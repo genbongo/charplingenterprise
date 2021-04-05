@@ -1,0 +1,94 @@
+ =========================  Admin Panel =====================================
+- Manage Staff
+    - Lists Staff
+    - Add Staff
+    - Edit Staff
+    - Assign Designated Area
+    - Activate / Deactivate Staff
+
+- Manage Client
+    - List Clients  
+    - Add Client
+    - Edit Client
+    - Approve / Disapprove Client
+    - View Store
+        - List of store
+        - Add Store
+        - Edit Store
+        - Activate / Deactivate Store
+
+
+- Manage Product    
+    - List Products
+    - Add Product   
+    - Edit Product
+        - Product Name / Description / Image
+        - Variation / Size / Product Flavor 
+        - Edit Price
+    - Product Stock    
+    - Activate / Deactivate Product
+
+
+- Manage Fridge
+    - List of Fridge
+    - Add Fridge
+    - Edit Fridge   
+    - Activate / Deactivate Store 
+    - Pull Out Fridge
+
+ =========================  Client Panel =====================================
+- Manage Dashboard - in progress
+- Shop Now
+    - List of Products
+        - Add To cart
+- Cart      
+    - List  of Carts
+    - Remove Carts
+    - Checkout
+        - Order info
+        - Client Info
+        - Store List / Dropdown
+
+- Stores
+    - List of Store
+    - Add Store
+    - Edit Store
+    - Activate / Deactivate Store         
+
+- Reports
+    - Transactions    
+        - List Of Transactions
+
+    - File Replacement
+        - List Of File Replacement
+        - Create File Replacement
+=========================== Staff Panel ===========================================
+- Dashboard
+    - List of order Today
+
+- Products
+    - List Of products    
+
+- Transactions
+    - List Of all Transactions    
+
+    steps:
+    1 -> composer dump-autoload
+    2. -> composer install --optimize-autoloader --no-dev
+    3.
+    php artisan cache:clear
+    php artisan route:clear
+    php artisan config:clear
+    php artisan view:clear
+
+
+    Gmail Account
+        enterprisecharpling@gmail.com
+        charplingenterprise@gmail.com
+        !qaz@wsx#edc
+
+        - less secure apps
+
+
+
+        genbongo@gmail.com | Mojobongo11
