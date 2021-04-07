@@ -13,8 +13,6 @@ handlers:
   - url: /images
     static_dir: public/images     
 
-    
-
 env_variables:
   ## Put production environment variables here.
   APP_KEY: base64:2yWnWJpy4ueRAUiQvePzT51bhqf9YnqMbY/gHF160mc=
