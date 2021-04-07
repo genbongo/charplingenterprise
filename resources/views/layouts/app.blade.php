@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <link rel="shortcut icon" type="image/jpg" href="{{url('/img/logo/logo.jpg')}}"/>
     <!-- Datatables bootstrap css -->
     <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
