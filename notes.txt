@@ -96,5 +96,8 @@
 https://charplingenterprise.df.r.appspot.com
 
 
-dbcreamline
+dbcreamline - instance
+creamline_db
 caAwDGeA62hdmksK
+
+gcloud sql connect dbcreamline --user=root

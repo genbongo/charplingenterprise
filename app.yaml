@@ -19,8 +19,8 @@ handlers:
     upload: .+\.(gif|png|jpg)$
 
 # Serve your app through a front controller at index.php or public/index.php.
-- url: .*
-  script: auto      
+  - url: .*
+    script: auto      
 
 env_variables:
   ## Put production environment variables here.
@@ -28,3 +28,10 @@ env_variables:
   APP_STORAGE: /tmp
   VIEW_COMPILED_PATH: /tmp
   SESSION_DRIVER: cookie
+  DB_DATABASE: creamline_db
+  DB_USERNAME: root
+  DB_PASSWORD: caAwDGeA62hdmksK
+  ## for MYSQL, use DB_SOCKET:
+  DB_SOCKET: "/cloudsql/charplingenterprise:us-central1:dbcreamline"
+  ## for PostgreSQL, use DB_HOST:
+  # DB_HOST: "/cloudsql/YOUR_CONNECTION_NAME"
