@@ -28,6 +28,20 @@ html, body {
     border: solid 15px #f2016a;
 }
 
+
+/* login page */
+
+
+#app .card {
+  border: 5px solid #fff;
+}
+
+.login-background {
+  background-image: url('/img/core/icecream.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 /* landing page */
 
 .content {
@@ -320,6 +334,27 @@ p.top-message {
     z-index: 999;
 }  
 
+
+/* Admin panel */
+
+.sidebar {
+  overflow-x: hidden;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: none !important;
+  border-color: #500087 !important;
+}
+
+.page-item.active .page-link {
+  background: #500087 !important;
+  border-color: #500087 !important;
+}
+
+.dataTable {
+  width: 100% !important;
+}
+
 /* 3 column section */
 .hover {
     overflow: hidden;
@@ -438,8 +473,8 @@ p.top-message {
 
 .btn-primary:hover,
 .btn-primary:focus {
-    background-color: #108d6f;
-    border-color: #108d6f;
+    background-color: #f2016a;
+    border-color: #f2016a;
     box-shadow: none;
     outline: none;
 }
@@ -448,6 +483,14 @@ p.top-message {
     color: #fff;
     background-color: #500087;
     border-color: #500087;
+}
+
+.bg-primary,.bg-secondary {
+  background-color: #500087 !important;
+}
+
+.bg-indigo-1 {
+  background-color: #f2016a !important;
 }
 
 section {

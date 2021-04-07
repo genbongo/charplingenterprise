@@ -44,10 +44,10 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <!-- Datatables bootstrap css -->
-    <!-- <link href="{{ asset('css/custom.css') }}" rel="stylesheet"> -->
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
 </head>
-<body>
+<body class="login-background">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-indigo shadow-sm">
             <div class="container">
