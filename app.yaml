@@ -28,6 +28,7 @@ env_variables:
   APP_STORAGE: /tmp
   VIEW_COMPILED_PATH: /tmp
   SESSION_DRIVER: cookie
+  
   DB_DATABASE: creamline_db
   DB_USERNAME: root
   DB_PASSWORD: caAwDGeA62hdmksK
