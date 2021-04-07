@@ -11,7 +11,16 @@ handlers:
     static_dir: public/img   
 
   - url: /images
-    static_dir: public/images     
+    static_dir: public/images  
+
+ # Serve images as static resources.
+  - url: /(.+\.(gif|png|jpg))$
+    static_files: \1
+    upload: .+\.(gif|png|jpg)$
+
+# Serve your app through a front controller at index.php or public/index.php.
+- url: .*
+  script: auto      
 
 env_variables:
   ## Put production environment variables here.
