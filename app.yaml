@@ -1,8 +1,10 @@
 runtime: php72
 
 handlers:
-  - url: /css
-    static_dir: public/css
+  - url: /
+    static_dir: public/    
+
+
 
 env_variables:
   ## Put production environment variables here.
