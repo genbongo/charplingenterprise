@@ -1,6 +1,9 @@
 runtime: php72
 handlers:
   - url: /public/css
+  
+  - url: /.*
+  script: public/index.php
 env_variables:
   ## Put production environment variables here.
   APP_KEY: base64:2yWnWJpy4ueRAUiQvePzT51bhqf9YnqMbY/gHF160mc=
