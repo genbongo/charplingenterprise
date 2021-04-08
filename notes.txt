@@ -82,6 +82,13 @@
     php artisan view:clear
 
 
+-----------------------
+git add --all
+git commit -m "message here"
+git push -u origin master
+git pull origin master
+
+
     Gmail Account
         enterprisecharpling@gmail.com
         charplingenterprise@gmail.com
