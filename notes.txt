@@ -104,3 +104,6 @@ gcloud sql connect dbcreamline --user=root
 
 
 === concerns =========
+
+Forgot layout
+Notification - updates should be on top not in bottom
