@@ -139,7 +139,7 @@
             </div>
         </nav>
 
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar" style="padding-top: 0">
+        <nav class="col-md-2 d-md-block bg-light sidebar" style="padding-top: 0">
             <div class="sidebar-sticky">
                 @if(Auth::user())
                     @if(Auth::user()->user_role == 99)
@@ -423,9 +423,17 @@
                         let output = '';
                         if(data.length > 0){
                             for (var i=0; i < data.length; i++){
-                                output += `<div class="dropdown-item notifications notif_wrapper">
-                                        ${data[i].message}
+                                if ($(window).width() < 600) {
+                                output += `<div class="">
+                                ‣ ${data[i].message}
                                     </div>`
+                                $('nav').removeClass('sidebar');
+
+                                }else{
+                                    output += `<div class="dropdown-item notifications notif_wrapper">
+                                    ‣ ${data[i].message}
+                                    </div>`
+                                }
                             }
                         }else{
                             output = `<a class="dropdown-item notifications" href="#">No notifications found.</a>`
