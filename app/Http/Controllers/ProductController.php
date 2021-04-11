@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Google\Cloud\Storage\StorageClient;
 
 class ProductController extends Controller
 {
@@ -103,6 +104,9 @@ class ProductController extends Controller
 
                     return $status;
                 })
+                ->editColumn('product_image', function ($row) {
+                    return 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' . $row->product_image;
+                })
                 ->rawColumns(['action', 'is_deleted'])
                 ->make(true);
         }
@@ -120,6 +124,8 @@ class ProductController extends Controller
     {  
         if ($request->ajax()) {
 
+            
+
             if(empty($request->product_id)){
                 $image = $request->file('product_image');
                 $new_name = rand() . '.' . $image->getClientOriginalExtension();
@@ -134,7 +140,30 @@ class ProductController extends Controller
                     $new_name = $pdct->product_image;
                 }
             }
-        
+
+            #start here ============================================================
+            $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+            
+            $storage = new StorageClient([
+                'keyFile' => json_decode($googleConfigFile, true)
+            ]);
+
+            $fileStoragePath = '/img/product/' . $new_name;
+            $publicPath = public_path($fileStoragePath);
+
+            $storageBucketName = config('googlecloud.storage_bucket');
+            $bucket = $storage->bucket($storageBucketName);
+            $fileSource = fopen($publicPath, 'r');
+            $newFolderName = 'img/product'; //$new_name.'_'.date("Y-m-d").'_'.date("H:i:s");
+            $googleCloudStoragePath = $newFolderName.'/'.$new_name;
+            /* Upload a file to the bucket.
+            Using Predefined ACLs to manage object permissions, you may
+            upload a file and give read access to anyone with the URL.*/
+            $bucket->upload($fileSource, [
+                'predefinedAcl' => 'publicRead',
+                'name' => $googleCloudStoragePath
+            ]);
+            #end here ===============================================================
             Product::updateOrCreate([
                 'id' => $request->product_id
             ],[

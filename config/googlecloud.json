@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "charplingenterprise",
+  "private_key_id": "d3a3745833be68d8b723450392e6c2496599440f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCsXm3s+YypbOKh\nxQOQsSGvilf1mvQgB8fYBHg1dgq7u21E3Fkds2rZFQvLg8R+ZYzCPKePcyAH18nD\nwFqPTuMEKdD3ntmz7EJF0ddOowVFr4XcgqyHw+YTldnzhjuEnOcLBYxT7ozYhnZ5\noRsQKNvnKFr22QoxFt4t+KPv8RwcWqnd7rrhE4Lol8wWU+uthY09vwBOrDBtIJjP\nc3YT6JhnPz+sZ4E+Ywun9i+FtKsk6XWYoszma0BBuqz8K8eOodkPbGtCBC3vmLyp\nMtF/4H/jQrzu7VtIOKkiIXoK74qFW4tPhGUu6+H0O8EtSnSob4aH7SltLOQ9XitZ\nqkw90vgNAgMBAAECggEAANQNybzq04VjKFDcHc3V4+JYs8EtJ7bqvxue1dJ9rUTy\nlzP1b60oqcqDfWLUOKFHTUdvrLSG30SN7ZyBpK7F3i5PQ360isprXgBq4L4IJbtq\ntItM4mZc/mk2VTNRqVj8WUFgoDShqPpGquwwcdPTGyfjGj54qJEtnyiZ5fjKYErx\nb1uW0npcHpM9xOj6TeEiPvoBjKif+nSzfEwVzvQSrgAOE+MHfunGuBtAcAxe15My\n4Ek2eOu6wJJSGpbWvtrfd241oKp9wFHZ+Gp02y1zeUyAGE67KvLkA7BrcSCYy2rK\nV2kvAlkjyZSAxNHLW1nM4dMxyPpja+GJyTThpgCZIQKBgQDsxYmK8P6uoONLBfYz\nT+cvML93/+t2+7cMPD08ofvH26rlK7zf1s5/VtToYuVk6+BPIVDCZ71XPl5cZMJw\nuNCboFPS4QaHEzukLzWYtMq3HxdLu43LTiCBFt+h9xY+0mLZQ26MAGETQelGXUzh\nCD0jS+Gu4C75wVZ9NKmgfAupsQKBgQC6XfbD9LhbZm9y5ZTdSRO4l8oLW3spAfPH\npJXT/TKzfpBciW424PgmLMGkjK4gj29KvYOMwcztsMxBCj/WhQYhJPByo0a9Rvz9\nWFxfyoTuIm9mm/b/MKSJeZYXqrCU434EYxWNVfq73h1zpCLS9GD7XCKOJPzeY5ZV\nb6Xizv1vHQKBgCo9o6gyDn3BHkvIKIBHBQuaOs6BzdRQW/vG03X5wB2LxxVTlEKq\n4/Q73YgH/LzgiAgV/X5xW4oxCkyZfUb28eCR3eKFWtDGUaGc+obf2jqJRXKxZz6a\nFZpyJjuTBVj318LDEPnRJ4B0BdYT1x9ehOnDI+Q7AqZ0I6X6uzhyaPJBAoGAO3S2\nwRVVq3MmoxUzRNWHgSCLyMvKou6Ig2yykAr7HeCG1b7SdpeXEza8IG7xLloUO1fy\nm/lIE5yPzUAj1aBisDhErY4Bh2kaVQjXj4fgmMhLmgSv7AHsvB8aDzrZUuaw0V17\nBrgjYcQeyUHYCk0Ek6x1KbwLIDfNQjx4Q7+dgtECgYBff8/0JGsnT5hCaJGSahSE\nx3kg5GZod0KZz5WmlmmN4HCXMxh15a2uu6VaBq713k42xpjhauXvwL/zlsJTb3Ij\nVl0M5dkXoAm+HTwxDVW7hSVf/ca4XS2RBXts9SZOWiH+p8g8kiJT1OfvawtE5FpD\n7rk8pQzEQw21eii5zVf32A==\n-----END PRIVATE KEY-----\n",
+  "client_email": "creamlime-app@charplingenterprise.iam.gserviceaccount.com",
+  "client_id": "112724250017185148980",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/creamlime-app%40charplingenterprise.iam.gserviceaccount.com"
+}

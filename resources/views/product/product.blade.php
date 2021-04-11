@@ -138,7 +138,8 @@
                 {   
                     data: 'product_image', name: 'product_image',
                     "render": function (data, type, full, meta) {
-                        return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='40' width='40'></a>";
+                        // 'https://storage.cloud.google.com/'.$storageBucketName.'/'.$googleCloudStoragePath
+                        return `<a data-fancybox='' href='${data}'><img src='${data}' height='40' width='40'></a>`;
                     },
                 },
                 {data: 'name', name: 'name'},
