@@ -82,6 +82,13 @@
     php artisan view:clear
 
 
+-----------------------
+git add --all
+git commit -m "message here"
+git push -u origin master
+git pull origin master
+
+
     Gmail Account
         enterprisecharpling@gmail.com
         charplingenterprise@gmail.com
@@ -106,3 +113,6 @@ gcloud sql connect dbcreamline --user=root
 === concerns =========
 https://docs.google.com/presentation/d/e/2PACX-1vRgaRIMIuYpCSqQOFOh3WDmb1sNUpipwpKsdHQJWu38EpHV8Lz5Cv1jZBH6t-dDBsMKb1Be02FE82do/pub?start=false&loop=false&delayms=3000&slide=id.gc906c04f3f_1_140
 https://dev.to/ediri_aghwotu/how-to-upload-files-to-google-cloud-using-laravel-3618
+
+Forgot layout
+Notification - updates should be on top not in bottom

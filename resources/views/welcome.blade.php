@@ -219,11 +219,11 @@
 <!-- Footer -->
 <footer class="text-center text-white footer-content">
 
-<section id="developers" class="pb-5">
+ <!-- <section id="developers" class="pb-5">
     <div class="container">
         <h5 class="section-title h1">The Developers</h5>
         <div class="row">
-            <!-- Team member -->
+    
             <div class="col-xs-12 col-sm-6 col-md-3">
                 <div class="image-flip" >
                     <div class="mainflip flip-0">
@@ -247,8 +247,7 @@
                     </div>
                 </div>
             </div>
-            <!-- ./Team member -->
-            <!-- Team member -->
+
             <div class="col-xs-12 col-sm-6 col-md-3">
                 <div class="image-flip" ontouchstart="this.classList.toggle('hover');">
                     <div class="mainflip">
@@ -272,8 +271,7 @@
                     </div>
                 </div>
             </div>
-            <!-- ./Team member -->
-            <!-- Team member -->
+
             <div class="col-xs-12 col-sm-6 col-md-3">
                 <div class="image-flip" ontouchstart="this.classList.toggle('hover');">
                     <div class="mainflip">
@@ -297,8 +295,7 @@
                     </div>
                 </div>
             </div>
-            <!-- ./Team member -->
-            <!-- Team member -->
+
             <div class="col-xs-12 col-sm-6 col-md-3">
                 <div class="image-flip" ontouchstart="this.classList.toggle('hover');">
                     <div class="mainflip">
@@ -322,11 +319,9 @@
                     </div>
                 </div>
             </div>
-            <!-- ./Team member -->
-
         </div>
     </div>
-</section>
+</section> -->
 
   <!-- Copyright -->
   <div class="text-left p-3 bottom">
@@ -342,10 +337,8 @@
     </div>
   </div>
 
-   
-  <!-- Copyright -->
 </footer>
-<!-- Footer -->
+
         </div>
     </body>
 </html>
