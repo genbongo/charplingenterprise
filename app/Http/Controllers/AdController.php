@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Validator;
-
+use Google\Cloud\Storage\StorageClient;
 class AdController extends Controller
 {
     /**
@@ -32,6 +32,9 @@ class AdController extends Controller
         if ($request->ajax()) {
             return Datatables::of($ads)
                 ->addIndexColumn()
+                ->editColumn('ads_image', function ($row) {
+                    return 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/ads/' . $row->ads_image;
+                })
                 ->addColumn('action', function ($row) {
 
                     $status = '';
@@ -77,7 +80,33 @@ class AdController extends Controller
         {
             $image = $request->file('ads_image');
             $new_name = rand() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('img/ads'), $new_name);
+            // $image->move(public_path('img/ads'), $new_name);
+
+            #start here ============================================================
+            $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+            
+            $storage = new StorageClient([
+                'keyFile' => json_decode($googleConfigFile, true)
+            ]);
+
+            $fileStoragePath = '/img/ads/' . $new_name;
+            $publicPath = public_path($fileStoragePath);
+
+            $storageBucketName = config('googlecloud.storage_bucket');
+            $bucket = $storage->bucket($storageBucketName);
+            $fileSource = fopen($publicPath, 'r');
+            $newFolderName = 'img/ads';
+            $googleCloudStoragePath = $newFolderName.'/'.$new_name;
+            /* Upload a file to the bucket.
+            Using Predefined ACLs to manage object permissions, you may
+            upload a file and give read access to anyone with the URL.*/
+            $bucket->upload($fileSource, [
+                'predefinedAcl'     => 'publicRead',
+                'name'              => $googleCloudStoragePath
+            ]);
+            #end here ===============================================================
+
+            // $image->move(public_path('img/ads'), $new_name);
 
             //insert to product table
             $productModel = Ad::updateOrCreate([

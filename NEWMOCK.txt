@@ -1,0 +1,19 @@
+Staff List, can still create existing email with the same user information
+
+Users need sessions to automatically logout
+
+Area ID in Re-Assignment Record is 0
+
+Generated Password should be removed or changed to different pattern.
+
+If not removed, users should be notified or messaged with their login details so that they can changed their password.
+
+Show number of info in table, dapat ta khbaw asa ni dapita sa code.
+
+-No validation in uploading image in product module
+
+-We should know what hash we used and ngano kani ato gi gamit
+
+NEW
+
+-Staff users with same email address but different password will conflict each other and neither of them can login.

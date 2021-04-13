@@ -9,8 +9,7 @@ use App\{Store, User};
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Validator;
+use Google\Cloud\Storage\StorageClient;
 
 class FileReplacementController extends Controller
 {
@@ -223,6 +222,33 @@ class FileReplacementController extends Controller
                 $check=in_array($extension,$allowedfileExtension);
                 $new_name = rand() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('img/filereport'), $new_name);
+
+                #start here ============================================================
+                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                
+                $storage = new StorageClient([
+                    'keyFile' => json_decode($googleConfigFile, true)
+                ]);
+
+                $fileStoragePath = '/img/filereport/' . $new_name;
+                $publicPath = public_path($fileStoragePath);
+
+                $storageBucketName = config('googlecloud.storage_bucket');
+                $bucket = $storage->bucket($storageBucketName);
+                $fileSource = fopen($publicPath, 'r');
+                $newFolderName = 'img/filereport';
+                $googleCloudStoragePath = $newFolderName.'/'.$new_name;
+                /* Upload a file to the bucket.
+                Using Predefined ACLs to manage object permissions, you may
+                upload a file and give read access to anyone with the URL.*/
+                $bucket->upload($fileSource, [
+                    'predefinedAcl'  => 'publicRead',
+                    'name'           => $googleCloudStoragePath
+                ]);
+                if(\File::exists(public_path('img/filereport/'.$new_name))){
+                    \File::delete(public_path('img/filereport/'.$new_name));
+                }
+                #end here ===============================================================
 
                 if($check)
                 {

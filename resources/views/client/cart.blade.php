@@ -71,7 +71,7 @@
                 {
                     data: 'product_image', name: 'product_image',
                     "render": function (data, type, full, meta) {
-                        var url  = "{{ asset('img/product') }}" +"/"+ data
+                        var url  = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data
                         return "<a data-fancybox='' href='"+ url +"' align='center'><img src='"+ url +"' height='40' width='40'></a>";
                     },
                 },

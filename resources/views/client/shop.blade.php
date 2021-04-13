@@ -14,14 +14,14 @@
                         @if($product->quantity == 0)
                         <div class="col-lg-3 col-md-4 col-6 pointer div-prod item">
                             <span class="notify-badge">Sold Out</span>
-                            <img class="img-fluid img-thumbnail card-img-top shop-img" src="{{ asset('img/product').'/'.$product->product_image}}" alt="">
+                            <img class="img-fluid img-thumbnail card-img-top shop-img" src="{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/'.$product->product_image}}" alt="">
                             <div class="padding-all-10px">
                                 <h5>{{ $product->name }}</h5>
                             </div>
                         </div>
                         @else
                         <div class="col-lg-3 col-md-4 col-6 pointer div-prod item" data-val="{{ $product->id }}">
-                            <img class="img-fluid img-thumbnail card-img-top shop-img" src="{{ asset('img/product').'/'.$product->product_image}}" alt="">
+                            <img class="img-fluid img-thumbnail card-img-top shop-img" src="{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/'.$product->product_image}}" alt="">
                             <div class="padding-all-10px">
                                 <h5>{{ $product->name }}</h5>
                             </div>
@@ -121,7 +121,7 @@
                 prod_stocks_qty = data.stocks[0].quantity;
                 $('#product_images').html("")
                 var name = data.product.product_image.split('.')
-                var url  = "{{ asset('img/product') }}" +"/"+ data.product.product_image
+                var url  = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}" + data.product.product_image
                 var jsx = `<div class="carousel-item active">
                     <img class="d-block w-100" src="${url}" alt="${name[0]}">
                   </div>`

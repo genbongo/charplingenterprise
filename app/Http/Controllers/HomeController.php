@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Validator;
+use Google\Cloud\Storage\StorageClient;
 
 
 class HomeController extends Controller
@@ -60,15 +61,43 @@ class HomeController extends Controller
                 $new_name = rand() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('img/profile'), $new_name);
 
+                #start here ============================================================
+                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                
+                $storage = new StorageClient([
+                    'keyFile' => json_decode($googleConfigFile, true)
+                ]);
+
+                $fileStoragePath = '/img/profile/' . $new_name;
+                $publicPath = public_path($fileStoragePath);
+
+                $storageBucketName = config('googlecloud.storage_bucket');
+                $bucket = $storage->bucket($storageBucketName);
+                $fileSource = fopen($publicPath, 'r');
+                $newFolderName = 'img/profile';
+                $googleCloudStoragePath = $newFolderName.'/'.$new_name;
+                /* Upload a file to the bucket.
+                Using Predefined ACLs to manage object permissions, you may
+                upload a file and give read access to anyone with the URL.*/
+                $bucket->upload($fileSource, [
+                    'predefinedAcl'  => 'publicRead',
+                    'name'           => $googleCloudStoragePath
+                ]);
+                if(\File::exists(public_path('img/profile/'.$new_name))){
+                    \File::delete(public_path('img/profile/'.$new_name));
+                }
+            #end here ===============================================================
+
                 User::updateOrCreate([
                     'id' => $request->user_id
                 ],[
                     'img' => $new_name,
                 ]);
 
+                
                 return response()->json([
                     'message'   => 'Image Upload Successfully',
-                    'uploaded_image' => url('img/profile').'/'.$new_name,
+                    'uploaded_image' => 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/profile/' . $new_name //url('img/profile').'/'.$new_name,
                 ]);
             }
             else

@@ -121,11 +121,12 @@
                 var i = 0
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
+                    var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='20'></a></td>
+                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>
                         <td>${row.quantity_ordered}</td>
                         <td>${row.ordered_total_price}</td>
                     </tr>`
@@ -155,146 +156,55 @@
                     }
                 },
                 columns: [
-                    // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    // {data: 'id', name: 'id'},
-                    // {data: 'name', name: 'name'},
-                    // {   
-                    //     data: 'product_image', name: 'product_image',
-                    //     "render": function (data, type, full, meta) {
-                    //         return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='20'></a>";
-                    //     },
-                    // },
-                    // {
-                    //     data: 'quantity_ordered', name: 'quantity_ordered',
-                    //     "render": function(data, type, full, meta){
-                    //         return data + " pcs"
-                    //     }
-                    // },
-                    // {
-                    //     data: 'ordered_total_price', name: 'ordered_total_price',
-                    //     "render": function(data, type, full, meta){
-                    //         return "&#x20b1; " + data
-                    //     }
-                    // },
-                    // {
-                    //     data: 'created_at', name: 'created_at',
-                    //     "render": function (data, type, full, meta) {
-                    //         return moment(data).format('MMMM D YYYY, h:mm:ss a');
-                    //     },
-                    // },
-                    // {
-                    //     data: 'delivery_date', name: 'delivery_date',
-                    //     "render": function (data, type, full, meta) {
-                    //         let output = '';
-                    //         if(data === null){
-                    //             output = '<span class="text-info font-weight-bold">(Not set)</span>'
-                    //         }else{
-                    //             output = moment(data).format('MMMM D YYYY, h:mm:ss a');
-                    //         }
-
-                    //         return output
-                    //     },
-                    // },
-                    // {
-                    //     data: 'is_approved', name: 'is_approved',
-                    //     "render": function (data, type, full, meta) {
-
-                    //         let output = '';
-
-                    //         if(data === 1){
-                    //             output = '<span class="text-info font-weight-bold">Approved</span>'
-
-                    //             if(full.is_completed === 1){
-                    //                 output = '<span class="text-success font-weight-bold">Completed</span>'
-                    //             }
-                    //         }else{
-                    //             output = '<span class="text-danger font-weight-bold">Pending</span>'
-                    //         }
-
-                    //         if(full.cancelled_by > 0){
-                    //             output = '<span class="text-danger font-weight-bold">Cancelled</span>'
-                    //         }
-
-                    //         return output
-                    //     },
-                    // },
                     {data: 'id', name: 'id'},
-                {data: 'invoice_no', name: 'invoice_no'},
-                // {
-                //     data: 'fullname', name: 'fullname',
-                //     "render": function(data, type, full, meta){
-                //         return full.fullname
-                //     }
-                // },
-                {data: 'total_price', name: 'total_price'},
-                {
-                    data: 'date_ordered', name: 'date_ordered',
-                    "render": function (data, type, full, meta) {
-                        return moment(data).format('MMMM D YYYY');
+                    {data: 'invoice_no', name: 'invoice_no'},
+                    {data: 'total_price', name: 'total_price'},
+                    {
+                        data: 'date_ordered', name: 'date_ordered',
+                        "render": function (data, type, full, meta) {
+                            return moment(data).format('MMMM D YYYY');
+                        },
                     },
-                },
-                {
-                    data: 'delivery_date', name: 'delivery_date',
-                    "render": function (data, type, full, meta) {
-                        let output = '';
-                        if(full.delivery_date == null){
-                            output = '<span class="text-info font-weight-bold">(Not set)</span>'
-                        }else{
-                            output = moment(data).format('MMMM D YYYY');
-                        }
+                    {
+                        data: 'delivery_date', name: 'delivery_date',
+                        "render": function (data, type, full, meta) {
+                            let output = '';
+                            if(full.delivery_date == null){
+                                output = '<span class="text-info font-weight-bold">(Not set)</span>'
+                            }else{
+                                output = moment(data).format('MMMM D YYYY');
+                            }
 
-                        return output
+                            return output
+                        },
                     },
-                },
-                // {
-                //     data: 'attempt', name: 'attempt',
-                //     render: function(data, type, full, meta){
-                        
-                //         let output = parseInt(data) + 1
-                //         let times = output > 1 ? "times" : "time"
+                    {
+                        data: 'is_completed', name: 'is_completed',
+                        render: function(data, type, full, meta){
+                            let output = full.is_approved == 1 ? '<span class="text-info font-weight-bold">Approved</span><br/>' : '<span class="text-danger font-weight-bold">Pending</span><br/>';
 
-                //         return output + " " + times
-                //     }
-                // },
-                
-                
-                // {
-                //     data: 'reason', name: 'reason',
-                //     render: function(data, type, full, meta){
-                //         let output = ''
-                //         if(data != ""){
-                //             output = "<a href='#' class='btnDisplayReason' data-reason='"+data+"'>View</a>"
-                //         }
-                //         return output
-                //     }
-                // },
-                {
-                    data: 'is_completed', name: 'is_completed',
-                    render: function(data, type, full, meta){
-                        let output = full.is_approved == 1 ? '<span class="text-info font-weight-bold">Approved</span><br/>' : '<span class="text-danger font-weight-bold">Pending</span><br/>';
+                            if(full.is_completed == 1){
+                                output += '<span class="text-success font-weight-bold">Completed</span>'
+                            }
+                            if(full.is_cancelled == 1){
+                                output += '<span class="text-danger font-weight-bold">Cancelled</span>'
+                            }
+                            if(full.is_rescheduled == 1){
+                                output += '<span class="text-info font-weight-bold">Rescheduled</span>'
+                            }
 
-                        if(full.is_completed == 1){
-                            output += '<span class="text-success font-weight-bold">Completed</span>'
+                            return output
                         }
-                        if(full.is_cancelled == 1){
-                            output += '<span class="text-danger font-weight-bold">Cancelled</span>'
-                        }
-                        if(full.is_rescheduled == 1){
-                            output += '<span class="text-info font-weight-bold">Rescheduled</span>'
-                        }
-
-                        return output
-                    }
-                },
-                {data: 'action', name: 'action', orderable: false, searchable: false},
-                ]
-            });
-            history.replaceState("", document.title, window.location.pathname);
-            $(document).on('change', '#filter_status', function(e){
-                e.preventDefault()
-                table.ajax.reload()
+                    },
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    ]
+                });
+                history.replaceState("", document.title, window.location.pathname);
+                $(document).on('change', '#filter_status', function(e){
+                    e.preventDefault()
+                    table.ajax.reload()
+                })
             })
-        })
     </script>
     
 </div>

@@ -58,42 +58,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-12">
-                            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-                                <a data-fancybox='' href="{{ asset('img/product/default.jpg') }}" id="a-product-of-the-month"><img style="max-height: 14rem;" class="card-img-top" src="{{ asset('img/product/default.jpg') }}"  id="img-product-of-the-month"></a>
-                                <div class="card-body">
-                                    <h4 class="card-title">Product of the Month:</h4>
-                                    <h5 id="lbl-product-of-the-month">....</h5>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- <div class="col-sm-4">
-                            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-                                <a data-fancybox='' href="{{ asset('img/product/default.jpg') }}" id="a-product-of-the-month-1"><img style="max-height: 14rem;" class="card-img-top" src="{{ asset('img/product/default.jpg') }}"  id="img-product-of-the-month-1"></a>
-                                <div class="card-body">
-                                    <h4 class="card-title">Top Products:</h4>
-                                    <h5 id="lbl-product-of-the-month-1">....</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-                                <a data-fancybox='' href="{{ asset('img/product/default.jpg') }}" id="a-product-of-the-month-2"><img style="max-height: 14rem;" class="card-img-top" src="{{ asset('img/product/default.jpg') }}"  id="img-product-of-the-month-2"></a>
-                                <div class="card-body">
-                                    <h4 class="card-title">Top Products:</h4>
-                                    <h5 id="lbl-product-of-the-month-2">....</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-                                <a data-fancybox='' href="{{ asset('img/product/default.jpg') }}" id="a-product-of-the-month-3"><img style="max-height: 14rem;" class="card-img-top" src="{{ asset('img/product/default.jpg') }}"  id="img-product-of-the-month-3"></a>
-                                <div class="card-body">
-                                    <h4 class="card-title">Top Products:</h4>
-                                    <h5 id="lbl-product-of-the-month-3">....</h5>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="row top_product_div">
                         </div>
@@ -229,27 +193,15 @@
                 success: function(response){
                     $(".top_product_div").html("")
                     // console.log(response)
-                    //return the response to the DOM
-                    // $("#lbl-product-of-the-month-1").html(response.data1.name)
-                    // $("#lbl-product-of-the-month-2").html(response.data2.name)
-                    // $("#lbl-product-of-the-month-3").html(response.data3.name)
-                    // var img1 = response.img1 == "default.jpg" ? response.img1 : response.img1.product_image;
-                    // var img2 = response.img2 == "default.jpg" ? response.img2 : response.img2.product_image;
-                    // var img3 = response.img3 == "default.jpg" ? response.img3 : response.img3.product_image;
-                    // $("#a-product-of-the-month-1").attr("href", "{{ asset('img/product/') }}" + "/" + img1)
-                    // $("#a-product-of-the-month-2").attr("href", "{{ asset('img/product/') }}" + "/" + img2)
-                    // $("#a-product-of-the-month-3").attr("href", "{{ asset('img/product/') }}" + "/" + img3)
-                    // $("#img-product-of-the-month-1").attr("src", "{{ asset('img/product/') }}" + "/" + img1)
-                    // $("#img-product-of-the-month-2").attr("src", "{{ asset('img/product/') }}" + "/" + img2)
-                    // $("#img-product-of-the-month-3").attr("src", "{{ asset('img/product/') }}" + "/" + img3)
-
+                   
                     var htmlData = '';
                     $.each(response, function(key, row){
-                        var imgHTML = "{{ asset('img/product/') }}" + "/" + row.product_image 
+                        var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                        var imgHTML = url + row.product_image 
                         htmlData += `<div class="col-sm-4">
                                     <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-                                        <a data-fancybox='' href="{{ asset('img/product/') }}/${row.product_image}" id="a-product-of-the-month-1">
-                                            <img style="max-height: 14rem;" class="card-img-top" src="{{ asset('img/product/') }}/${row.product_image}"  id="img-product-of-the-month-1"></a>
+                                        <a data-fancybox='' href="${url + row.product_image}" id="a-product-of-the-month-1">
+                                            <img style="max-height: 14rem;" class="card-img-top" src="${url + row.product_image}"  id="img-product-of-the-month-1"></a>
                                         <div class="card-body">
                                             <h4 class="card-title">Top Products</h4>
                                             <h5 id="lbl-product-of-the-month-1">${row.product_name}</h5>
@@ -369,60 +321,6 @@
                 }
             })
         }
-
-        // //call the function that will display the product of the month
-        // populate_product_of_the_month()
-
-        // //create a function that will populate the product of the month
-        // function populate_product_of_the_month(){
-        //     $.ajax({
-        //         url: "{{ url('display_product_of_the_month') }}",
-        //         method: "GET",
-        //         data: {},
-        //         success: function(response){
-        //             // console.log(response)
-        //             //return the response to the DOM
-        //             $("#lbl-product-of-the-month").html(response.data.name)
-        //             $("#a-product-of-the-month").attr("href", "{{ asset('img/product/') }}" + "/" + response.img.product_image)
-        //             $("#img-product-of-the-month").attr("src", "{{ asset('img/product/') }}" + "/" + response.img.product_image)
-        //         },
-        //         error: function(err){
-        //             console.log(err)
-        //         }
-        //     })
-        // }
-
-        //call the function that will display the best 3 product of the month
-        // populate_best_3_product_of_the_month()
-
-        //create a function that will populate the product of the month
-        // function populate_best_3_product_of_the_month(){
-        //     $.ajax({
-        //         url: "{{ url('display_3_best_product_of_the_month') }}",
-        //         method: "GET",
-        //         data: {},
-        //         success: function(response){
-        //             // console.log(response)
-        //             //return the response to the DOM
-        //             $("#lbl-product-of-the-month-1").html(response.data1.name)
-        //             $("#lbl-product-of-the-month-2").html(response.data2.name)
-        //             $("#lbl-product-of-the-month-3").html(response.data3.name)
-        //             var img1 = response.img1 == "default.jpg" ? response.img1 : response.img1.product_image;
-        //             var img2 = response.img2 == "default.jpg" ? response.img2 : response.img2.product_image;
-        //             var img3 = response.img3 == "default.jpg" ? response.img3 : response.img3.product_image;
-
-        //             $("#a-product-of-the-month-1").attr("href", "{{ asset('img/product/') }}" + "/" + img1)
-        //             $("#a-product-of-the-month-2").attr("href", "{{ asset('img/product/') }}" + "/" + img2)
-        //             $("#a-product-of-the-month-3").attr("href", "{{ asset('img/product/') }}" + "/" + img3)
-        //             $("#img-product-of-the-month-1").attr("src", "{{ asset('img/product/') }}" + "/" + img1)
-        //             $("#img-product-of-the-month-2").attr("src", "{{ asset('img/product/') }}" + "/" + img2)
-        //             $("#img-product-of-the-month-3").attr("src", "{{ asset('img/product/') }}" + "/" + img3)
-        //         },
-        //         error: function(err){
-        //             console.log(err)
-        //         }
-        //     })
-        // }
 
         //call the function that will display the product of the month
         populate_weekly_sales_data().then(res => {

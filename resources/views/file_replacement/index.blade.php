@@ -323,12 +323,12 @@
         $('#displayFileModal').modal('show');
 
         $('#divContentImages').empty()
-
+        var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
         images.map(image => {
             var jsx =`
                 <div class="row">
                     <div class="col-4 m-2">
-                        <img src="{{ URL('img/filereport') }}/${image.file_report_image}" style="height:101px;"/>
+                        <img src="${url + image.file_report_image}" style="height:101px;"/>
                     </div>
                 </div>`;
             $('#divContentImages').append(jsx)
@@ -477,11 +477,11 @@
                 var output = '';
 
                 const file_images = data.product_file_report;
-
+                var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
                 for(var i = 0; i < file_images.length; i++){
                     console.log(file_images[i])
                     output += '<div class="col-lg-4 col-md-4 col-4">' +
-                                "<a data-fancybox='' href='{{ URL('img/filereport') }}/"+ file_images[i].file_report_image +"'><img src='{{ URL('img/filereport') }}/"+ file_images[i].file_report_image +"' class='img-fluid img-thumbnail card-img-top' style='height:100px;width:100px'></a>" +
+                                "<a data-fancybox='' href='"+ url + file_images[i].file_report_image +"'><img src='"+url + file_images[i].file_report_image +"' class='img-fluid img-thumbnail card-img-top' style='height:100px;width:100px'></a>" +
                             '</div>'
                 }
 

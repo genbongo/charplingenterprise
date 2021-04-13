@@ -547,26 +547,6 @@
                         return full.fullname
                     }
                 },
-                // {data: 'total_price', name: 'total_price'},
-                // {data: 'name', name: 'name'},
-                // {   
-                //     data: 'product_image', name: 'product_image',
-                //     "render": function (data, type, full, meta) {
-                //         return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='20'></a>";
-                //     },
-                // },
-                // {
-                //     data: 'quantity_ordered', name: 'quantity_ordered',
-                //     "render": function(data, type, full, meta){
-                //         return data + " pcs"
-                //     }
-                // },
-                // {
-                //     data: 'ordered_total_price', name: 'ordered_total_price',
-                //     "render": function(data, type, full, meta){
-                //         return "&#x20b1; " + data
-                //     }
-                // },
                 {
                     data: 'date_ordered', name: 'date_ordered',
                     "render": function (data, type, full, meta) {
@@ -602,13 +582,14 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
+                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='20'></a></td>`
+                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>`
                         if(['all','pending'].indexOf(type) !== -1){
                             htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
                         } else {
@@ -663,13 +644,14 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
+                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='20'></a></td>
+                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>
                         <td>${row.quantity_ordered}</td>
                         <td>${row.ordered_total_price}</td>
                     </tr>`
@@ -762,69 +744,13 @@
         /* -------------------------------------------------------------------------------
                                         UNDELIVERED LIST
         -------------------------------------------------------------------------------- */
-        // datatable
-        // var undeliverTable = $('#undeliveredTable').DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     ajax: "{{ url('undeliver') }}",
-        //     columns: [
-        //         // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-        //         {data: 'id', name: 'id'},
-        //         {
-        //             data: 'fname', name: 'fname',
-        //             "render": function(data, type, full, meta){
-        //                 return full.lname + ', ' + full.fname
-        //             }
-        //         },
-        //         {data: 'name', name: 'name'},
-        //         {   
-        //             data: 'product_image', name: 'product_image',
-        //             "render": function (data, type, full, meta) {
-        //                 return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='20'></a>";
-        //             },
-        //         },
-        //         {
-        //             data: 'quantity_ordered', name: 'quantity_ordered',
-        //             "render": function(data, type, full, meta){
-        //                 return data + " pcs"
-        //             }
-        //         },
-        //         {
-        //             data: 'ordered_total_price', name: 'ordered_total_price',
-        //             "render": function(data, type, full, meta){
-        //                 return "&#x20b1; " + data
-        //             }
-        //         },
-        //         {
-        //             data: 'created_at', name: 'created_at',
-        //             "render": function (data, type, full, meta) {
-        //                 return moment(data).format('MMMM D YYYY, h:mm:ss a');
-        //             },
-        //         },
-        //         {
-        //             data: 'delivery_date', name: 'delivery_date',
-        //             "render": function (data, type, full, meta) {
-        //                 let output = '';
-        //                 if(full.is_cancelled == 1){
-        //                     output = '<span class="text-danger font-weight-bold">(To be reschedule)</span>'
-        //                 }else{
-        //                     output = moment(data).format('MMMM D YYYY');
-        //                 }
-
-        //                 return output
-        //             },
-        //         },
-        //         {data: 'action', name: 'action', orderable: false, searchable: false},
-        //     ]
-        // });
-
+        
         var undeliverTable = $('#undeliveredTable').DataTable({
             processing: true,
             serverSide: true,
             paging    : false,
             ajax: "{{ url('undeliver') }}",
             columns: [
-                // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
                 {
@@ -833,26 +759,7 @@
                         return full.fullname
                     }
                 },
-                // {data: 'total_price', name: 'total_price'},
-                // {data: 'name', name: 'name'},
-                // {   
-                //     data: 'product_image', name: 'product_image',
-                //     "render": function (data, type, full, meta) {
-                //         return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='20'></a>";
-                //     },
-                // },
-                // {
-                //     data: 'quantity_ordered', name: 'quantity_ordered',
-                //     "render": function(data, type, full, meta){
-                //         return data + " pcs"
-                //     }
-                // },
-                // {
-                //     data: 'ordered_total_price', name: 'ordered_total_price',
-                //     "render": function(data, type, full, meta){
-                //         return "&#x20b1; " + data
-                //     }
-                // },
+                
                 {
                     data: 'date_ordered', name: 'date_ordered',
                     "render": function (data, type, full, meta) {
@@ -888,13 +795,14 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
+                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='20'></a></td>`
+                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='20'></a></td>`
                     htmlData += `<td>${row.quantity_ordered}</td>`
                     htmlData +=`<td>${row.ordered_total_price}
                             <input type='hidden' name='order[${i}][product_id]' value='${row.prodID}'>
@@ -1109,11 +1017,12 @@
             $('#divContentImages').empty()
             const images =JSON.parse($(this).attr("data-val"));
             $('#displayFileModal').modal('show');
+            var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
             images.map(image => {
                 var jsx =`
                     <div class="row">
                         <div class="col-4 m-2">
-                            <img src="{{ URL('img/filereport') }}/${image.file_report_image}" style="height:101px;"/>
+                            <img src="${url + image.file_report_image}" style="height:101px;"/>
                         </div>
                     </div>`;
                 $('#divContentImages').append(jsx)
@@ -1300,10 +1209,8 @@
             processing: true,
             serverSide: true,
             paging    : false,
-            // ajax: "{{ url('undeliver') }}",
             ajax: "{{ url('order_replacement') }}",
             columns: [
-                // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
                 {
@@ -1312,26 +1219,6 @@
                         return full.fullname
                     }
                 },
-                // {data: 'total_price', name: 'total_price'},
-                // {data: 'name', name: 'name'},
-                // {   
-                //     data: 'product_image', name: 'product_image',
-                //     "render": function (data, type, full, meta) {
-                //         return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='20'></a>";
-                //     },
-                // },
-                // {
-                //     data: 'quantity_ordered', name: 'quantity_ordered',
-                //     "render": function(data, type, full, meta){
-                //         return data + " pcs"
-                //     }
-                // },
-                // {
-                //     data: 'ordered_total_price', name: 'ordered_total_price',
-                //     "render": function(data, type, full, meta){
-                //         return "&#x20b1; " + data
-                //     }
-                // },
                 {
                     data: 'date_ordered', name: 'date_ordered',
                     "render": function (data, type, full, meta) {
@@ -1464,11 +1351,11 @@
                 var output = '';
 
                 const file_images = data.product_file_report;
-
+                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
                 for(var i = 0; i < file_images.length; i++){
                     console.log(file_images[i])
                     output += '<div class="col-lg-4 col-md-4 col-4">' +
-                                "<a data-fancybox='' href='{{ URL('img/filereport') }}/"+ file_images[i].file_report_image +"'><img src='{{ URL('img/filereport') }}/"+ file_images[i].file_report_image +"' class='img-fluid img-thumbnail card-img-top' style='height:100px;width:100px'></a>" +
+                                "<a data-fancybox='' href='"+url +  file_images[i].file_report_image +"'><img src='"+ url + file_images[i].file_report_image +"' class='img-fluid img-thumbnail card-img-top' style='height:100px;width:100px'></a>" +
                             '</div>'
                 }
 
@@ -1864,136 +1751,6 @@
                 },
             ]
         });
-
-        // var historyTable = $('#historyTable').DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     paging    : false,
-        //     ajax: "{{ url('history') }}",
-        //     columns: [
-        //         // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-        //         // {data: 'id', name: 'id'},
-        //         // {
-        //         //     data: 'fullname', name: 'fullname',
-        //         //     "render": function(data, type, full, meta){
-        //         //         return data.fullname
-        //         //     }
-        //         // },
-        //         // {data: 'name', name: 'name'},
-        //         // {   
-        //         //     data: 'product_image', name: 'product_image',
-        //         //     "render": function (data, type, full, meta) {
-        //         //         return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='20'></a>";
-        //         //     },
-        //         // },
-        //         // {
-        //         //     data: 'quantity_ordered', name: 'quantity_ordered',
-        //         //     "render": function(data, type, full, meta){
-        //         //         return data + " pcs"
-        //         //     }
-        //         // },
-        //         // {
-        //         //     data: 'ordered_total_price', name: 'ordered_total_price',
-        //         //     "render": function(data, type, full, meta){
-        //         //         return "&#x20b1; " + data
-        //         //     }
-        //         // },
-        //         // {
-        //         //     data: 'created_at', name: 'created_at',
-        //         //     "render": function (data, type, full, meta) {
-        //         //         return moment(data).format('MMMM D YYYY');
-        //         //     },
-        //         // },
-        //         // {
-        //         //     data: 'delivery_date', name: 'delivery_date',
-        //         //     "render": function (data, type, full, meta) {
-        //         //         let output = '';
-        //         //         if(data === '1010-10-10'){
-        //         //             output = '<span class="text-info font-weight-bold">(Not set)</span>'
-        //         //         }else{
-        //         //             if(full.is_cancelled == 1){
-        //         //                 output = '<span class="text-danger font-weight-bold">(To be reschedule)</span>'
-        //         //             }else{
-        //         //                 output = moment(data).format('MMMM D YYYY');
-        //         //             }
-        //         //         }
-
-
-        //         //         return output
-        //         //     },
-        //         // },
-        //         {data: 'id', name: 'id'},
-        //         {data: 'invoice_no', name: 'invoice_no'},
-        //         {
-        //             data: 'fullname', name: 'fullname',
-        //             "render": function(data, type, full, meta){
-        //                 return full.fullname
-        //             }
-        //         },
-        //         {data: 'total_price', name: 'total_price'},
-        //         {
-        //             data: 'date_ordered', name: 'date_ordered',
-        //             "render": function (data, type, full, meta) {
-        //                 return moment(data).format('MMMM D YYYY');
-        //             },
-        //         },
-        //         {
-        //             data: 'delivery_date', name: 'delivery_date',
-        //             "render": function (data, type, full, meta) {
-        //                 let output = '';
-        //                 if(full.delivery_date == null){
-        //                     output = '<span class="text-info font-weight-bold">(Not set)</span>'
-        //                 }else{
-        //                     output = moment(data).format('MMMM D YYYY');
-        //                 }
-
-        //                 return output
-        //             },
-        //         },
-        //         {
-        //             data: 'attempt', name: 'attempt',
-        //             render: function(data, type, full, meta){
-                        
-        //                 let output = parseInt(data) + 1
-        //                 let times = output > 1 ? "times" : "time"
-
-        //                 return output + " " + times
-        //             }
-        //         },
-                
-                
-        //         {
-        //             data: 'reason', name: 'reason',
-        //             render: function(data, type, full, meta){
-        //                 let output = ''
-        //                 if(data != ""){
-        //                     output = "<a href='#' class='btnDisplayReason' data-reason='"+data+"'>View</a>"
-        //                 }
-        //                 return output
-        //             }
-        //         },
-        //         {
-        //             data: 'is_completed', name: 'is_completed',
-        //             render: function(data, type, full, meta){
-        //                 let output = ''
-        //                 // let output = full.is_approved == 1 ? '<span class="text-info font-weight-bold">Approved</span><br/>' : '<span class="text-danger font-weight-bold">Pending</span><br/>';
-
-        //                 if(full.is_completed == 1){
-        //                     output += '<span class="text-success font-weight-bold">Completed</span>'
-        //                 }
-        //                 if(full.is_cancelled == 1){
-        //                     output += '<span class="text-danger font-weight-bold">Cancelled</span>'
-        //                 }
-        //                 if(full.is_rescheduled == 1){
-        //                     output += '<span class="text-info font-weight-bold">Rescheduled</span>'
-        //                 }
-
-        //                 return output
-        //             }
-        //         },
-        //         {data: 'action', name: 'action', orderable: false, searchable: false},
-        //     ]
-        // });
 
         //when reason dot is clicked
         $(document).on('click', '.btnDisplayReason', function(){

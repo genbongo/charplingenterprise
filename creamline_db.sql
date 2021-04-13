@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2021 at 08:56 AM
+-- Generation Time: Apr 13, 2021 at 02:40 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -97,8 +97,7 @@ CREATE TABLE `assigned_areas` (
 --
 
 INSERT INTO `assigned_areas` (`id`, `user_id`, `area_id`, `created_at`, `updated_at`) VALUES
-(1, 18, 2, '2021-04-04 18:02:54', '2021-04-04 18:02:54'),
-(2, 18, 1, '2021-04-04 18:06:19', '2021-04-04 18:06:19');
+(3, 20, 1, '2021-04-13 04:12:02', '2021-04-13 04:12:02');
 
 -- --------------------------------------------------------
 
@@ -141,14 +140,6 @@ CREATE TABLE `carts` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `carts`
---
-
-INSERT INTO `carts` (`id`, `product_id`, `product_stock_id`, `user_id`, `product_image`, `product_name`, `product_description`, `size`, `flavor`, `quantity`, `price`, `subtotal`, `is_checkout`, `is_placed`, `created_at`, `updated_at`) VALUES
-(1, 3, 2, 17, '1230981259.jpg', 'Mocha Ice Cream', 'Mocha Ice Cream Description', '50ml', NULL, 2, 2, 4.00, '1', '1', '2021-04-04 18:00:54', '2021-04-04 18:01:37'),
-(2, 2, 1, 17, '1571710643.jpg', 'Chocolate Ice Cream', 'Chocolate Ice Cream Description', '11ml', NULL, 2, 15, 30.00, '1', '1', '2021-04-04 18:01:12', '2021-04-04 18:01:38');
 
 -- --------------------------------------------------------
 
@@ -253,8 +244,7 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`id`, `note_description`, `order_id`, `stock_id`, `user_id`, `customer_id`, `created_at`, `updated_at`) VALUES
-(1, 'Thank you for ordering Creamline Products. Your Invoice # 2104050001 has been accepted. Total amount purchased of PHP 34.00. Please expect it to be delivered on April 5 2021.', 0, 0, 0, 17, '2021-04-04 18:04:33', '2021-04-04 18:04:33'),
-(2, 'Your Quota for Year 2021 has been set!', 0, 0, 1, 0, '2021-04-04 18:42:23', '2021-04-04 18:42:23');
+(3, 'Thank you for ordering Creamline Products. Your Invoice # 2104130001 has been accepted. Total amount purchased of PHP 2.00. Please expect it to be delivered on April 13 2021.', 0, 0, 0, 21, '2021-04-13 04:37:11', '2021-04-13 04:37:11');
 
 -- --------------------------------------------------------
 
@@ -297,8 +287,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `client_id`, `invoice_id`, `delivery_date`, `store_id`, `product_id`, `product_stock_id`, `size`, `flavor`, `quantity_ordered`, `ordered_total_price`, `item_price`, `quantity_received`, `received_total_price`, `is_replacement`, `is_approved`, `is_cancelled`, `is_rescheduled`, `is_completed`, `is_damages`, `is_replacement_reference`, `order_cancel`, `cancelled_by`, `attempt`, `reason`, `created_at`, `updated_at`) VALUES
-(1, 17, 1, '2021-04-05', 21, 3, 2, '50ml', NULL, 2, 4.00, 2.00, 0, 0.00, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 'test', '2021-04-04 18:01:40', '2021-04-04 18:04:32'),
-(2, 17, 1, '2021-04-05', 21, 2, 1, '11ml', NULL, 2, 30.00, 15.00, 0, 0.00, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 'test', '2021-04-04 18:01:40', '2021-04-04 18:04:32');
+(3, 21, 2, '2021-04-13', 23, 3, 2, '50ml', NULL, 1, 2.00, 2.00, 0, 0.00, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '', '2021-04-13 04:23:10', '2021-04-13 04:37:11');
 
 -- --------------------------------------------------------
 
@@ -313,13 +302,6 @@ CREATE TABLE `order_invoice` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `order_invoice`
---
-
-INSERT INTO `order_invoice` (`id`, `user_id`, `invoice_no`, `created_at`, `updated_at`) VALUES
-(1, 17, '2104050001', '2021-04-04 18:01:35', NULL);
 
 -- --------------------------------------------------------
 
@@ -354,9 +336,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `product_image`, `is_deleted`, `created_at`, `updated_at`) VALUES
-(1, 'Ube Pandan', 'Ube Pandan Description', '741108362.jpg', 0, '2020-10-21 05:38:40', '2021-03-30 03:41:57'),
-(2, 'Chocolate Ice Cream', 'Chocolate Ice Cream Description', '1571710643.jpg', 0, '2020-10-21 05:40:22', '2021-03-17 04:03:16'),
-(3, 'Mocha Ice Cream', 'Mocha Ice Cream Description', '1230981259.jpg', 0, '2020-10-21 05:40:42', '2021-02-26 17:15:26');
+(1, 'Ube Pandan', 'Ube Pandan Description', '2066790211.jpg', 0, '2020-10-21 05:38:40', '2021-04-11 05:07:01'),
+(2, 'Chocolate Ice Cream', 'Chocolate Ice Cream Description', '1102200320.jpg', 0, '2020-10-21 05:40:22', '2021-04-12 03:46:48'),
+(3, 'Mocha Ice Cream', 'Mocha Ice Cream Description', '1133094368.jpg', 0, '2020-10-21 05:40:42', '2021-04-12 03:46:58');
 
 -- --------------------------------------------------------
 
@@ -588,13 +570,6 @@ CREATE TABLE `stores` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `stores`
---
-
-INSERT INTO `stores` (`id`, `store_name`, `store_address`, `user_id`, `area_id`, `is_deleted`, `created_at`, `updated_at`) VALUES
-(21, 'Zhavia Store', 'Aloran', 17, 1, 0, '2021-03-27 17:07:53', '2021-03-27 17:07:53');
-
 -- --------------------------------------------------------
 
 --
@@ -620,24 +595,8 @@ CREATE TABLE `system_notifications` (
 --
 
 INSERT INTO `system_notifications` (`id`, `user_id`, `type`, `area_id`, `product_id`, `product_stock_id`, `message`, `email_to`, `status`, `created_at`, `updated_at`) VALUES
-(12, 17, 'approved_client', 1, 0, 0, 'Hi,Panfilo Remedio. Welcome to creamline. You can now order <a href=\"/shop\">here</a>.', 'client', 'unread', '2021-03-27 17:46:35', '2021-03-27 17:46:35'),
-(13, 17, 'reminder', 1, 0, 0, 'Hi, Pong. <br> We’ve noticed you don’t\r\n                have any transactions with us for 2 months. \r\n                <br/> Please be reminded that you will be deactivated in 7 days if the situation is still the same.', 'client', 'unread', '2021-03-27 18:21:59', '2021-03-27 18:21:59'),
-(14, 17, 'reminder_client', 1, 0, 0, 'Hi, Pong. <br> We’ve noticed you don’t have any transactions with us for 2 months. <br/> Please be reminded that you will be deactivated in 7 days if the situation is still the same.', 'client', 'unread', '2021-03-27 18:36:14', '2021-03-27 18:36:14'),
-(15, 17, 'reminder_staff', 1, 0, 0, 'Client (17) Pong Remedio will be deactivated in 7 days if there is still no transaction made. Please follow up client. ', 'staff', 'unread', '2021-03-27 18:36:15', '2021-03-27 18:36:15'),
-(16, 17, 'reminder_staff', 1, 0, 0, 'Client (17) Pong Remedio will be deactivated in 7 days if there is still no transaction made. Please follow up client. ', 'staff', 'unread', '2021-03-27 18:38:03', '2021-03-27 18:38:03'),
-(17, 17, 'reminder_staff', 1, 0, 0, 'Client (17) Pong Remedio will be deactivated in 7 days if there is still no transaction made. Please follow up client. ', 'staff', 'unread', '2021-03-27 18:38:25', '2021-03-27 18:38:25'),
-(18, 17, 'reminder_client', 1, 0, 0, 'Hi, Pong. <br> We’ve noticed you don’t have any transactions with us for 2 months. <br/> Please be reminded that you will be deactivated in 7 days if the situation is still the same.', 'client', 'unread', '2021-03-27 18:38:48', '2021-03-27 18:38:48'),
-(19, 17, 'reminder_staff', 1, 0, 0, 'Client (17) Pong Remedio will be deactivated in 7 days if there is still no transaction made. Please follow up client. ', 'staff', 'unread', '2021-03-27 18:38:48', '2021-03-27 18:38:48'),
-(20, 17, 'client_deactivation', 1, 0, 0, '(17) Pong Remedio  is deactivated from the client’s list. ', 'staff', 'unread', '2021-03-30 02:39:36', '2021-03-30 02:39:36'),
-(21, 17, 'client_deactivation', 1, 0, 0, '(17) Pong Remedio  is deactivated from the client’s list. ', 'staff', 'unread', '2021-03-30 02:50:16', '2021-03-30 02:50:16'),
-(133, 0, 'running_out_stock', 0, 1, 3, 'Ube Pandan 10ml has reached the stock threshold. Please re-stock as soon as possible.', 'admin', 'unread', '2021-03-30 04:14:56', '2021-03-30 04:14:56'),
-(134, 0, 'out_of_stock', 0, 1, 4, 'Ube Pandan 15ml is out of stock. Please re-stock as soon as possible.', 'admin', 'unread', '2021-03-30 04:37:04', '2021-03-30 04:37:04'),
-(135, 17, 'client_deactivation', 1, 0, 0, '(17) Pong Remedio  is deactivated from the client’s list. ', 'staff', 'unread', '2021-03-30 05:10:39', '2021-03-30 05:10:39'),
-(136, 17, 'client_deactivation', 1, 0, 0, '(17) Pong Remedio  is deactivated from the client’s list. ', 'staff', 'unread', '2021-03-30 05:12:44', '2021-03-30 05:12:44'),
-(137, 17, 'client_deactivation', 1, 0, 0, '(17) Pong Remedio  is deactivated from the client’s list. ', 'staff', 'unread', '2021-03-30 05:14:56', '2021-03-30 05:14:56'),
-(138, 17, 'reminder_admin_client_deactivate', 1, 0, 0, '(17) Pong Remedio  did not order within the 7-day allowance. He is now added to inactive list.                ', 'admin', 'unread', '2021-03-30 05:14:56', '2021-03-30 05:14:56'),
-(139, 18, 'staff_cancel_order', 1, 0, 0, 'Staff Remedio cancelled order 2104050001 of Client Remedio due to (Client Cancel) - test.', 'admin', 'unread', '2021-04-04 18:28:43', '2021-04-04 18:28:43'),
-(140, 18, 'staff_cancel_order', 1, 0, 0, 'Staff Remedio cancelled order 2104050001 of Client Remedio due to Client Cancel (test).', 'admin', 'unread', '2021-04-04 18:47:37', '2021-04-04 18:47:37');
+(6, 0, 'running_out_stock', 0, 1, 3, 'Ube Pandan 10ml has reached the stock threshold. Please re-stock as soon as possible.', 'admin', 'unread', '2021-04-13 04:40:30', '2021-04-13 04:40:30'),
+(7, 0, 'out_of_stock', 0, 1, 4, 'Ube Pandan 15ml is out of stock. Please re-stock as soon as possible.', 'admin', 'unread', '2021-04-13 04:40:30', '2021-04-13 04:40:30');
 
 -- --------------------------------------------------------
 
@@ -672,9 +631,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fname`, `mname`, `lname`, `address`, `contact_num`, `email`, `email_verified_at`, `password`, `user_role`, `is_active`, `is_pending`, `img`, `remember_token`, `area_id`, `expiry`, `sent`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'NA', 'NA', 'Pardo Cebu', '0912312321', 'act.dcatindoy@gmail.com', '2020-06-07 23:57:47', '$2y$10$EN8DMgNgmRlqVPmSOAvmJO9vM/VJHWvgsXkBg9A2wgLnwidiOpWDO', 99, 1, 0, '2048479171.jpg', 'NiAaJzz33m1WqZofD8Ql1X7Brv1NlIpYa41tITJJGMSJJGndCfCbuCYnRKs9', 0, NULL, 0, '2020-06-06 18:42:21', '2021-03-04 05:12:19'),
-(17, 'Client', 'Ople', 'Remedio', 'Pilit Cabancalan Mandaue City Cebu', '09157339459', 'client@gmail.com', NULL, '$2y$10$0bCj6sg5S1jZB47UBrhfvO4Vat3CTanujbq1WTvxb6n0KZ6JOD67q', 2, 1, 0, '', NULL, 1, '2021-05-28 01:06:56', 1, '2021-03-29 17:06:56', '2021-04-04 18:03:08'),
-(18, 'Staff', 'Ople', 'Remedio', 'NA', '09157339459', 'staff@gmail.com', '2020-06-07 23:57:47', '$2y$10$RGUK0/2aPpPw6vvFB70KtuIdX4syteEJ.wuecfifLISOWMwvin1Su', 1, 1, 0, 'NA', 'NA', 1, '2021-05-28 01:06:56', 1, '2021-03-27 17:06:56', '2021-04-04 18:06:19');
+(1, 'Admin', 'NA', 'NA', 'Pardo Cebu', '0912312321', 'admin@creamline.com', '2020-06-07 23:57:47', '$2y$10$EN8DMgNgmRlqVPmSOAvmJO9vM/VJHWvgsXkBg9A2wgLnwidiOpWDO', 99, 1, 0, '2048479171.jpg', 'eKAoByh7kW2cct4MrAbeC396qKco9OFrHwEzlhIAbSJYtAZC8BRg9YzPUO16', 0, NULL, 0, '2020-06-06 18:42:21', '2021-03-04 05:12:19');
 
 -- --------------------------------------------------------
 
@@ -909,7 +866,7 @@ ALTER TABLE `areas`
 -- AUTO_INCREMENT for table `assigned_areas`
 --
 ALTER TABLE `assigned_areas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `carousels`
@@ -921,7 +878,7 @@ ALTER TABLE `carousels`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -945,19 +902,19 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `order_invoice`
 --
 ALTER TABLE `order_invoice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -1035,19 +992,19 @@ ALTER TABLE `stocks`
 -- AUTO_INCREMENT for table `stores`
 --
 ALTER TABLE `stores`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `system_notifications`
 --
 ALTER TABLE `system_notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `user_fridges`

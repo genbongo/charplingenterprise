@@ -71,7 +71,8 @@
                 {   
                     data: 'ads_image', name: 'ads_image',
                     "render": function (data, type, full, meta) {
-                        return "<a data-fancybox='' href='{{ URL('img/ads') }}/"+ full.ads_image +"'><img src='{{ URL('img/ads') }}/"+ full.ads_image +"' height='20'></a>";
+                        return `<a data-fancybox='' href='${data}'><img src='${data}' height='40' width='40'></a>`;
+                        // return "<a data-fancybox='' href='{{ URL('img/ads') }}/"+ full.ads_image +"'><img src='{{ URL('img/ads') }}/"+ full.ads_image +"' height='20'></a>";
                     },
                 },
                 {data: 'action', name: 'action', orderable: false, searchable: false},

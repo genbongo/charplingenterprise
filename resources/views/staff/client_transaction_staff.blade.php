@@ -219,27 +219,6 @@
         //display the date here...
         $("#date_here").html(moment().format('MMMM D YYYY'));
 
-        // datatable
-        // var table = $('#dataTable').DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     ajax: "{{ url('staff-transaction') }}",
-        //     columns: [
-        //         // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-        //         {
-        //             data: 'id', name: 'id',
-        //             "render": function(data, type, full, meta){
-        //                 return '<a href="#" class="btnDisplayOrderDetail" data-prod="'+ full.name +'" data-qty="'+ full.quantity_ordered +'" data-total="'+ full.ordered_total_price +'">'+ data +'</a>'
-        //             }
-        //         },
-        //         {data: 'name', name: 'name'},
-        //         {data: 'store_name', name: 'store_name'},
-        //         {data: 'store_address', name: 'store_address'},
-        //         {data: 'status', name: 'status'},
-        //         {data: 'action', name: 'action', orderable: false, searchable: false},
-        //     ]
-        // });
-
         var table = $('#dataTable').DataTable({
             processing: true,
             serverSide: true,
@@ -260,26 +239,6 @@
                         return full.fullname
                     }
                 },
-                // {data: 'total_price', name: 'total_price'},
-                // {data: 'name', name: 'name'},
-                // {   
-                //     data: 'product_image', name: 'product_image',
-                //     "render": function (data, type, full, meta) {
-                //         return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='20'></a>";
-                //     },
-                // },
-                // {
-                //     data: 'quantity_ordered', name: 'quantity_ordered',
-                //     "render": function(data, type, full, meta){
-                //         return data + " pcs"
-                //     }
-                // },
-                // {
-                //     data: 'ordered_total_price', name: 'ordered_total_price',
-                //     "render": function(data, type, full, meta){
-                //         return "&#x20b1; " + data
-                //     }
-                // },
                 {
                     data: 'date_ordered', name: 'date_ordered',
                     "render": function (data, type, full, meta) {
@@ -328,13 +287,14 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
+                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='20'></a></td>`
+                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='20'></a></td>`
                     if(type == 0){
                         htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
                     } else {

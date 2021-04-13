@@ -8,7 +8,6 @@ use App\Variation;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Validator;
 use Google\Cloud\Storage\StorageClient;
 
@@ -36,31 +35,6 @@ class ProductController extends Controller
                     })
                     ->latest()
                         ->get();
-        // if($request->filter_status != 'all'){
-        //     if(in_array($request->filter_status, [0,1])){ //available
-        //         $where = ['is_deleted' => $request->filter_status];
-        //         $product = Product::join('stocks', ['stocks.product_id' => 'products.id'])
-        //             ->selectRaw('products.*,stocks.quantity, stocks.threshold')
-        //                 ->where($where)
-        //                     ->whereRaw('stocks.quantity > stocks.threshold')
-        //                         ->latest()
-        //                             ->get();
-        //     } else if($request->filter_status == 3){
-        //         $product = Product::join('stocks', ['stocks.product_id' => 'products.id'])
-        //             ->selectRaw('products.*,stocks.quantity, stocks.threshold')
-        //                 ->where('stocks.quantity',0)
-        //                     ->latest()
-        //                         ->get();
-        //     } 
-        //     else if($request->filter_status == 2){
-        //         $product = Product::join('stocks', ['stocks.product_id' => 'products.id'])
-        //             ->selectRaw('products.*,stocks.quantity, stocks.threshold')
-        //                 ->whereRaw('stocks.quantity <= stocks.threshold')
-        //                     ->where('stocks.quantity','>', 0)
-        //                         ->latest()
-        //                             ->get();
-        //     } 
-        // }
         if ($request->ajax()) {
             return Datatables::of($product)
                 ->addIndexColumn()
@@ -140,6 +114,8 @@ class ProductController extends Controller
                     $new_name = $pdct->product_image;
                 }
             }
+            
+           
 
             #start here ============================================================
             $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
@@ -154,16 +130,20 @@ class ProductController extends Controller
             $storageBucketName = config('googlecloud.storage_bucket');
             $bucket = $storage->bucket($storageBucketName);
             $fileSource = fopen($publicPath, 'r');
-            $newFolderName = 'img/product'; //$new_name.'_'.date("Y-m-d").'_'.date("H:i:s");
+            $newFolderName = 'img/product';
             $googleCloudStoragePath = $newFolderName.'/'.$new_name;
             /* Upload a file to the bucket.
             Using Predefined ACLs to manage object permissions, you may
             upload a file and give read access to anyone with the URL.*/
             $bucket->upload($fileSource, [
-                'predefinedAcl' => 'publicRead',
-                'name' => $googleCloudStoragePath
+                'predefinedAcl'  => 'publicRead',
+                'name'           => $googleCloudStoragePath
             ]);
+            if(\File::exists(public_path('img/product/'.$new_name))){
+                \File::delete(public_path('img/product/'.$new_name));
+            }
             #end here ===============================================================
+
             Product::updateOrCreate([
                 'id' => $request->product_id
             ],[
