@@ -19,7 +19,9 @@ handlers:
     upload: public/.*\.(gif|png|jpg|css|js)$
 
 # Serve your app through a front controller at index.php or public/index.php.
-  - url: .*
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
     script: auto      
 
 env_variables:
