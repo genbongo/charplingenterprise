@@ -16,7 +16,7 @@ handlers:
  # Serve images as static resources.
   - url: /(.+\.(gif|png|jpg))$
     static_files: \1
-    upload: .+\.(gif|png|jpg)$
+    upload: public/.*\.(gif|png|jpg|css|js)$
 
 # Serve your app through a front controller at index.php or public/index.php.
   - url: .*
