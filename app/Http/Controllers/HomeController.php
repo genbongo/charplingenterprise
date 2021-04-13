@@ -60,7 +60,7 @@ class HomeController extends Controller
                 $new_name = 'img_' . rand(1000000, 9999999) . '.' . $request->file('img')->getClientOriginalExtension();
                 // $image = $request->file('img');
                 // $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                // $image->move(public_path('img/profile'), $new_name);
+                // $image->move(public_path('img/profile'), $new_name); 
                 $request->file('img')->move('img/profile', $new_name);
 
                 #start here ============================================================
