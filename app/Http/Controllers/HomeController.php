@@ -59,7 +59,7 @@ class HomeController extends Controller
             {
                 $image = $request->file('img');
                 $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                // $image->move(public_path('img/profile'), $new_name);
+                $image->move(public_path('img/profile'), $new_name);
 
                 #start here ============================================================
                 $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
