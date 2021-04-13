@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2021 at 02:40 PM
+-- Generation Time: Apr 13, 2021 at 03:29 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -91,13 +91,6 @@ CREATE TABLE `assigned_areas` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `assigned_areas`
---
-
-INSERT INTO `assigned_areas` (`id`, `user_id`, `area_id`, `created_at`, `updated_at`) VALUES
-(3, 20, 1, '2021-04-13 04:12:02', '2021-04-13 04:12:02');
 
 -- --------------------------------------------------------
 
@@ -239,13 +232,6 @@ CREATE TABLE `notifications` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `notifications`
---
-
-INSERT INTO `notifications` (`id`, `note_description`, `order_id`, `stock_id`, `user_id`, `customer_id`, `created_at`, `updated_at`) VALUES
-(3, 'Thank you for ordering Creamline Products. Your Invoice # 2104130001 has been accepted. Total amount purchased of PHP 2.00. Please expect it to be delivered on April 13 2021.', 0, 0, 0, 21, '2021-04-13 04:37:11', '2021-04-13 04:37:11');
-
 -- --------------------------------------------------------
 
 --
@@ -281,13 +267,6 @@ CREATE TABLE `orders` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`id`, `client_id`, `invoice_id`, `delivery_date`, `store_id`, `product_id`, `product_stock_id`, `size`, `flavor`, `quantity_ordered`, `ordered_total_price`, `item_price`, `quantity_received`, `received_total_price`, `is_replacement`, `is_approved`, `is_cancelled`, `is_rescheduled`, `is_completed`, `is_damages`, `is_replacement_reference`, `order_cancel`, `cancelled_by`, `attempt`, `reason`, `created_at`, `updated_at`) VALUES
-(3, 21, 2, '2021-04-13', 23, 3, 2, '50ml', NULL, 1, 2.00, 2.00, 0, 0.00, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '', '2021-04-13 04:23:10', '2021-04-13 04:37:11');
 
 -- --------------------------------------------------------
 
@@ -336,9 +315,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `product_image`, `is_deleted`, `created_at`, `updated_at`) VALUES
-(1, 'Ube Pandan', 'Ube Pandan Description', '2066790211.jpg', 0, '2020-10-21 05:38:40', '2021-04-11 05:07:01'),
-(2, 'Chocolate Ice Cream', 'Chocolate Ice Cream Description', '1102200320.jpg', 0, '2020-10-21 05:40:22', '2021-04-12 03:46:48'),
-(3, 'Mocha Ice Cream', 'Mocha Ice Cream Description', '1133094368.jpg', 0, '2020-10-21 05:40:42', '2021-04-12 03:46:58');
+(1, 'Ube Pandan', 'Ube Pandan Description', '1358607368.jpg', 0, '2020-10-21 05:38:40', '2021-04-13 05:05:17'),
+(2, 'Chocolate Ice Cream', 'Chocolate Ice Cream Description', '1225969935.jpg', 0, '2020-10-21 05:40:22', '2021-04-13 05:05:43'),
+(3, 'Mocha Ice Cream', 'Mocha Ice Cream Description', '2031570907.jpg', 0, '2020-10-21 05:40:42', '2021-04-13 05:00:33');
 
 -- --------------------------------------------------------
 
@@ -595,8 +574,8 @@ CREATE TABLE `system_notifications` (
 --
 
 INSERT INTO `system_notifications` (`id`, `user_id`, `type`, `area_id`, `product_id`, `product_stock_id`, `message`, `email_to`, `status`, `created_at`, `updated_at`) VALUES
-(6, 0, 'running_out_stock', 0, 1, 3, 'Ube Pandan 10ml has reached the stock threshold. Please re-stock as soon as possible.', 'admin', 'unread', '2021-04-13 04:40:30', '2021-04-13 04:40:30'),
-(7, 0, 'out_of_stock', 0, 1, 4, 'Ube Pandan 15ml is out of stock. Please re-stock as soon as possible.', 'admin', 'unread', '2021-04-13 04:40:30', '2021-04-13 04:40:30');
+(10, 0, 'running_out_stock', 0, 1, 3, 'Ube Pandan 10ml has reached the stock threshold. Please re-stock as soon as possible.', 'admin', 'unread', '2021-04-13 05:29:30', '2021-04-13 05:29:30'),
+(11, 0, 'out_of_stock', 0, 1, 4, 'Ube Pandan 15ml is out of stock. Please re-stock as soon as possible.', 'admin', 'unread', '2021-04-13 05:29:30', '2021-04-13 05:29:30');
 
 -- --------------------------------------------------------
 
@@ -631,7 +610,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fname`, `mname`, `lname`, `address`, `contact_num`, `email`, `email_verified_at`, `password`, `user_role`, `is_active`, `is_pending`, `img`, `remember_token`, `area_id`, `expiry`, `sent`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'NA', 'NA', 'Pardo Cebu', '0912312321', 'admin@creamline.com', '2020-06-07 23:57:47', '$2y$10$EN8DMgNgmRlqVPmSOAvmJO9vM/VJHWvgsXkBg9A2wgLnwidiOpWDO', 99, 1, 0, '2048479171.jpg', 'eKAoByh7kW2cct4MrAbeC396qKco9OFrHwEzlhIAbSJYtAZC8BRg9YzPUO16', 0, NULL, 0, '2020-06-06 18:42:21', '2021-03-04 05:12:19');
+(1, 'Admin', 'NA', 'NA', 'Pardo Cebu', '0912312321', 'admin@creamline.com', '2020-06-07 23:57:47', '$2y$10$EN8DMgNgmRlqVPmSOAvmJO9vM/VJHWvgsXkBg9A2wgLnwidiOpWDO', 99, 1, 0, '848604136.jpg', 'eKAoByh7kW2cct4MrAbeC396qKco9OFrHwEzlhIAbSJYtAZC8BRg9YzPUO16', 0, NULL, 0, '2020-06-06 18:42:21', '2021-04-13 05:12:00');
 
 -- --------------------------------------------------------
 
@@ -920,7 +899,7 @@ ALTER TABLE `order_invoice`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `product_damages`
@@ -992,19 +971,19 @@ ALTER TABLE `stocks`
 -- AUTO_INCREMENT for table `stores`
 --
 ALTER TABLE `stores`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `system_notifications`
 --
 ALTER TABLE `system_notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user_fridges`
