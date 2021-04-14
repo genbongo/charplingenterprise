@@ -57,11 +57,9 @@ class HomeController extends Controller
 
             if($validation->passes())
             {
-                $new_name = 'img_' . rand(1000000, 9999999) . '.' . $request->file('img')->getClientOriginalExtension();
-                // $image = $request->file('img');
-                // $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                // $image->move(public_path('img/profile'), $new_name); 
-                $request->file('img')->move('img/profile', $new_name);
+                $image = $request->file('img');
+                $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('img/profile'), $new_name);
 
                 #start here ============================================================
                 $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
@@ -70,8 +68,8 @@ class HomeController extends Controller
                     'keyFile' => json_decode($googleConfigFile, true)
                 ]);
 
-                $fileStoragePath = public_path() . '/img/profile/' . $new_name; //'/img/profile/' . $new_name;
-                $publicPath = $fileStoragePath;
+                $fileStoragePath = '/img/profile/' . $new_name;
+                $publicPath = public_path($fileStoragePath);
 
                 $storageBucketName = config('googlecloud.storage_bucket');
                 $bucket = $storage->bucket($storageBucketName);
@@ -85,9 +83,9 @@ class HomeController extends Controller
                     'predefinedAcl'  => 'publicRead',
                     'name'           => $googleCloudStoragePath
                 ]);
-                if(\File::exists($fileStoragePath)){
-                    \File::delete($fileStoragePath);
-                }
+                // if(\File::exists(public_path('img/profile/'.$new_name))){
+                //     \File::delete(public_path('img/profile/'.$new_name));
+                // }
             #end here ===============================================================
 
                 User::updateOrCreate([

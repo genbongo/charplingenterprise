@@ -405,7 +405,7 @@
             });
 
             //call the function for displaying the notifications
-            displayNotifications();
+            // displayNotifications();
 
             //create a function that will display the notifications
             function displayNotifications(){
