@@ -49,6 +49,17 @@ class HomeController extends Controller
     */
     public function profile_upload(Request $request)
     {
+        // $filepath = $request->img->getClientOriginalName();
+        $image = $request->file('img');
+        // $request->filea->storeAs('public/upload',$filepath);
+        // \Storage::disk('uploads')->put('filename', $request->file('img'));
+        $path = \Storage::disk('public')->put('img/profile', $image);
+
+        // $image = $request->file('img');
+        //         $new_name = rand() . '.' . $image->getClientOriginalExtension();
+        // \Storage::putFile('spares', $new_name);
+        // return storage_path('app/public/'.$path); //\Storage::get($path);
+        // exit;
         //check if there is an ajax request
         if($request->ajax()){
             $validation = Validator::make($request->all(), [
@@ -57,9 +68,9 @@ class HomeController extends Controller
 
             if($validation->passes())
             {
-                $image = $request->file('img');
-                $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('img/profile'), $new_name);
+                // $image = $request->file('img');
+                // $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                // $image->move(public_path('img/profile'), $new_name);
 
                 #start here ============================================================
                 $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
@@ -68,14 +79,14 @@ class HomeController extends Controller
                     'keyFile' => json_decode($googleConfigFile, true)
                 ]);
 
-                $fileStoragePath = '/img/profile/' . $new_name;
-                $publicPath = public_path($fileStoragePath);
+                // $fileStoragePath = '/img/profile/' . $new_name;
+                // $publicPath = public_path($fileStoragePath);
 
                 $storageBucketName = config('googlecloud.storage_bucket');
                 $bucket = $storage->bucket($storageBucketName);
-                $fileSource = fopen($publicPath, 'r');
-                $newFolderName = 'img/profile';
-                $googleCloudStoragePath = $newFolderName.'/'.$new_name;
+                $fileSource = fopen(storage_path('app/public/'.$path), 'r');
+                // $newFolderName = 'img/profile';
+                $googleCloudStoragePath = $path; //$newFolderName.'/'.$new_name;
                 /* Upload a file to the bucket.
                 Using Predefined ACLs to manage object permissions, you may
                 upload a file and give read access to anyone with the URL.*/
@@ -87,7 +98,7 @@ class HomeController extends Controller
                 //     \File::delete(public_path('img/profile/'.$new_name));
                 // }
             #end here ===============================================================
-
+                $new_name = str_replace("img/profile/", "", $path);
                 User::updateOrCreate([
                     'id' => $request->user_id
                 ],[
