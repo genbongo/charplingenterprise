@@ -94,7 +94,7 @@
                                 </select>
                             </div>
                             <div class="col-lg-3">
-                                <input type="number" class="form-control"  name="quantity[0]" placeholder="Qty" required>
+                                <input type="number" class="form-control enter_qty"  name="quantity[0]" placeholder="Qty" required>
                             </div>
                             <div class="col-lg-3 pl-3 pt-1">
                                
@@ -110,7 +110,7 @@
                     </div>
                     <div class="form-group">
                         <label class="new-avatar hidden"><span class="far fa-plus-square"></span>
-                            <input id="file_report_image" name="file_report_image[]" type="file" multiple required="" class="text-center center-block file-upload"/>
+                            <input id="file_report_image" name="file_report_image[]" accept=".png, .jpg, .jpeg"onchange="validateImage()" type="file" multiple required="" class="text-center center-block file-upload"/>
                         </label>
                     </div>
                     <div class="form-group">
@@ -197,6 +197,30 @@
             options += `<option value="${product.id}">${product.name}</option>`
         });
         return options;
+    }
+
+    $(".enter_qty").keypress(function (e) {
+        //if the letter is not digit then display error and don't type anything
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+        return false;
+   });
+
+   function validateImage() {
+        // var formData = new FormData();
+        var file = document.getElementById("file_report_image").files[0];
+        // formData.append("Filedata", file);
+        var t = file.type.split('/').pop().toLowerCase();
+        if (t != "jpeg" && t != "jpg" && t != "png" && t != "gif") {
+            alert('Please select a valid image file');
+            document.getElementById("file_report_image").value = '';
+            return false;
+        }
+        if (file.size > 1024000) {
+            alert('Max Upload size is 1MB only');
+            document.getElementById("img").value = '';
+            return false;
+        }
+        return true;
     }
 
     $('#addProduct').on('click', function(){

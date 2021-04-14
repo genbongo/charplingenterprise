@@ -17,6 +17,7 @@
                             <img class="img-fluid img-thumbnail card-img-top shop-img" src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/'.$product->product_image}}" alt="">
                             <div class="padding-all-10px">
                                 <h5>{{ $product->name }}</h5>
+                                <p> Price: <strong>{{ @$product->price }}</strong></p>
                             </div>
                         </div>
                         @else
@@ -24,6 +25,7 @@
                             <img class="img-fluid img-thumbnail card-img-top shop-img" src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/'.$product->product_image}}" alt="">
                             <div class="padding-all-10px">
                                 <h5>{{ $product->name }}</h5>
+                                <p> Price: <strong>{{ @$product->price }}</strong></p>
                             </div>
                         </div>
                         @endif

@@ -35,6 +35,11 @@ class Product extends Model
                         ->where('products.is_deleted', 0)
                             ->groupBy('product_stocks.product_id')
                                 ->latest()
-                                    ->get();
+                                    ->get()->map(function($item){
+                                        $product_stock = ProductStock::where('product_id',$item->id)
+                                                            ->get()->min('price');
+                                        $item->price = number_format($product_stock ? $product_stock : 0, 2);
+                                        return  $item;
+                                    });
     }
 }
