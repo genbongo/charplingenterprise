@@ -138,73 +138,103 @@
             });
         }
 
-            $('body').on('click', '.viewCompletedOrder', function () {
-                //get the data
-                const invoice_id = $(this).attr("data-id");
-                getCompletedOrders(invoice_id)
+        $(document).on('click', '.removeOrder', function(e){
+            e.preventDefault();
+            var invoice_id = $(this).data("id");
+            swal({
+                title: "Are you sure?",
+                text: 'Once confirm, this order will be deleted!',
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((isTrue) => {
+                if (isTrue) {
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ url('transaction_history/delete') }}" +'/' +  invoice_id,
+                        success: function (data) {
+                            table.draw();
+                            swal(data.message, {
+                                icon: "success",
+                            });
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                }
             });
+        })
 
-            // datatable
-            var table = $('#dataTable').DataTable({
-                processing: true,
-                serverSide: true,
-                // ajax: "{{ url('transaction_history') }}",
-                ajax: {
-                    url: "{{ url('transaction_history') }}",
-                    data: function(e){
-                        e.filter_status = $('#filter_status').val();
+        $('body').on('click', '.viewCompletedOrder', function () {
+            //get the data
+            const invoice_id = $(this).attr("data-id");
+            getCompletedOrders(invoice_id)
+        });
+
+        // datatable
+        var table = $('#dataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            // ajax: "{{ url('transaction_history') }}",
+            ajax: {
+                url: "{{ url('transaction_history') }}",
+                data: function(e){
+                    e.filter_status = $('#filter_status').val();
+                }
+            },
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'invoice_no', name: 'invoice_no'},
+                {data: 'total_price', name: 'total_price'},
+                {
+                    data: 'date_ordered', name: 'date_ordered',
+                    "render": function (data, type, full, meta) {
+                        return moment(data).format('MMMM D YYYY');
+                    },
+                },
+                {
+                    data: 'delivery_date', name: 'delivery_date',
+                    "render": function (data, type, full, meta) {
+                        let output = '';
+                        if(full.delivery_date == null){
+                            output = '<span class="text-info font-weight-bold">(Not set)</span>'
+                        }else{
+                            output = moment(data).format('MMMM D YYYY');
+                        }
+
+                        return output
+                    },
+                },
+                {
+                    data: 'is_completed', name: 'is_completed',
+                    render: function(data, type, full, meta){
+                        let output = full.is_approved == 1 ? '<span class="text-info font-weight-bold">Approved</span><br/>' : '<span class="text-danger font-weight-bold">Pending</span><br/>';
+
+                        if(full.is_completed == 1){
+                            output += '<span class="text-success font-weight-bold">Completed</span>'
+                        }
+                        if(full.is_cancelled == 1){
+                            output += '<span class="text-danger font-weight-bold">Cancelled</span>'
+                        }
+                        if(full.is_rescheduled == 1){
+                            output += '<span class="text-info font-weight-bold">Rescheduled</span>'
+                        }
+
+                        return output
                     }
                 },
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'invoice_no', name: 'invoice_no'},
-                    {data: 'total_price', name: 'total_price'},
-                    {
-                        data: 'date_ordered', name: 'date_ordered',
-                        "render": function (data, type, full, meta) {
-                            return moment(data).format('MMMM D YYYY');
-                        },
-                    },
-                    {
-                        data: 'delivery_date', name: 'delivery_date',
-                        "render": function (data, type, full, meta) {
-                            let output = '';
-                            if(full.delivery_date == null){
-                                output = '<span class="text-info font-weight-bold">(Not set)</span>'
-                            }else{
-                                output = moment(data).format('MMMM D YYYY');
-                            }
-
-                            return output
-                        },
-                    },
-                    {
-                        data: 'is_completed', name: 'is_completed',
-                        render: function(data, type, full, meta){
-                            let output = full.is_approved == 1 ? '<span class="text-info font-weight-bold">Approved</span><br/>' : '<span class="text-danger font-weight-bold">Pending</span><br/>';
-
-                            if(full.is_completed == 1){
-                                output += '<span class="text-success font-weight-bold">Completed</span>'
-                            }
-                            if(full.is_cancelled == 1){
-                                output += '<span class="text-danger font-weight-bold">Cancelled</span>'
-                            }
-                            if(full.is_rescheduled == 1){
-                                output += '<span class="text-info font-weight-bold">Rescheduled</span>'
-                            }
-
-                            return output
-                        }
-                    },
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                    ]
-                });
-                history.replaceState("", document.title, window.location.pathname);
-                $(document).on('change', '#filter_status', function(e){
-                    e.preventDefault()
-                    table.ajax.reload()
-                })
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+            history.replaceState("", document.title, window.location.pathname);
+            $(document).on('change', '#filter_status', function(e){
+                e.preventDefault()
+                table.ajax.reload()
             })
+        })
     </script>
     
 </div>

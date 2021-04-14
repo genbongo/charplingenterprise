@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Carbon;
 use DataTables;
 
 class TransactionHistoryController extends Controller
@@ -77,7 +74,7 @@ class TransactionHistoryController extends Controller
                 ->addColumn('action', function ($row) {
                     $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->contact_num.'" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm viewCompletedOrder">View details</a> ';
                     if($row->is_approved == 0){
-                        $btn .= '<a  href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-danger btn-sm viewCompletedOrder">Remove Order</a>';
+                        $btn .= '<a  href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-danger btn-sm removeOrder">Remove Order</a>';
                     }
                     return $btn;
                 })
@@ -86,6 +83,21 @@ class TransactionHistoryController extends Controller
         }
 
         return view('client.transaction_history', compact('order'));
+    }
+
+    public function deleteOrder(Request $request){
+        if($request->id){
+            // return response
+            $order = DB::table('order_invoice')->where('id', $request->id)->delete();
+            if($order){
+                DB::table('orders')->where('invoice_id', $request->id)->delete();
+            }
+            $response = [
+                'success' => true,
+                'message' => 'Store saved successfully.',
+            ];
+            return response()->json($response, 200);
+        }
     }
 
     /**

@@ -117,6 +117,7 @@ Route::resource('cart',                                                 'CartCon
 Route::post('damage-cart',                                              'CartController@storeDamageCart');
 Route::resource('transaction',                                          'TransactionController');
 Route::resource('transaction_history',                                  'TransactionHistoryController');
+Route::get('transaction_history/delete/{id}',                      'TransactionHistoryController@deleteOrder');
 Route::get('order-success',                                             'TransactionController@thankyou')->name('thankyou');
 
 //client dashboard
