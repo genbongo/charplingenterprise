@@ -102,48 +102,38 @@ class ProductController extends Controller
 
             if(empty($request->product_id)){
                 $image = $request->file('product_image');
-                $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('img/product'), $new_name);
             } else {
                 if($request->hasFile("product_image")){
                     $image = $request->file('product_image');
-                    $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path('img/product'), $new_name);
                 } else {
                     $pdct = Product::find($request->product_id);
                     $new_name = $pdct->product_image;
                 }
             }
+            if($request->hasFile("product_image")){
+                // $image = $request->file('img');
+                $path = \Storage::disk('public')->put('img/product', $image);
             
-           
+                #start here ============================================================
+                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                
+                $storage = new StorageClient([
+                    'keyFile' => json_decode($googleConfigFile, true)
+                ]);
 
-            #start here ============================================================
-            $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
-            
-            $storage = new StorageClient([
-                'keyFile' => json_decode($googleConfigFile, true)
-            ]);
+                $storageBucketName  = config('googlecloud.storage_bucket');
+                $bucket             = $storage->bucket($storageBucketName);
+                $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                
+                $googleCloudStoragePath = $path;
 
-            $fileStoragePath = '/img/product/' . $new_name;
-            $publicPath = public_path($fileStoragePath);
-
-            $storageBucketName = config('googlecloud.storage_bucket');
-            $bucket = $storage->bucket($storageBucketName);
-            $fileSource = fopen($publicPath, 'r');
-            $newFolderName = 'img/product';
-            $googleCloudStoragePath = $newFolderName.'/'.$new_name;
-            /* Upload a file to the bucket.
-            Using Predefined ACLs to manage object permissions, you may
-            upload a file and give read access to anyone with the URL.*/
-            $bucket->upload($fileSource, [
-                'predefinedAcl'  => 'publicRead',
-                'name'           => $googleCloudStoragePath
-            ]);
-            if(\File::exists(public_path('img/product/'.$new_name))){
-                \File::delete(public_path('img/product/'.$new_name));
+                $bucket->upload($fileSource, [
+                    'predefinedAcl'  => 'publicRead',
+                    'name'           => $googleCloudStoragePath
+                ]);
+                #end here ===============================================================
+                $new_name = str_replace("img/product/", "", $path);
             }
-            #end here ===============================================================
-
             Product::updateOrCreate([
                 'id' => $request->product_id
             ],[
