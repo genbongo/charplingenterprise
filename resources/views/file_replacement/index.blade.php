@@ -323,7 +323,7 @@
         $('#displayFileModal').modal('show');
 
         $('#divContentImages').empty()
-        var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
+        var url = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
         images.map(image => {
             var jsx =`
                 <div class="row">
@@ -477,7 +477,7 @@
                 var output = '';
 
                 const file_images = data.product_file_report;
-                var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
+                var url = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
                 for(var i = 0; i < file_images.length; i++){
                     console.log(file_images[i])
                     output += '<div class="col-lg-4 col-md-4 col-4">' +

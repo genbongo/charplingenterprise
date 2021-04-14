@@ -196,7 +196,7 @@
                    
                     var htmlData = '';
                     $.each(response, function(key, row){
-                        var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                        var url = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                         var imgHTML = url + row.product_image 
                         htmlData += `<div class="col-sm-4">
                                     <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">

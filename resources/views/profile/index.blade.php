@@ -18,9 +18,9 @@
 		<div class="profile">
 			<picture>
 			@if(Auth::user()->img !== "NA" && Auth::user()->img != "")
-				<img src="{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/profile/'.Auth::user()->img }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
+				<img src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/profile/'.Auth::user()->img }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
 			@else
-				<img src="{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/profile/default.png' }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
+				<img src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/profile/default.png' }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
 			@endif
 			</picture>
 			<br/><br>

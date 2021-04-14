@@ -138,7 +138,7 @@
                 {   
                     data: 'product_image', name: 'product_image',
                     "render": function (data, type, full, meta) {
-                        // 'https://storage.cloud.google.com/'.$storageBucketName.'/'.$googleCloudStoragePath
+                        // 'https://storage.googleapis.com/'.$storageBucketName.'/'.$googleCloudStoragePath
                         return `<a data-fancybox='' href='${data}'><img src='${data}' height='40' width='40'></a>`;
                     },
                 },

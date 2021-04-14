@@ -88,7 +88,7 @@ class HomeController extends Controller
                 
                 return response()->json([
                     'message'   => 'Image Upload Successfully',
-                    'uploaded_image' => 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/profile/' . $new_name
+                    'uploaded_image' => 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/profile/' . $new_name
                 ]);
             }
             else

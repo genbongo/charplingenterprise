@@ -79,7 +79,7 @@ class ProductController extends Controller
                     return $status;
                 })
                 ->editColumn('product_image', function ($row) {
-                    return 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' . $row->product_image;
+                    return 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' . $row->product_image;
                 })
                 ->rawColumns(['action', 'is_deleted'])
                 ->make(true);

@@ -314,7 +314,7 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>

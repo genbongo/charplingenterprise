@@ -48,7 +48,7 @@
                 {   
                     data: 'product_image', name: 'product_image',
                     "render": function (data, type, full, meta) {
-                        return "<a data-fancybox='' href='{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data +"'><img src='{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data +"' height='40'></a>";
+                        return "<a data-fancybox='' href='{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data +"'><img src='{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data +"' height='40'></a>";
                     },
                 },
                 {data: 'id', name: 'id'},

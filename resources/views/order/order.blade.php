@@ -582,7 +582,7 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
@@ -644,7 +644,7 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
@@ -795,7 +795,7 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
@@ -1017,7 +1017,7 @@
             $('#divContentImages').empty()
             const images =JSON.parse($(this).attr("data-val"));
             $('#displayFileModal').modal('show');
-            var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
+            var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
             images.map(image => {
                 var jsx =`
                     <div class="row">
@@ -1351,7 +1351,7 @@
                 var output = '';
 
                 const file_images = data.product_file_report;
-                var  url =  "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
+                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
                 for(var i = 0; i < file_images.length; i++){
                     console.log(file_images[i])
                     output += '<div class="col-lg-4 col-md-4 col-4">' +

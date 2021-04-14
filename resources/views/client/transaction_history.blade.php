@@ -121,7 +121,7 @@
                 var i = 0
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
-                    var url = "{{ 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                    var url = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>

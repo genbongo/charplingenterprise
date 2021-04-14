@@ -33,7 +33,7 @@ class AdController extends Controller
             return Datatables::of($ads)
                 ->addIndexColumn()
                 ->editColumn('ads_image', function ($row) {
-                    return 'https://storage.cloud.google.com/'.config('googlecloud.storage_bucket').'/img/ads/' . $row->ads_image;
+                    return 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/ads/' . $row->ads_image;
                 })
                 ->addColumn('action', function ($row) {
 
