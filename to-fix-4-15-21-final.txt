@@ -1,0 +1,54 @@
+ADMIN
+-should know which products are outs of stock and running low ---> pwede ni siya modal lng na makita ang listing asay running out of stocks and running low. Sa dashboard ni
+
+Manage area ---> delete mahimong deactivate
+Staff page ---> maka create ug staff na parehas ug email. 		Dapat dili ni mahitabo.
+	----> ig edit sa staff kay ig save mahimong inactive, 		dapat active ra unta siya. 
+	----> unclickable ang Assigned Stores na button.
+
+Client page ---> doesnt notify the email of the client nor in 	text message if mismo and admin mo add sa client. 	Ma notify ra if ang registration kay done by client.
+
+Product ---> Size should only input numbers and dot
+             ---> radio button for mL and L
+             ---> cant input negative numbers in manage stocks
+             ---> Ang display gd sa stocks sa client na panel or sa 	show now page sa admin panel kay ang ma display 	na stocks kay actual stocks minus threshold. Palitan 	naay 1000 ka stocks akoa gibutang then threshold 	kay 300, so ang ma display ra sa shop now or kanang products display kay 700 ra, then if mahurot na ang 700 ang mabutang ddto kay out of stocks. Naa koy backdoor products nga 300 nga for emergency mao na ang purpose.
+
+             ---> maka upload ug file na dili jpeg or png, dapat dili 	pwede
+             ---> showing 10 entries daw ang product page pero 	nag show ug 11 entries
+
+
+
+
+
+CLIENT PANEL 
+---> add to cart button can add dot to quantity
+
+-Registration
+
+-Confirm in registration should be confirmed password
+
+-Contact number should be validation (all contact numbers na field dapat ma validate)
+
+-Exit button after registration kay wala exit button.
+
+-Client can login without approval.
+
+--->Shop Now
+Product Quantity can input [dot], dapat dili pwede
+
+->Cart add edit for size or quanity
+->Should highlight which page user is in, kay pulos ra dashboard naka highlight
+->alignment search button
+->table image no need to sort naay may mga sorting buttons nga up and down
+->all IDS are not necessary if not in admin, pwede ra siya counter lng
+
+
+
+GLOBAL
+---->ALL CHECK OUT BUTTONS in ALL PANELS ARE NOT WORKING
+ --->all upload files can upload multiple files and can only upload images
+
+
+Please ko check sa notifications nako na gihatag sa imoha, katong notification nga gipabuhat nako, wala pato na finish tanan. Nag out of stocks na ang products wla mugawas sa notification bell. 
+
+Wala pasad ma work on ang failed delivery page sa admin panel.

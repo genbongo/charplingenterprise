@@ -110,11 +110,11 @@
             .then((isTrue) => {
                 if (isTrue) {
                     $.ajax({
+                        url: "{{ url('save_cart') }}",
+                        type: "POST",
                         data: {
                             ids
                         },
-                        url: "{{ url('save_cart') }}",
-                        type: "POST",
                         dataType: 'json',
                         success: function (data) {
                             //redirect to transaction page
