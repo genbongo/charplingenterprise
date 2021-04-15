@@ -229,7 +229,7 @@ class CartController extends Controller
 
         // store the data into session named cart_data
         // Session::put(['cart_data' => $carts]);
-        Session::put('cart_data', []);
+        Session::put('cart_data', $carts);
 
         return response()->json(['message'=>'Sucessfully stored in session.']);
     }
