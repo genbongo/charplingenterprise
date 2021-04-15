@@ -61,7 +61,8 @@ class TransactionController extends Controller
         $is_replacement = $request->input("is_replacement");
 
         //get the data from our session cart
-        $cart_data = session('cart_data');
+        // $cart_data = session('cart_data');
+        $cart_data = Cart::findMany(Session::get('cart_data'));
 
         foreach ($cart_data as $session_cart) {
             $cart               = Cart::find($session_cart->id);
