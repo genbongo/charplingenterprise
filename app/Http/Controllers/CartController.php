@@ -229,13 +229,13 @@ class CartController extends Controller
         //     $cart->is_checkout = 1;
         //     $cart->save();
         // }
-    return $carts;
+    
         // clear first the session named cart_data
-        session()->forget('cart_data');
+        // session()->forget('cart_data');
 
         // store the data into session named cart_data
-        session(['cart_data' => $carts]);
+        // session(['cart_data' => $carts]);
 
-        return response()->json(['message'=>'Sucessfully stored in session.']);
+        return response()->json(['message'=>'Sucessfully stored in session.', $carts]);
     }
 }

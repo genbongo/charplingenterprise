@@ -112,9 +112,7 @@
                     $.ajax({
                         url: "{{ url('save_cart') }}",
                         type: "POST",
-                        data: {
-                            ids:ids
-                        },
+                        data: { ids:ids },
                         dataType: 'json',
                         success: function (data) {
                             //redirect to transaction page
