@@ -135,9 +135,9 @@
             var swal_text = '';
 
             if(stat == 0){
-                swal_text = 'Once deleted, you will not be able to retreive this!';
+                swal_text = 'Once deactivated, you will not be able to retrieve this!';
             }else{
-                swal_text = 'Once activated, you will be able to retreive this!';
+                swal_text = 'Once activated, you will be able to retrieve this!';
             }
 
             swal({

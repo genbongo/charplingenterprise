@@ -39,7 +39,7 @@ class AreaController extends Controller
 
                     if($row->is_deleted == 0){
                         $status = 0;
-                        $delete_status = 'Delete';
+                        $delete_status = 'Deactivate';
                         $delete_btn = 'btn-danger';
                     }else{
                         $status = 1;

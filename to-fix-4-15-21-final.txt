@@ -1,20 +1,26 @@
 ADMIN
 -should know which products are outs of stock and running low ---> pwede ni siya modal lng na makita ang listing asay running out of stocks and running low. Sa dashboard ni
 
-Manage area ---> delete mahimong deactivate
+Manage area ---> delete mahimong deactivate ------- done
 Staff page ---> maka create ug staff na parehas ug email. 		Dapat dili ni mahitabo.
-	----> ig edit sa staff kay ig save mahimong inactive, 		dapat active ra unta siya. 
-	----> unclickable ang Assigned Stores na button.
+	----> ig edit sa staff kay ig save mahimong inactive, 		dapat active ra unta siya. ---done
+	----> unclickable ang Assigned Stores na button. ----- done -- clickable rani nag loading pa wait lang...
 
 Client page ---> doesnt notify the email of the client nor in 	text message if mismo and admin mo add sa client. 	Ma notify ra if ang registration kay done by client.
 
 Product ---> Size should only input numbers and dot
              ---> radio button for mL and L
              ---> cant input negative numbers in manage stocks
-             ---> Ang display gd sa stocks sa client na panel or sa 	show now page sa admin panel kay ang ma display 	na stocks kay actual stocks minus threshold. Palitan 	naay 1000 ka stocks akoa gibutang then threshold 	kay 300, so ang ma display ra sa shop now or kanang products display kay 700 ra, then if mahurot na ang 700 ang mabutang ddto kay out of stocks. Naa koy backdoor products nga 300 nga for emergency mao na ang purpose.
+             ---> Ang display gd sa stocks sa client na panel or sa 	
+                    show now page sa admin panel kay ang ma display 	
+                        na stocks kay actual stocks minus threshold. Palitan 	
+                        naay 1000 ka stocks akoa gibutang then threshold 	
+                        kay 300, so ang ma display ra sa shop now or kanang products display kay 700 ra,
+                         then if mahurot na ang 700 ang mabutang ddto kay out of stocks. 
+                         Naa koy backdoor products nga 300 nga for emergency mao na ang purpose.
 
-             ---> maka upload ug file na dili jpeg or png, dapat dili 	pwede
-             ---> showing 10 entries daw ang product page pero 	nag show ug 11 entries
+             ---> maka upload ug file na dili jpeg or png, dapat dili 	pwede  ---- done 
+             ---> showing 10 entries daw ang product page pero 	nag show ug 11 entries -- done
 
 
 

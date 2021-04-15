@@ -83,7 +83,7 @@
                                 <label class="col-sm-12 control-label">Product Image</label>
                                 <div class="col-sm-12">
                                     <label class="new-avatar hidden"><span class="far fa-plus-square"></span>
-                                        <input id="product_image" name="product_image" type="file" accept="image/*" class="text-center center-block file-upload"/>
+                                        <input id="product_image" name="product_image" type="file" onchange="validateFileType()" accept="image/jpg,image/png,image/jpeg"  class="text-center center-block file-upload"/>
                                     </label>
                                 </div>
                             </div>
@@ -109,7 +109,16 @@
 </div>
 
 <script type="text/javascript">
-
+    function validateFileType(){
+            var fileName = document.getElementById("product_image").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+                //TO DO
+            }else{
+                alert("Only jpg/jpeg and png files are allowed!");
+            }   
+        }
     //declare global variable
     var variation_data = [];
 
@@ -120,6 +129,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        
 
         // datatable
         var table = $('#dataTable').DataTable({
