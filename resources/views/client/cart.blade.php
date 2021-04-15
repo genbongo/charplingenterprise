@@ -113,13 +113,13 @@
                         url: "{{ url('save_cart') }}",
                         type: "POST",
                         data: {
-                            ids
+                            ids:ids
                         },
                         dataType: 'json',
                         success: function (data) {
                             //redirect to transaction page
                             if(data){
-                                // window.location = "{{ url('transaction') }}"
+                                window.location = "{{ url('transaction') }}"
                             }
                         },
                         error: function (data) {
