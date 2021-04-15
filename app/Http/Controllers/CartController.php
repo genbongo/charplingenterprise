@@ -217,14 +217,8 @@ class CartController extends Controller
      */
     public function save_cart(Request $request)
     {
-        // return $request->ids;
         $carts = Cart::findMany($request->ids);
-        return $carts;
-        // foreach ($carts as $cart) {
-        //     $cart->is_checkout = 1;
-        //     $cart->save();
-        // }
-
+ 
         // clear first the session named cart_data
         session()->forget('cart_data');
 
