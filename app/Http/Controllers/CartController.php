@@ -221,20 +221,14 @@ class CartController extends Controller
         foreach ($request->ids as $key => $value) {
             $ids[] = (int) $value;
         }
-        // return $ids;
-        // return $request->ids;
+     
         $carts = Cart::findMany($ids);
-        // return $carts;
-        // foreach ($carts as $cart) {
-        //     $cart->is_checkout = 1;
-        //     $cart->save();
-        // }
     
         // clear first the session named cart_data
-        session()->forget('cart_data');
+        Session()->forget('cart_data');
 
         // store the data into session named cart_data
-        session(['cart_data' => $carts]);
+        Session(['cart_data' => $carts]);
 
         return response()->json(['message'=>'Sucessfully stored in session.']);
     }
