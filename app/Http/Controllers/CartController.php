@@ -217,6 +217,7 @@ class CartController extends Controller
      */
     public function save_cart(Request $request)
     {
+        return $request->ids;
         $carts = Cart::find($request->ids);
 
         // foreach ($carts as $cart) {
