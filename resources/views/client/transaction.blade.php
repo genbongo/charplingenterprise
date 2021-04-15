@@ -29,7 +29,7 @@
                     @php
                         $total = 0;   
                     @endphp
-                    @foreach (session('cart_data') as $cart)
+                    @foreach ($carts as $cart)
                     @php
                         $total += $cart->subtotal;
                     @endphp

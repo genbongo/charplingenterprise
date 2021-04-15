@@ -30,7 +30,8 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        return view("client.transaction");
+        $carts = Cart::findMany(Session::get('cart_data'));
+        return view("client.transaction", compact('carts'));
     }
 
     /**
