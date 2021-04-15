@@ -229,7 +229,7 @@ class CartController extends Controller
         //     $cart->is_checkout = 1;
         //     $cart->save();
         // }
-
+    return $carts;
         // clear first the session named cart_data
         session()->forget('cart_data');
 
