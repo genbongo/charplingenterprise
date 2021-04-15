@@ -222,14 +222,14 @@ class CartController extends Controller
             $ids[] = (int) $value;
         }
      
-        $carts = Cart::findMany($ids);
+        // $carts = Cart::where_in($ids);
     
         // clear first the session named cart_data
         Session::forget('cart_data');
 
         // store the data into session named cart_data
         // Session::put(['cart_data' => $carts]);
-        Session::put('cart_data', $carts);
+        Session::put('cart_data', $ids);
 
         return response()->json(['message'=>'Sucessfully stored in session.']);
     }
