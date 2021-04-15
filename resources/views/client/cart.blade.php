@@ -117,7 +117,7 @@
                         success: function (data) {
                             //redirect to transaction page
                             if(data){
-                                // window.location = "{{ url('transaction') }}"
+                                window.location = "{{ url('transaction') }}"
                             }
                         },
                         error: function (data) {
