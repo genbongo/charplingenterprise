@@ -114,7 +114,7 @@
                             ids
                         },
                         url: "{{ url('save_cart') }}",
-                        type: "GET",
+                        type: "POST",
                         dataType: 'json',
                         success: function (data) {
                             //redirect to transaction page

@@ -112,7 +112,7 @@ Route::resource('client_list',                                          'ClientL
 Route::get('shop',                                                      'ShopController@shop')->name('shop');
 Route::post('save_to_cart',                                             'ShopController@save_to_cart')->name('save_to_cart');
 Route::resource('store',                                                'StoreController');
-Route::get('save_cart',                                                 'CartController@save_cart')->name('save_cart');
+Route::post('save_cart',                                                 'CartController@save_cart')->name('save_cart');
 Route::resource('cart',                                                 'CartController');
 Route::post('damage-cart',                                              'CartController@storeDamageCart');
 Route::resource('transaction',                                          'TransactionController');
