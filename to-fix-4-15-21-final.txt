@@ -53,14 +53,14 @@ Product Quantity can input [dot], dapat dili pwede --- done
 ->Cart add edit for size or quantity
 ->Should highlight which page user is in, kay pulos ra dashboard naka highlight --- done
 ->alignment search button
-->table image no need to sort naay may mga sorting buttons nga up and down
-->all IDS are not necessary if not in admin, pwede ra siya counter lng
+->table image no need to sort naay may mga sorting buttons nga up and down --- done
+->all IDS are not necessary if not in admin, pwede ra siya counter lng --- done
 
 
 
 GLOBAL
 ---->ALL CHECK OUT BUTTONS in ALL PANELS ARE NOT WORKING -- done
- --->all upload files can upload multiple files and can only upload images
+ --->all upload files can upload multiple files and can only upload images -- done
 
 
 Please ko check sa notifications nako na gihatag sa imoha, katong notification nga gipabuhat nako, wala pato na finish tanan. Nag out of stocks na ang products wla mugawas sa notification bell. 

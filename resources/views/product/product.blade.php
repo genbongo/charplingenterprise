@@ -199,6 +199,7 @@
                         // 'https://storage.googleapis.com/'.$storageBucketName.'/'.$googleCloudStoragePath
                         return `<a data-fancybox='' href='${data}'><img src='${data}' height='40' width='40'></a>`;
                     },
+                    "orderable": false
                 },
                 {data: 'name', name: 'name'},
                 {data: 'description', name: 'description'},
