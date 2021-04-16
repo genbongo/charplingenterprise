@@ -9,6 +9,7 @@
 
                 <div class="card-body">
                     Welcome to Creamline! This is to inform you that you have successfully registered to the system. Please be advised that your account is pending and needs to be verified by the Admin. Please wait for 3 - 6 days for approval and try to login again.
+                    <br><a href="/">&#x21A9; Back to home</a>
                 </div>
             </div>
         </div>

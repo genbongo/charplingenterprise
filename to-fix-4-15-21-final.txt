@@ -34,21 +34,24 @@ Product ---> Size should only input numbers and dot --- done
 CLIENT PANEL 
 ---> add to cart button can add dot to quantity --- done
 
+--->Shop Now
+Product Quantity can input [dot], dapat dili pwede --- done
+
+
 -Registration
 
 -Confirm in registration should be confirmed password -- done
 
--Contact number should be validation (all contact numbers na field dapat ma validate) -- done
+-Contact number should be validation (all contact numbers na field dapat ma validate) --- done
 
--Exit button after registration kay wala exit button.
+-Exit button after registration kay wala exit button. --- done
 
--Client can login without approval. -- done
+-Client can login without approval. --- done
 
---->Shop Now
-Product Quantity can input [dot], dapat dili pwede
 
-->Cart add edit for size or quanity
-->Should highlight which page user is in, kay pulos ra dashboard naka highlight
+
+->Cart add edit for size or quantity
+->Should highlight which page user is in, kay pulos ra dashboard naka highlight --- done
 ->alignment search button
 ->table image no need to sort naay may mga sorting buttons nga up and down
 ->all IDS are not necessary if not in admin, pwede ra siya counter lng

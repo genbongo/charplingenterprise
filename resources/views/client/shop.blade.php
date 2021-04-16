@@ -104,13 +104,10 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        $("#quantity").on("input", function(evt) {
-            var self = $(this);
-            self.val(self.val().replace(/[^0-9\.]/g, ''));
-            if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) 
-            {
-                evt.preventDefault();
+        $("#quantity").on("keypress keyup blur",function (event) {    
+           $(this).val($(this).val().replace(/[^\d].+/, ""));
+            if ((event.which < 48 || event.which > 57)) {
+                event.preventDefault();
             }
         });
 
