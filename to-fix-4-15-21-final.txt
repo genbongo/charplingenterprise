@@ -12,9 +12,10 @@ Client page ---> doesnt notify the email of the client nor in
                     text message if mismo and admin mo add sa client. 
                         	Ma notify ra if ang registration kay done by client. --- done
 
-Product ---> Size should only input numbers and dot
-             ---> radio button for mL and L
-             ---> cant input negative numbers in manage stocks
+Product ---> Size should only input numbers and dot --- done
+             ---> radio button for mL and L -- done
+             ---> cant input negative numbers in manage stocks --- done
+
              ---> Ang display gd sa stocks sa client na panel or sa 	
                     show now page sa admin panel kay ang ma display 	
                         na stocks kay actual stocks minus threshold. Palitan 	
@@ -31,7 +32,7 @@ Product ---> Size should only input numbers and dot
 
 
 CLIENT PANEL 
----> add to cart button can add dot to quantity
+---> add to cart button can add dot to quantity --- done
 
 -Registration
 
