@@ -101,7 +101,7 @@ class StaffDashboardController extends Controller
                 //     'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
                 // ->where('is_approved', 0)
                 ->where('orders.delivery_date', '=', $now)
-                ->where('stores.area_id', $area->id)
+                ->where('stores.area_id', @$area->id)
                 ->groupBy('orders.invoice_id')
                 ->get();
 
