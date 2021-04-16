@@ -28,6 +28,33 @@ html, body {
     border: solid 15px #f2016a;
 }
 
+.isactive {
+  background-color: #f2016a !important;
+  color: #fff !important;
+}
+
+.sidebar-sticky a.nav-link.active {
+  color: #f2016a;
+  font-weight: bold;
+}
+
+.badge-here:empty {
+  display: none;
+}
+
+div#dataTable_filter {
+  margin-right: 15px;
+}
+
+img.d-block.w-100 {
+  height: auto;
+}
+
+img.img-fluid.img-thumbnail.card-img-top.shop-img {
+  max-height: 160px;
+  object-fit: contain;
+}
+
 
 /* login page */
 
