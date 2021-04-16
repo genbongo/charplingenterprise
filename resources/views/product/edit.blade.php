@@ -14,7 +14,12 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-12 control-label">Size</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="size" name="size" maxlength="50" required placeholder="ex. 100ml">
+                                <input type="text" class="form-control" id="size" name="size" maxlength="50" required placeholder="ex. 10">
+                                <br>
+                                <p>
+                                    Options: <input type="radio" id="ml_length" value="ML" name="size_length" checked> ML &nbsp;
+                                    <input type="radio" value="L" id="l_length" name="size_length"> L
+                                </p>
                             </div>
                         </div>
                         <div class="form-group">
@@ -108,6 +113,15 @@
             }
         });
 
+        $("#size").on("input", function(evt) {
+            var self = $(this);
+            self.val(self.val().replace(/[^0-9\.]/g, ''));
+            if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) 
+            {
+                evt.preventDefault();
+            }
+        });
+
         //get data table
         // datatable
         var table = $('#stocks_table').DataTable({
@@ -143,8 +157,17 @@
             e.preventDefault();
             var id = $(this).data('id')
             $.get("{{ url('stocks') }}" + '/edit/' + id, function (data) {
+                var size = data.size.split(" ")
                 $('#id').val(data.id)
-                $('#size').val(data.size)
+                $('#size').val(size[0])
+                if(size[1] != undefined){
+                    if(size[1] == 'ML'){
+                        $("#ml_length").prop("checked", true)
+                    } 
+                    if(size[1] == 'L'){
+                        $("#l_length").prop("checked", true)
+                    }
+                }
                 $('#quantity').val(data.quantity)
                 $('#price').val(data.price)
                 $('#threshold').val(data.threshold)

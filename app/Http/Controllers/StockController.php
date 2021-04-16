@@ -79,7 +79,7 @@ class StockController extends Controller
                 'id' => $request->id
             ],[
                 'product_id'     => $request->product_id,
-                'size'           => $request->size,
+                'size'           => $request->size . ' ' .$request->size_length,
                 'quantity'       => $request->quantity,
                 'price'          => $request->price,
                 'threshold'      => $request->threshold,
