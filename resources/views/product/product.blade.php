@@ -126,6 +126,7 @@
                             <th>Quantity</th>
                             <th>Threshold</th>
                             <th>Price</th>
+                            <th>Type</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,6 +171,7 @@
                         <td>${row.quantity}</td>
                         <td>${row.threshold}</td>
                         <td>${parseFloat(row.price).toFixed(2)}</td>
+                        <td>${(row.quantity == 0 ? 'Out of stock' : 'Low stock')}</td>
                     </tr>`
                 });
                $("#stock_out_low_body").find('tbody').html("").append(htmlData) 
