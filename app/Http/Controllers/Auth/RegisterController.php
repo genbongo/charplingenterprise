@@ -79,7 +79,13 @@ class RegisterController extends Controller
     {
         if(User::where('email', $request->email)->first()){
             return response()->json([
-                'status' => 'exist'
+                'status'    => 'exist',
+                'message'   => 'Email Address Already Exist.'
+            ]);
+        }else if(User::where('contact_num', $request->contact_num)->first()){
+            return response()->json([
+                'status'    => 'exist',
+                'message'   => 'Phone Number Already Exist.'
             ]);
         } else {
             $user_role = "2"; //means client/customer

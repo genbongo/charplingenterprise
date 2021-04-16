@@ -291,7 +291,7 @@
                         if(data.status == 'exist'){
                             $("#btnRegister").prop("disabled",false)
                             $("#btnRegister").text("Register")
-                            $("#error_message").html('Email Address Already Exist.').show()
+                            $("#error_message").html(data.message).show()
                             return
                         } else {
                             $("#btnRegister").prop("disabled",true)
