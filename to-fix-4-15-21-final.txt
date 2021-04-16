@@ -1,5 +1,7 @@
 ADMIN
--should know which products are outs of stock and running low ---> pwede ni siya modal lng na makita ang listing asay running out of stocks and running low. Sa dashboard ni
+-should know which products are outs of stock and running low ---> 
+    pwede ni siya modal lng na makita ang listing asay 
+        running out of stocks and running low. Sa dashboard ni --- done
 
 Manage area ---> delete mahimong deactivate --- done
 Staff page ---> maka create ug staff na parehas ug email. 		Dapat dili ni mahitabo. --- done

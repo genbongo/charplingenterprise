@@ -23,6 +23,20 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
+    public function getLowStocks($product_id, $type = 'all'){
+        if($type == 'all'){
+            return ProductStock::where('product_id', $product_id)
+                    ->whereRaw('quantity <= threshold')
+                    ->orderBy('id', 'desc')
+                    ->get();
+        } else {
+            return ProductStock::where('product_id', $product_id)
+                        ->whereRaw('quantity <= threshold')
+                                ->get()
+                                    ->count();
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -53,10 +67,10 @@ class ProductController extends Controller
                         $delete_status = 'Available';
                         $delete_btn = 'btn-success';
                     }
-
+                    $stock = $this->getLowStocks($row->id, 'single');
                     $btn = '<a href="javascript://;" data-toggle="tooltip" data-placement="top" title="Update Product" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
                     $btn .=' <a href="product/'.$row->id.'/edit" data-toggle="tooltip" data-placement="top" title="Stock" data-toggle="tooltip" data-id="'.$row->id.'" data-name="'.$row->name.'" data-original-title="Stock" class="btn btn-warning btn-sm"> Manage Stock</a>';
-                    // $btn .=' <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="'.$delete_status.' Product" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn '.$delete_btn.' btn-sm deleteProduct">'.$delete_status.'</a>';
+                    $btn .=' <button type="button" '.($stock == 0 ? 'disabled' : '').' data-toggle="tooltip" data-placement="top" data-toggle="tooltip" data-id="'.$row->id.'"  class="btn btn-info btn-sm viewLowStocks">Low Stocks ('.$stock.')</button>';
 
                     return $btn;
                 })

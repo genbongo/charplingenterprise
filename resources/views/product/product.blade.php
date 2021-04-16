@@ -108,17 +108,45 @@
     </div>
 </div>
 
+{{-- update pending modal--}}
+<div class="modal fade" id="lowStocksModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Low / Out of stocks</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-stripped" id="stock_out_low_body">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Threshold</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     function validateFileType(){
-            var fileName = document.getElementById("product_image").value;
-            var idxDot = fileName.lastIndexOf(".") + 1;
-            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-            if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
-                //TO DO
-            }else{
-                alert("Only jpg/jpeg and png files are allowed!");
-            }   
-        }
+        var fileName = document.getElementById("product_image").value;
+        var idxDot = fileName.lastIndexOf(".") + 1;
+        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+        if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+            //TO DO
+        }else{
+            alert("Only jpg/jpeg and png files are allowed!");
+        }   
+    }
     //declare global variable
     var variation_data = [];
 
@@ -130,7 +158,24 @@
             }
         });
 
-        
+       $(document).on('click', '.viewLowStocks', function(e){
+            e.preventDefault()
+            var product_id = $(this).data('id')
+            $.getJSON( "/product/json/"+product_id, function( data ) {
+               console.log(data)
+                var htmlData = ''
+                $.each(data, function( index, row ) {
+                    htmlData += `<tr>
+                        <td>${row.size}</td>
+                        <td>${row.quantity}</td>
+                        <td>${row.threshold}</td>
+                        <td>${parseFloat(row.price).toFixed(2)}</td>
+                    </tr>`
+                });
+               $("#stock_out_low_body").find('tbody').html("").append(htmlData) 
+               $('#lowStocksModal').modal('show');
+            });
+       }) 
 
         // datatable
         var table = $('#dataTable').DataTable({
