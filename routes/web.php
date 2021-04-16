@@ -140,3 +140,7 @@ Route::get('product/edit/{id}',                                         'Product
 Route::get('report/orders',                                             'ReportsController@index');
 Route::get('order/reports/json/{filter_status}',                        'ReportsController@getOrders');
 Route::get('statistic_reports/{year}',                                  'HomeController@getYearStatistics');
+
+
+Route::post('login/user',                                               'AuthController@loginUser');
+Route::post('register/user',                                            'Auth\RegisterController@create');

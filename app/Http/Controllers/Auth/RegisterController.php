@@ -75,45 +75,55 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create(Request $request)
     {
-        $user_role = "2"; //means client/customer
-        $is_pending = "1"; //means pending account
+        if(User::where('email', $request->email)->first()){
+            return response()->json([
+                'status' => 'exist'
+            ]);
+        } else {
+            $user_role = "2"; //means client/customer
+            $is_pending = "1"; //means pending account
 
-        $data_inserted_id = User::create([
-            'fname'         => $data['fname'],
-            'mname'         => $data['mname'],
-            'lname'         => $data['lname'],
-            'address'       => $data['address'],
-            'contact_num'   => $data['contact_num'],
-            'email'         => $data['email'],
-            'password'      => Hash::make($data['password']),
-            'user_role'     => $user_role,
-            'is_pending'    => $is_pending,
-            'area_id'       => $data['area_id'],
-            'expiry'        => date('Y-m-d H:i:s', strtotime('+2 months'))
-        ]);
+            $data_inserted_id = User::create([
+                'fname'         => $request->fname,
+                'mname'         => $request->mname,
+                'lname'         => $request->lname,
+                'address'       => $request->address,
+                'contact_num'   => $request->contact_num,
+                'email'         => $request->email,
+                'password'      => Hash::make($request->password),
+                'user_role'     => $user_role,
+                'is_pending'    => $is_pending,
+                'area_id'       => $request->area_id,
+                'expiry'        => date('Y-m-d H:i:s', strtotime('+2 months'))
+            ]);
 
-        //set text message
-        $text_message = "Hi, ". $data['fname'] . "\n \nThank you for registering as one of our retailers. Your details are going to be reviewed along with  your submitted requirements. Please wait for the updates and we will be back at you as soon as possible. 
-        \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+            //set text message
+            $text_message = "Hi, ". $request->fname . "\n \nThank you for registering as one of our retailers. Your details are going to be reviewed along with  your submitted requirements. Please wait for the updates and we will be back at you as soon as possible. 
+            \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
-        //send it to customer
-        $this->global_itexmo($data['contact_num'], $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+            //send it to customer
+            $this->global_itexmo($request->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
 
-        new MailDispatch('registration', trim($data['email']), array(
-            'subject'   => 'Welcome to Charpling Square Enterprise',
-            'title'     => 'Welcome to Charpling Square Enterprise', 
-            "site"      => '',
-            "name"      => trim($data['fname'])
-        ));
-        
-        return Store::create([
-            'store_name'        => $data['store_name'],
-            'store_address'     => $data['store_address'],
-            'user_id'           => $data_inserted_id->id,
-            'area_id'           => $data['area_id'],
-        ]);
+            new MailDispatch('registration', trim($request->email), array(
+                'subject'   => 'Welcome to Charpling Square Enterprise',
+                'title'     => 'Welcome to Charpling Square Enterprise', 
+                "site"      => '',
+                "name"      => trim($request->fname)
+            ));
+            
+            Store::create([
+                'store_name'        => $request->store_name,
+                'store_address'     => $request->store_address,
+                'user_id'           => $data_inserted_id->id,
+                'area_id'           => $request->area_id,
+            ]);
+
+            return response()->json([
+                'status' => 'success'
+            ]);
+        }
     }
 
     /**

@@ -16,7 +16,8 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    {{-- <form method="POST" action="{{ route('register') }}"> --}}
+                    <form method="POST" id="registerForm">
                         @csrf
                         <div class="row d-flex align-items-center justify-content-center">
                             <div class="col-md-8">
@@ -33,6 +34,7 @@
                                     </p>
                                 </div>
                                 {{-- user account --}}
+                                <div class="alert alert-danger" role="alert" id="error_message" style="display:none;"></div>
                                 <div class="card-header bg-secondary mb-4">
                                     <div class="row">
                                         <div class="col-md-2"></div>
@@ -144,7 +146,7 @@
                                     <label for="contact_num" class="col-md-3 col-form-label text-md-left">{{ __('Contact Number') }}</label>
 
                                     <div class="col-md-9">
-                                        <input id="contact_num" type="number" placeholder="09xxxxxxxxx" class="form-control @error('contact_num') is-invalid @enderror" name="contact_num" value="{{ old('contact_num') }}" required autocomplete="contact_num" autofocus>
+                                        <input id="contact_num" type="number" placeholder="09xxxxxxxxx" maxlength="11" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" class="form-control @error('contact_num') is-invalid @enderror" name="contact_num" value="{{ old('contact_num') }}" required autocomplete="contact_num" autofocus>
 
                                         @error('contact_num')
                                             <span class="invalid-feedback" role="alert">
@@ -202,7 +204,7 @@
                                 {{-- end store --}}
                                 <div class="form-group">
                                     <div class="float-right">
-                                        <button type="submit" class="btn btn-success full-width-button">{{ __('Register') }}</button>
+                                        <button type="submit" id="btnRegister" class="btn btn-success full-width-button">{{ __('Register') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -263,7 +265,50 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        });  
+        }); 
+
+        $(document).on('submit', '#registerForm', function(e){
+            e.preventDefault(); 
+            $("#error_message").html("").hide()
+            if(!(/^(09|\+639)\d{9}$/.test($("#contact_num").val()))){
+                $("#error_message").html('Invalid Phone Number.').show()
+                return;
+            } else if($('#password').val() != $('#password-confirm').val()){
+                $("#error_message").html('The password and confirmation password do not match.').show()
+                return;
+            } else if($('#password').val().length < 7){
+                $("#error_message").html('Your password must be atleast 8 characters.').show()
+                return;
+            } else {
+                $("#btnRegister").prop("disabled",true)
+                $("#btnRegister").text("Processing, Please wait..")
+                $.ajax({
+                    type: "post",
+                    url: "{{ url('register/user') }}",
+                    data: $(this).serialize(),
+                    cache: false,
+                    success: function (data) {
+                        if(data.status == 'exist'){
+                            $("#btnRegister").prop("disabled",false)
+                            $("#btnRegister").text("Register")
+                            $("#error_message").html('Email Address Already Exist.').show()
+                            return
+                        } else {
+                            $("#btnRegister").prop("disabled",true)
+                            $("#btnRegister").text("Register")
+                            window.location.replace('/pending')
+                        }
+                    },
+                    error: function (data){
+                        $("#btnRegister").prop("disabled",false)
+                        $("#btnRegister").text("Register")
+                        alert('Something went wrong.')
+                        return
+                    }
+                });
+            }
+            
+        }); 
     });
 </script>
 @endsection
