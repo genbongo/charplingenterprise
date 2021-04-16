@@ -190,7 +190,7 @@
                         <div class="hover-overlay"></div>
                         <div class="hover-4-content">
                             <!-- <h3 class="hover-4-title text-uppercase font-weight-bold mb-0"><span>Available Now!</span></h3> -->
-                            <p class="hover-4-description text-uppercase mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor</p>
+                            <p class="hover-4-description text-uppercase mb-0">I doubt whether the world holds for anyone a more soul-stirring surprise than the first adventure with ice cream.</p>
                         </div>
                     </div>
                 </div>
@@ -200,7 +200,7 @@
                         <div class="hover-overlay"></div>
                         <div class="hover-4-content">
                             <!-- <h3 class="hover-4-title text-uppercase font-weight-bold mb-0"><span>Available Now!</span></h3> -->
-                            <p class="hover-4-description text-uppercase mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor</p>
+                            <p class="hover-4-description text-uppercase mb-0">I think the serving size of ice cream is when you hear the spoon hit the bottom of the container.</p>
                         </div>
                     </div>
                 </div>
@@ -210,7 +210,7 @@
                         <div class="hover-overlay"></div>
                         <div class="hover-4-content">
                             <!-- <h3 class="hover-4-title text-uppercase font-weight-bold mb-0"><span>Available Now!</span></h3> -->
-                            <p class="hover-4-description text-uppercase mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor</p>
+                            <p class="hover-4-description text-uppercase mb-0">It is a grave error to assume that ice cream consumption requires hot weather.</p>
                         </div>
                     </div>
                 </div>
