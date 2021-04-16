@@ -147,57 +147,68 @@ class ClientController extends Controller
                 'message' => 'Client successfully updated.',
             ];
             return response()->json($response, 200);
-        }else{
+        } else {
+
+            if(User::where('email', $request->email)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Email Address Already Exist.'
+                ]);
+            }else if(User::where('contact_num', $request->contact_num)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Phone Number Already Exist.'
+                ]);
+            } else {
+                $user = User::updateOrCreate([
+                    'id' => $request->client_id
+                ],[
+                    'fname' => $request->fname,
+                    'mname' => $request->mname,
+                    'lname' => $request->lname,
+                    'email' => $request->email,
+                    'contact_num' => $request->contact_num,
+                    'user_role' => 2,   //2 for client
+                    'is_pending' => 0,   //0 means not pending
+                    'is_active'  => 1,   //1 means not active
+                    'password' => Hash::make($request->password),
+                    'address' => "NA",
+                    'email_verified_at' => "2020-06-08 07:57:47",
+                    'img' => "NA",
+                    'remember_token' => "NA"
+                ]);
+
+                if(!$request->client_id){
+                    new MailDispatch('client_approval', trim($request->email), array(
+                        'subject'   => 'Welcome to Charpling Square Enterprise',
+                        'title'     => 'Welcome to Charpling Square Enterprise', 
+                        "status"    => 'admin_approve',
+                        "name"      => trim($request->fname),
+                        "password"  => $request->password
+                    ));
             
-            $user = User::updateOrCreate([
-                'id' => $request->client_id
-            ],[
-                'fname' => $request->fname,
-                'mname' => $request->mname,
-                'lname' => $request->lname,
-                'email' => $request->email,
-                'contact_num' => $request->contact_num,
-                'user_role' => 2,   //2 for client
-                'is_pending' => 0,   //0 means not pending
-                'is_active'  => 1,   //1 means not active
-                'password' => Hash::make($request->password),
-                'address' => "NA",
-                'email_verified_at' => "2020-06-08 07:57:47",
-                'img' => "NA",
-                'remember_token' => "NA"
-            ]);
+                    $text_message = 'Hi, '. $request->fname . `
+                        \n\nWelcome to Creamline! We are glad
+                        to inform you that you are now one of
+                        our retailers. \n Please click this link for
+                        account confirmation and to change
+                        your password:
+                        ` . $request->password . `Best regards,\n
+                        Charpling Square Enterprise\n
+                        Creamline Authorized Distributor`;
+                    
+                    //send it to customer
+                    $this->global_itexmo($request->contact_num, $text_message." \n\n\n\n","ST-CREAM343228_LGZPB", '#5pcg2mpi]');
+                }
 
-            if(!$request->client_id){
-
-                new MailDispatch('client_approval', trim($request->email), array(
-                    'subject'   => 'Welcome to Charpling Square Enterprise',
-                    'title'     => 'Welcome to Charpling Square Enterprise', 
-                    "status"    => 'admin_approve',
-                    "name"      => trim($request->fname),
-                    "password"  => $request->password
-                ));
-                
-                $text_message = 'Hi, '. $request->fname . `
-                    \n\nWelcome to Creamline! We are glad
-                    to inform you that you are now one of
-                    our retailers. \n Please click this link for
-                    account confirmation and to change
-                    your password: 
-                    ` . $request->password . `Best regards,\n
-                    Charpling Square Enterprise\n
-                    Creamline Authorized Distributor`;
-                
-                //send it to customer
-                $this->global_itexmo($request->contact_num, $text_message." \n\n\n\n","ST-CREAM343228_LGZPB", '#5pcg2mpi]');
+                // return response
+                $response = [
+                    'success' => true,
+                    'message' => 'Client successfully saved.',
+                    $user
+                ];
+                return response()->json($response, 200);
             }
-
-            // return response
-            $response = [
-                'success' => true,
-                'message' => 'Client successfully saved.',
-                $user
-            ];
-            return response()->json($response, 200);
         }
     }
 

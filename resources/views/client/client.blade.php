@@ -59,6 +59,7 @@
                 <form id="clientForm" name="clientForm" class="form-horizontal">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="alert alert-danger" role="alert" id="error_message" style="display:none;"></div>
                             <input type="hidden" name="client_id" id="client_id">
                             <input type="hidden" name="action" id="action">
                             <div class="form-group">
@@ -195,25 +196,35 @@
         });
 
         // create or update client
-        $('#saveBtn').click(function (e) {
+        $(document).on('submit', '#clientForm', function(e){
             e.preventDefault();
-            $(this).html('Saving..').attr('disabled',true);
-
+            $("#error_message").html("").hide()
+            if(!(/^(09|\+639)\d{9}$/.test($("#contact_num").val()))){
+                $("#error_message").html('Invalid Phone Number.').show()
+                return;
+            }
+            $('#saveBtn').html('Saving..');
             $.ajax({
-                data: $('#clientForm').serialize(),
+                data: $(this).serialize(),
                 url: "{{ url('client') }}",
                 type: "POST",
                 dataType: 'json',
                 success: function (data) {
-                    $('#clientForm').trigger("reset");
-                    $('#ajaxModel').modal('hide');
-                    table.draw();
-                    $('#saveBtn').html('Save').attr('disabled',false);
-                    swal("Information", data.message);
+                    if(data.status == 'exist'){
+                        $('#saveBtn').html('Create');
+                        $("#error_message").html(data.message).show()
+                        return
+                    } else {
+                        $('#clientForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        table.draw();
+                        $('#saveBtn').html('Create').attr('disabled',false);
+                        swal("Information", data.message);
+                    }
                 },
                 error: function (data) {
-                    console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $("#error_message").html(data).hide()
+                    $('#saveBtn').html('Create');
                 }
             });
         });

@@ -97,29 +97,43 @@ class StaffController extends Controller
             $message = 'Successfully Assigned.';
 
         } else {
-            User::updateOrCreate([
-                'id' => $request->staff_id
-            ],[
-                'fname'             => $request->fname,
-                'mname'             => $request->mname,
-                'lname'             => $request->lname,
-                'email'             => $request->email,
-                'contact_num'       => $request->contact_num,
-                'address'           => "NA",
-                'email_verified_at' => "2020-06-08 07:57:47",
-                'img'               => "NA",
-                'remember_token'    => "NA",
-                'user_role'         => 1,
-                'password'          => Hash::make($request->password),
-                'is_active'         => 0,
-                'is_pending'        => 0
-            ]);
 
-            $message = 'Staff successfully updated.';
+            if(User::where('email', $request->email)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Email Address Already Exist.'
+                ]);
+            }else if(User::where('contact_num', $request->contact_num)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Phone Number Already Exist.'
+                ]);
+            } else {
+
+                User::updateOrCreate([
+                    'id' => $request->staff_id
+                ],[
+                    'fname'             => $request->fname,
+                    'mname'             => $request->mname,
+                    'lname'             => $request->lname,
+                    'email'             => $request->email,
+                    'contact_num'       => $request->contact_num,
+                    'address'           => "NA",
+                    'email_verified_at' => "2020-06-08 07:57:47",
+                    'img'               => "NA",
+                    'remember_token'    => "NA",
+                    'user_role'         => 1,
+                    'password'          => Hash::make($request->password),
+                    'is_active'         => 0,
+                    'is_pending'        => 0
+                ]);
+
+                $message = 'Staff successfully updated.';
+            }
         }
 
         $response = [
-            'success' => true,
+            'status' => true,
             'message' => $message
         ];
 

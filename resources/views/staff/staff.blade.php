@@ -53,32 +53,33 @@
                 <form id="staffForm" name="staffForm" class="form-horizontal">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="alert alert-danger" role="alert" id="error_message" style="display:none;"></div>
                             <input type="hidden" name="staff_id" id="staff_id">
                             <div class="form-group">
                                 <label for="fname" class="col-sm-12 control-label">First Name</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter First Name"
-                                           value="" maxlength="50" required="" autocomplete="off" onkeypress="return onlyLetters(event)">
+                                           value="" maxlength="50" required="" autocomplete="off" required onkeypress="return onlyLetters(event)">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="mname" class="col-sm-12 control-label">Middle Name</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" id="mname" name="mname" placeholder="Enter Middle Name"
-                                           value="" maxlength="50" required="" autocomplete="off" onkeypress="return onlyLetters(event)">
+                                           value="" maxlength="50" required="" autocomplete="off" required onkeypress="return onlyLetters(event)">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="lname" class="col-sm-12 control-label">Last Name</label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter Last Name"
-                                           value="" maxlength="50" required="" autocomplete="off" onkeypress="return onlyLetters(event)">
+                                           value="" maxlength="50" required="" autocomplete="off" required onkeypress="return onlyLetters(event)">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="email">Email</label>
                                 <div class="col-sm-12">
-                                    <input type="email" class="form-control" id="email" name="email"
+                                    <input type="email" class="form-control" id="email" required name="email"
                                            placeholder="Enter Email"
                                            value="" maxlength="50" required="" autocomplete="off">
                                 </div>
@@ -87,7 +88,7 @@
                                 <label for="contact_num" class="col-sm-12 control-label">Contact Number</label>
                                 <div class="col-sm-12">
                                     <input type="number" class="form-control" id="contact_num" name="contact_num" placeholder="Enter Contact"
-                                           value="" required="" autocomplete="off" onkeypress="return onlyNumbers(event)">
+                                           value="" required="" autocomplete="off" required onkeypress="return onlyNumbers(event)">
                                 </div>
                             </div>
                             <div class="form-group" id="div_password">
@@ -95,7 +96,7 @@
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" id="password" name="password"
                                            placeholder="Enter Password"
-                                           value="" maxlength="50" required="" autocomplete="off">
+                                           value="" maxlength="50" required autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -284,24 +285,36 @@
         });
 
         // create or update staff
-        $('#saveBtn').click(function (e) {
+        // $('#saveBtn').click(function (e) {
+        $(document).on('submit', '#staffForm', function(e){
             e.preventDefault();
-            $(this).html('Saving..');
+            $("#error_message").html("").hide()
+            if(!(/^(09|\+639)\d{9}$/.test($("#contact_num").val()))){
+                $("#error_message").html('Invalid Phone Number.').show()
+                return;
+            }
+            $('#saveBtn').html('Saving..');
             $.ajax({
-                data: $('#staffForm').serialize(),
+                data: $(this).serialize(),
                 url: "{{ url('staff') }}",
                 type: "POST",
                 dataType: 'json',
                 success: function (data) {
-                    $('#staffForm').trigger("reset");
-                    $('#ajaxModel').modal('hide');
-                    table.draw();
-                    $('#saveBtn').html('Save');
-                    swal("Information", data.message);
+                    if(data.status == 'exist'){
+                        $('#saveBtn').html('Create');
+                        $("#error_message").html(data.message).show()
+                        return
+                    } else {
+                        $('#staffForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        table.draw();
+                        $('#saveBtn').html('Create');
+                        swal("Information", data.message);
+                    }
                 },
                 error: function (data) {
-                    console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $("#error_message").html(data).hide()
+                    $('#saveBtn').html('Create');
                 }
             });
         });

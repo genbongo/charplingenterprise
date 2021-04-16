@@ -1,12 +1,14 @@
 ADMIN
 -should know which products are outs of stock and running low ---> pwede ni siya modal lng na makita ang listing asay running out of stocks and running low. Sa dashboard ni
 
-Manage area ---> delete mahimong deactivate ------- done
-Staff page ---> maka create ug staff na parehas ug email. 		Dapat dili ni mahitabo.
-	----> ig edit sa staff kay ig save mahimong inactive, 		dapat active ra unta siya. ---done
-	----> unclickable ang Assigned Stores na button. ----- done -- clickable rani nag loading pa wait lang...
+Manage area ---> delete mahimong deactivate --- done
+Staff page ---> maka create ug staff na parehas ug email. 		Dapat dili ni mahitabo. --- done
+	----> ig edit sa staff kay ig save mahimong inactive, 		dapat active ra unta siya. --- done
+	----> unclickable ang Assigned Stores na button. ----- done 
 
-Client page ---> doesnt notify the email of the client nor in 	text message if mismo and admin mo add sa client. 	Ma notify ra if ang registration kay done by client.
+Client page ---> doesnt notify the email of the client nor in 	
+                    text message if mismo and admin mo add sa client. 
+                        	Ma notify ra if ang registration kay done by client. --- done
 
 Product ---> Size should only input numbers and dot
              ---> radio button for mL and L
@@ -31,13 +33,13 @@ CLIENT PANEL
 
 -Registration
 
--Confirm in registration should be confirmed password
+-Confirm in registration should be confirmed password -- done
 
--Contact number should be validation (all contact numbers na field dapat ma validate)
+-Contact number should be validation (all contact numbers na field dapat ma validate) -- done
 
 -Exit button after registration kay wala exit button.
 
--Client can login without approval.
+-Client can login without approval. -- done
 
 --->Shop Now
 Product Quantity can input [dot], dapat dili pwede
@@ -51,7 +53,7 @@ Product Quantity can input [dot], dapat dili pwede
 
 
 GLOBAL
----->ALL CHECK OUT BUTTONS in ALL PANELS ARE NOT WORKING
+---->ALL CHECK OUT BUTTONS in ALL PANELS ARE NOT WORKING -- done
  --->all upload files can upload multiple files and can only upload images
 
 
