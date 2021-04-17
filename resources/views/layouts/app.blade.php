@@ -242,7 +242,7 @@
                     @if(Auth::user()->user_role == 2)
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('home') }}">
+                            <a class="nav-link active" href="{{ route('main') }}">
                                 <span data-feather="home"></span>
                                 Dashboard <span class="sr-only"></span>
                             </a>
