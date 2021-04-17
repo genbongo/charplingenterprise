@@ -225,7 +225,7 @@
                         </li>
 
 
-                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        {{-- <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                             <span>Emergency</span>
                         </h6>
                         <li class="nav-item">
@@ -233,7 +233,7 @@
                                 <span data-feather="message-circle"></span>
                                 Failed Delivery
                             </a>
-                        </li>
+                        </li> --}}
 
                         
                     </ul>

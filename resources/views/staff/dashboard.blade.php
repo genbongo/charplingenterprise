@@ -32,9 +32,9 @@
         <tbody>
         </tbody>
     </table>
-    <button class="btn btn-danger" id="emergency_report" style="position: absolute;bottom: 40px;right: 20px">
+    {{-- <button class="btn btn-danger" id="emergency_report" style="position: absolute;bottom: 40px;right: 20px">
         Emergency Report
-    </button>
+    </button> --}}
 </div>
 
 {{-- update failed delivery--}}
