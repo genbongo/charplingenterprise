@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Notification;
-use App\{Area, User, Product};
+use App\{Area, User, Product, Order};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
@@ -30,6 +30,19 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
+     
+        $orders = Order::where('orders.is_approved', 1)
+                ->where('orders.is_completed', 0)
+                ->where('is_cancelled',0)
+                    ->whereRaw("delivery_date < CURDATE()")
+                        ->get();
+
+                        // return $orders;
+        foreach ($orders as $key => $value) {
+            Order::whereId($value->id)->update([
+                'is_cancelled' => 1
+            ]);
+        }
         $users = User::where('is_pending','0')
                         ->where('is_active','1')
                             ->where('user_role',2)
