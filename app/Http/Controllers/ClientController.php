@@ -127,25 +127,82 @@ class ClientController extends Controller
             return response()->json($response, 200);
 
         }else if($request->action == 'update_client_profile'){
-            User::updateOrCreate([
-                'id' => $request->client_id
-            ],[
-                'fname' => $request->fname,
-                'mname' => $request->mname,
-                'lname' => $request->lname,
-                'email' => $request->email,
-                'contact_num' => $request->contact_num,
-                'address' => "NA",
-                'email_verified_at' => "2020-06-08 07:57:47",
-                'img' => "NA",
-                'remember_token' => "NA"
-            ]);
 
-            // return response
-            $response = [
-                'success' => true,
-                'message' => 'Client successfully updated.',
-            ];
+            if($request->email != $request->email1){
+                if(User::where('email', $request->email)->first()){
+                    return response()->json([
+                        'status'    => 'exist',
+                        'message'   => 'Email Address Already Exist.'
+                    ]);
+                } else {
+                    User::updateOrCreate([
+                        'id' => $request->client_id
+                    ],[
+                        'fname' => $request->fname,
+                        'mname' => $request->mname,
+                        'lname' => $request->lname,
+                        'email' => $request->email,
+                        'contact_num' => $request->contact_num,
+                        'address' => "NA",
+                        'email_verified_at' => "2020-06-08 07:57:47",
+                        'img' => "NA",
+                        'remember_token' => "NA"
+                    ]);
+        
+                    // return response
+                    $response = [
+                        'success' => true,
+                        'message' => 'Client successfully updated.',
+                    ];
+                }
+            } if($request->contact_num != $request->contact_num1) {
+                if(User::where('contact_num', $request->contact_num)->first()){
+                    return response()->json([
+                        'status'    => 'exist',
+                        'message'   => 'Phone Number Already Exist.'
+                    ]);
+                } else {
+                    User::updateOrCreate([
+                        'id' => $request->client_id
+                    ],[
+                        'fname' => $request->fname,
+                        'mname' => $request->mname,
+                        'lname' => $request->lname,
+                        'email' => $request->email,
+                        'contact_num' => $request->contact_num,
+                        'address' => "NA",
+                        'email_verified_at' => "2020-06-08 07:57:47",
+                        'img' => "NA",
+                        'remember_token' => "NA"
+                    ]);
+        
+                    // return response
+                    $response = [
+                        'success' => true,
+                        'message' => 'Client successfully updated.',
+                    ];
+                }
+            } else {
+                User::updateOrCreate([
+                    'id' => $request->client_id
+                ],[
+                    'fname' => $request->fname,
+                    'mname' => $request->mname,
+                    'lname' => $request->lname,
+                    'email' => $request->email,
+                    'contact_num' => $request->contact_num,
+                    'address' => "NA",
+                    'email_verified_at' => "2020-06-08 07:57:47",
+                    'img' => "NA",
+                    'remember_token' => "NA"
+                ]);
+    
+                // return response
+                $response = [
+                    'success' => true,
+                    'message' => 'Client successfully updated.',
+                ];
+            }
             return response()->json($response, 200);
         } else {
 

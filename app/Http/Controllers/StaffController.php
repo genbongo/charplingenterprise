@@ -118,13 +118,20 @@ class StaffController extends Controller
             }
 
             if($request->staff_id){
-                if($request->email != $request->email1 || $request->contact_num != $request->contact_num1){
+                if($request->email != $request->email1){
                     if(User::where('email', $request->email)->first()){
                         return response()->json([
                             'status'    => 'exist',
                             'message'   => 'Email Address Already Exist.'
                         ]);
-                    }else if(User::where('contact_num', $request->contact_num)->first()){
+                    } else {
+                        User::updateOrCreate([
+                            'id' => $request->staff_id
+                        ],$data);
+                        $message = 'Staff successfully updated.';
+                    }
+                } else if($request->contact_num != $request->contact_num1) {
+                    if(User::where('contact_num', $request->contact_num)->first()){
                         return response()->json([
                             'status'    => 'exist',
                             'message'   => 'Phone Number Already Exist.'
@@ -135,7 +142,8 @@ class StaffController extends Controller
                         ],$data);
                         $message = 'Staff successfully updated.';
                     }
-                } else {
+                }
+                 else {
                     User::updateOrCreate([
                         'id' => $request->staff_id
                     ],$data);

@@ -86,6 +86,7 @@
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="email">Email</label>
                                 <div class="col-sm-12">
+                                    <input type="hidden" class="form-control" id="email1" name="email1">
                                     <input type="email" class="form-control" id="email" name="email"
                                            placeholder="Enter Email"
                                            value="" maxlength="50" required="" autocomplete="off">
@@ -94,6 +95,7 @@
                             <div class="form-group">
                                 <label for="contact_num" class="col-sm-12 control-label">Contact Number</label>
                                 <div class="col-sm-12">
+                                    <input type="hidden" class="form-control" id="contact_num1" name="contact_num1">
                                     <input type="number" class="form-control" id="contact_num" name="contact_num" placeholder="Enter Contact"
                                            value="" required="" autocomplete="off" onkeypress="return onlyNumbers(event)">
                                 </div>
@@ -187,9 +189,12 @@
         $('#createNewClient').click(function () {
             $('#saveBtn').html("Create");
             $('#client_id').val('');
+            $('#contact_num1').val("");
+            $('#email1').val("");
             $('#clientForm').trigger("reset");
             $('#modelHeading').html("Create New Client");
             $('#ajaxModel').modal('show');
+            $("#password").attr('required')
             $("#password").val(randomPassword(10));
             $("#div_password").show();
             $("#action").val('');
@@ -241,7 +246,10 @@
                 $('#mname').val(data.mname);
                 $('#lname').val(data.lname);
                 $('#email').val(data.email);
+                $('#email1').val(data.email);
                 $('#contact_num').val(data.contact_num);
+                $('#contact_num1').val(data.contact_num);
+                $("#password").removeAttr('required')
                 $("#div_password").hide();
                 $("#action").val('update_client_profile');
             })
