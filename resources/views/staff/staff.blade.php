@@ -79,6 +79,7 @@
                             <div class="form-group">
                                 <label class="col-sm-12 control-label" for="email">Email</label>
                                 <div class="col-sm-12">
+                                    <input type="hidden" class="form-control" id="email1" name="email1">
                                     <input type="email" class="form-control" id="email" required name="email"
                                            placeholder="Enter Email"
                                            value="" maxlength="50" required="" autocomplete="off">
@@ -87,6 +88,7 @@
                             <div class="form-group">
                                 <label for="contact_num" class="col-sm-12 control-label">Contact Number</label>
                                 <div class="col-sm-12">
+                                    <input type="hidden" class="form-control" id="contact_num1" name="contact_num1">
                                     <input type="number" class="form-control" id="contact_num" name="contact_num" placeholder="Enter Contact"
                                            value="" required="" autocomplete="off" required onkeypress="return onlyNumbers(event)">
                                 </div>
@@ -268,6 +270,8 @@
         $('#createNewStaff').click(function () {
             $('#saveBtn').html("Create");
             $('#staff_id').val('');
+            $('#contact_num1').val("");
+            $('#email1').val("");
             $('#fname').removeAttr("disabled");
             $('#mname').removeAttr("disabled");
             $('#lname').removeAttr("disabled");
@@ -277,6 +281,7 @@
             $("#saveBtn").removeAttr("disabled").show();
             $('#staffForm').trigger("reset");
             $('#modelHeading').html("Create New Staff");
+            $("#password").attr('required')
             $('#ajaxModel').modal('show');
             $("#password").val(randomPassword(10));
         });
@@ -328,8 +333,11 @@
                 $('#mname').val(data.staff.mname);
                 $('#lname').val(data.staff.lname);
                 $('#email').val(data.staff.email);
+                $('#email1').val(data.staff.email);
                 $('#contact_num').val(data.staff.contact_num);
+                $('#contact_num1').val(data.staff.contact_num);
                 $("#div_password").hide();
+                $("#password").removeAttr('required')
                 $("#action").val('update_staff_profile');
             })
         });

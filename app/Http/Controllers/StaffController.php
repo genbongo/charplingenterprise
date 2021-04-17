@@ -98,37 +98,66 @@ class StaffController extends Controller
 
         } else {
 
-            if(User::where('email', $request->email)->first()){
-                return response()->json([
-                    'status'    => 'exist',
-                    'message'   => 'Email Address Already Exist.'
-                ]);
-            }else if(User::where('contact_num', $request->contact_num)->first()){
-                return response()->json([
-                    'status'    => 'exist',
-                    'message'   => 'Phone Number Already Exist.'
-                ]);
+            $data = [
+                'fname'             => $request->fname,
+                'mname'             => $request->mname,
+                'lname'             => $request->lname,
+                'email'             => $request->email,
+                'contact_num'       => $request->contact_num,
+                'address'           => "NA",
+                'email_verified_at' => "2020-06-08 07:57:47",
+                'img'               => "NA",
+                'remember_token'    => "NA",
+                'user_role'         => 1,
+                'is_active'         => 0,
+                'is_pending'        => 0
+            ];
+
+            if(!$request->staff_id){
+                $data = array_merge($data, ['password' => Hash::make($request->password)]);
+            }
+
+            if($request->staff_id){
+                if($request->email != $request->email1 || $request->contact_num != $request->contact_num1){
+                    if(User::where('email', $request->email)->first()){
+                        return response()->json([
+                            'status'    => 'exist',
+                            'message'   => 'Email Address Already Exist.'
+                        ]);
+                    }else if(User::where('contact_num', $request->contact_num)->first()){
+                        return response()->json([
+                            'status'    => 'exist',
+                            'message'   => 'Phone Number Already Exist.'
+                        ]);
+                    } else {
+                        User::updateOrCreate([
+                            'id' => $request->staff_id
+                        ],$data);
+                        $message = 'Staff successfully updated.';
+                    }
+                } else {
+                    User::updateOrCreate([
+                        'id' => $request->staff_id
+                    ],$data);
+                    $message = 'Staff successfully updated.';
+                }
             } else {
-
-                User::updateOrCreate([
-                    'id' => $request->staff_id
-                ],[
-                    'fname'             => $request->fname,
-                    'mname'             => $request->mname,
-                    'lname'             => $request->lname,
-                    'email'             => $request->email,
-                    'contact_num'       => $request->contact_num,
-                    'address'           => "NA",
-                    'email_verified_at' => "2020-06-08 07:57:47",
-                    'img'               => "NA",
-                    'remember_token'    => "NA",
-                    'user_role'         => 1,
-                    'password'          => Hash::make($request->password),
-                    'is_active'         => 0,
-                    'is_pending'        => 0
-                ]);
-
-                $message = 'Staff successfully updated.';
+                if(User::where('email', $request->email)->first()){
+                    return response()->json([
+                        'status'    => 'exist',
+                        'message'   => 'Email Address Already Exist.'
+                    ]);
+                }else if(User::where('contact_num', $request->contact_num)->first()){
+                    return response()->json([
+                        'status'    => 'exist',
+                        'message'   => 'Phone Number Already Exist.'
+                    ]);
+                } else {
+                    User::updateOrCreate([
+                        'id' => $request->staff_id
+                    ],$data);
+                    $message = 'Staff successfully updated.';
+                }
             }
         }
 
