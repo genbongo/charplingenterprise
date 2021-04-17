@@ -68,12 +68,41 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
-        Area::updateOrCreate([
-            'id' => $request->area_id
-        ],[
-            'area_name' => $request->area_name,
-            'area_code' => $request->area_code
-        ]);
+        if($request->area_id) {
+            if($request->area_name != $request->area_name1){
+                if(Area::where('area_name', $request->area_name)->first()){
+                    return response()->json(['success' => 'exist',
+                    'message' => 'Area Already Exist.'], 200);
+                } else {
+                    Area::updateOrCreate([
+                        'id' => $request->area_id
+                    ],[
+                        'area_name' => $request->area_name,
+                        'area_code' => $request->area_code
+                    ]);
+                }
+            } else {
+                Area::updateOrCreate([
+                    'id' => $request->area_id
+                ],[
+                    'area_name' => $request->area_name,
+                    'area_code' => $request->area_code
+                ]);
+            }
+        } else {
+            if(Area::where('area_name', $request->area_name)->first()){
+                return response()->json(['success' => 'exist',
+                'message' => 'Area Already Exist.'], 200);
+            } else {
+                Area::updateOrCreate([
+                    'id' => $request->area_id
+                ],[
+                    'area_name' => $request->area_name,
+                    'area_code' => $request->area_code
+                ]);
+            }
+        }
+        
 
         // return response
         $response = [

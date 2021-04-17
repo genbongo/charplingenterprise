@@ -29,13 +29,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="modelHeading"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="error_message" style="display:none;"></div>
                 <form id="areaForm" name="areaForm" class="form-horizontal">
                     <input type="hidden" name="area_id" id="area_id">
                     <div class="form-group">
                         <label for="area_name" class="col-sm-12 control-label">Area Name</label>
                         <div class="col-sm-12">
+                            <input type="hidden" class="form-control" id="area_name1" name="area_name1">
                             <input type="text" class="form-control" id="area_name" name="area_name" placeholder="Enter Area name"
                                    value="" maxlength="50" required="" autocomplete="off">
                         </div>
@@ -86,6 +91,7 @@
         $('#createNewArea').click(function () {
             $('#saveBtn').html("Create");
             $('#area_id').val('');
+            $('#area_name').val('');
             $('#areaForm').trigger("reset");
             $('#modelHeading').html("Create New Area");
             $('#ajaxModel').modal('show');
@@ -95,17 +101,23 @@
         $('#saveBtn').click(function (e) {
             e.preventDefault();
             $(this).html('Saving..');
-
+            $("#error_message").html("")
             $.ajax({
                 data: $('#areaForm').serialize(),
                 url: "{{ url('area') }}",
                 type: "POST",
                 dataType: 'json',
                 success: function (data) {
-                    $('#areaForm').trigger("reset");
-                    $('#ajaxModel').modal('hide');
-                    table.draw();
-                    $('#saveBtn').html('Save');
+                    if(data.success == "exist"){
+                        $("#error_message").html(data.message).show()
+                        return;
+                    } else {
+                        $('#areaForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        table.draw();
+                        $('#saveBtn').html('Save');
+                    }
+                    
                 },
                 error: function (data) {
                     console.log('Error:', data);
@@ -123,6 +135,7 @@
                 $('#ajaxModel').modal('show');
                 $('#area_id').val(data.id);
                 $('#area_name').val(data.area_name);
+                $('#area_name1').val(data.area_name);
                 $('#area_code').val(data.area_code);
             })
         });
