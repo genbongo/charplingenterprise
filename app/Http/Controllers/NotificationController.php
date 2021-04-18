@@ -31,7 +31,6 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
-        return;
         $orders = Order::where('orders.is_approved', 1)
                 ->where('orders.is_completed', 0)
                 ->where('is_cancelled',0)
