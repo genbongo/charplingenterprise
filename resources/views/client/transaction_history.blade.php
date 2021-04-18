@@ -2,11 +2,6 @@
 
 @section('content')
 <div class="container">
-    <!-- <div class="container-fluid">
-        <div class="row">
-            <h4 class="center">Order History</h4>
-        </div>
-    </div> -->
     <div class="container-fluid">
         <div class="row">
             
@@ -26,33 +21,15 @@
         </div>
     </div>
     <br>
-    {{-- <table id="dataTable" class="table table-striped table-bordered">
-        <thead class="bg-indigo-1 text-white">
-        <tr>
-            <th>ID</th>
-            <th>Product</th>
-            <th>Image</th>
-            <th>Qty</th>
-            <th>Amount</th>
-            <th>Date Ordered</th>
-            <th>Delivery Date</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table> --}}
     <table style="width: 100%;" id="dataTable" class="table table-striped table-bordered">
         <thead class="bg-indigo-1 text-white">
             <tr>
                 <th>ID</th>
                 <th>Invoice #</th>
-                {{-- <th>Customer</th> --}}
+                <th>Store</th>
                 <th>Total</th>
                 <th>Date Ordered</th>
                 <th>Delivery Date</th>
-                {{-- <th>Attempt</th> --}}
-                {{-- <th>Reason</th> --}}
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -188,6 +165,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
+                {data: 'store_name', name: 'store_name'},
                 {data: 'total_price', name: 'total_price'},
                 {
                     data: 'date_ordered', name: 'date_ordered',

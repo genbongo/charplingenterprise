@@ -118,7 +118,7 @@
                         <textarea class="form-control" id="reason" rows="5" placeholder="Reason.." name="reason" required></textarea>
                     </div>
                     <div class="form-group">
-                        <button style="width: 100%;" type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+                        <button style="width: 100%;" type="submit" class="btn btn-primary" id="saveBtn">Create</button>
                     </div>
                 </form>
             </div>
@@ -374,7 +374,7 @@
             ajax: "{{ url('file_replacement') }}",
             columns: [
                 // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'id', name: 'id'},
+                {data: 'report_no', name: 'report_no'},
                 {data: 'report_type', name: 'report_type'},
                 {data: 'full_name', name: 'full_name'},
                 {data: 'store_name', name: 'store_name'},
@@ -438,7 +438,7 @@
         // create or update file_replacement
         $('#prodReportForm').on('submit', function (e) {
             e.preventDefault();
-
+            $('#saveBtn').html('Creating..').prop('disabled',true);
             $.ajax({
                 url:"{{ url('file_replacement') }}",
                 method:"POST",
@@ -452,11 +452,11 @@
                     $('#prodReportForm').trigger("reset");
                     $('#ajaxModel').modal('hide');
                     table.draw();
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Create').prop('disabled',false);
                 },
                 error: function (data) {
                     console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Create').prop('disabled',false);
                 }
             });
         });

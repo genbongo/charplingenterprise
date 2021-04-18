@@ -21,6 +21,7 @@
             <th>ID</th>
             <th>Invoice #</th>
             <th>Client</th>
+            <th>Store</th>
             <th>Ordered</th>
             <th>Delivery</th>
             <th align="center">Attempt</th>
@@ -231,6 +232,7 @@
                         return full.fullname
                     }
                 },
+                {data: 'store_name', name: 'store_name'},
                 {
                     data: 'date_ordered', name: 'date_ordered',
                     "render": function (data, type, full, meta) {

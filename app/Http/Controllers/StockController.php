@@ -75,22 +75,62 @@ class StockController extends Controller
     public function createUpdate(Request $request)
     {
         if ($request->ajax()) {
-            ProductStock::updateOrCreate([
-                'id' => $request->id
-            ],[
+            $size   = $request->size . ' ' .$request->size_length;
+            $size1  = $request->size1 . ' ' .$request->option;
+            $data   = [
                 'product_id'     => $request->product_id,
-                'size'           => $request->size . ' ' .$request->size_length,
+                'size'           => $size,
                 'quantity'       => $request->quantity,
                 'price'          => $request->price,
                 'threshold'      => $request->threshold,
                 'promo'          => $request->promo,
                 'status'         => $request->status,
-            ]);
+            ];
 
-            return response()->json([
-                'message'   => 'Stock Successfully submitted.',
-                200
-            ]);
+            if($request->id){
+                if($size != $size1){
+                    if(ProductStock::where(['size' => $size, 'product_id' => $request->product_id])->first()){
+                        return response()->json([
+                            'status'    => 'exist',
+                            'message'   => 'Size Already Exist.'
+                        ]);
+                    } else {
+                        ProductStock::updateOrCreate([
+                            'id' => $request->id
+                        ], $data);
+                        return response()->json([
+                            'status'    => 'success',
+                            'message'   => 'Stock Successfully submitted.',
+                            200
+                        ]);
+                    }
+                } else {
+                    ProductStock::updateOrCreate([
+                        'id' => $request->id
+                    ],$data);
+                    return response()->json([
+                        'status'    => 'success',
+                        'message'   => 'Stock Successfully submitted.',
+                        200
+                    ]);
+                }
+            } else {
+                if(ProductStock::where(['size' => $size, 'product_id' => $request->product_id])->first()){
+                    return response()->json([
+                        'status'    => 'exist',
+                        'message'   => 'Size Already Exist.'
+                    ]);
+                } else {
+                    ProductStock::updateOrCreate([
+                        'id' => $request->id
+                    ], $data);
+                    return response()->json([
+                        'status'    => 'success',
+                        'message'   => 'Stock Successfully submitted.',
+                        200
+                    ]);
+                }
+            }
         }
     }
 

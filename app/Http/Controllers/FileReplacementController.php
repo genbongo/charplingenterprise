@@ -7,6 +7,7 @@ use App\Product_Report;
 use App\ReplacementProduct;
 use App\{Store, User};
 use DataTables;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Google\Cloud\Storage\StorageClient;
@@ -202,6 +203,21 @@ class FileReplacementController extends Controller
                     'reason'            => $request->reason,
                 ]);
             }
+
+            $reportId        = 0;
+            $count_order    = DB::table('product_reports')
+                                    ->select('id')
+                                        ->whereRaw('DATE(created_at) = DATE("'.date('Y-m-d H:i:s').'")')
+                                            ->limit(1)
+                                                ->first();
+            $reportId        = (int) ($items->id - $count_order->id) + 1;
+
+            $uId            = sprintf("%04s", $reportId);
+            $reportNo      = '01'.date('ymd').$uId;
+
+            DB::table('product_reports')
+                ->whereId($reportId)
+                    ->update(['report_no' => $reportNo]);
             
 
             foreach ($prodIds as $key => $product) {

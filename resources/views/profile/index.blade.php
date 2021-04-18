@@ -82,6 +82,7 @@
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade show active" id="profile-tab-data" role="tabpanel">
 					<form id="profileForm" name="profileForm">
+						<div class="alert alert-danger" role="alert" id="error_message" style="display:none;"></div>
 						<input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
 							<div class="row">
 								<div class="col-md-6">
@@ -114,13 +115,15 @@
 									<div class="form-group">
 										<div class="col-xs-12 col-md-12">
 											<label for="phone">Contact Number</label>
+											<input type="hidden" name="contact_num1" id="contact_num1" class="form-control" value="{{ Auth::user()->contact_num  }}"/>
 											<input type="text" class="form-control" name="contact_num" id="contact_num" placeholder="Contact Number" value="{{ Auth::user()->contact_num  }}" required onkeypress="return onlyNumbers(event)"/>
 										</div>
 									</div>
 									<div class="form-group">
 										<div class="col-xs-12 col-md-12">
 											<label for="email">Email Address</label>
-											<input type="email" class="form-control" data-toggle="tooltip" data-placement="top" title="Email address should not be changed."  placeholder="Email Address" value="{{ Auth::user()->email  }}" required/>
+											<input type="hidden" name="email1" id="email1" class="form-control" value="{{ Auth::user()->email  }}"/>
+											<input type="email" name="email" id="email" class="form-control" data-toggle="tooltip" data-placement="top" title="Email address should not be changed."  placeholder="Email Address" value="{{ Auth::user()->email  }}" required/>
 										</div>
 									</div>
 								</div>
@@ -216,20 +219,28 @@
 		$('#profileForm').on('submit', function (e) {
 			e.preventDefault();
 			// $(this).html('Saving..');
-
+			$("#error_message").html("").hide()
 			$.ajax({
 				data: $('#profileForm').serialize(),
 				url: "{{ url('profile_update') }}",
 				type: "POST",
 				dataType: 'json',
 				success: function (response) {
-				$("#fname").val(response.fname);
-				$("#mname").val(response.mname);
-				$("#lname").val(response.lname);
-				$("#address").val(response.address);
-				$("#contact_num").val(response.contact_num);
-
-				swal("Information", response.message);
+					if(response.status == 'exist'){
+                        $("#error_message").html(response.message).show()
+                        return
+                    } else {
+                        $("#fname").val(response.fname);
+						$("#mname").val(response.mname);
+						$("#lname").val(response.lname);
+						$("#address").val(response.address);
+						$("#contact_num").val(response.contact_num);
+						$("#contact_num1").val(response.contact_num);
+						$("#email").val(response.email);
+						$("#email1").val(response.email);
+						swal("Information", response.message);
+                    }
+					
 				},
 				error: function (data) {
 				console.log('Error:', data);

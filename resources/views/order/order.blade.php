@@ -36,7 +36,7 @@
                                 <th>ID</th>
                                 <th>Invoice #</th>
                                 <th>Client</th>
-                                {{-- <th>Total</th> --}}
+                                <th>Store</th>
                                 <th>Date Ordered</th>
                                 <th>Delivery Date</th>
                                 <th>Action</th>
@@ -48,27 +48,12 @@
                     </div>
                     <div class="tab-pane fade show" id="order-tab-undelivered" role="tabpanel">
                         <table style="width: 100%;" id="undeliveredTable" class="table table-striped table-bordered">
-                            {{-- <thead class="bg-indigo-1 text-white">
-                            <tr>
-                                <th>ID</th>
-                                <th>Client</th>
-                                <th>Product</th>
-                                <th>Image</th>
-                                <th>Qty</th>
-                                <th>Amount</th>
-                                <th>Date Ordered</th>
-                                <th>Delivery Date</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody> --}}
                             <thead class="bg-indigo-1 text-white">
                                 <tr>
                                     <th>ID</th>
                                     <th>Invoice #</th>
                                     <th>Client</th>
-                                    {{-- <th>Total</th> --}}
+                                    <th>Store</th>
                                     <th>Date Ordered</th>
                                     <th>Delivery Date</th>
                                     <th>Attempt</th>
@@ -83,22 +68,11 @@
                     <div class="tab-pane fade show" id="order-replacement" role="tabpanel">
                         <table style="width: 100%;" id="replacementTable" class="table table-striped table-bordered">
                         <thead class="bg-indigo-1 text-white">
-                        {{-- <tr>
-                            <th>ID</th>
-                            <th>Type</th>
-                            <th>Issued By</th>
-                            <th>Client</th>
-                            <th>Products</th>
-                            <th>Files</th>
-                            <th>Reason</th>
-                            <th>Status</th>
-                            <th width="280px">Action</th>
-                        </tr> --}}
                         <tr>
                             <th>ID</th>
                             <th>Invoice #</th>
                             <th>Client</th>
-                            {{-- <th>Total</th> --}}
+                            <th>Store</th>
                             <th>Date Ordered</th>
                             <th>Delivery Date</th>
                             <th>Attempt</th>
@@ -198,42 +172,10 @@
                         </tfoot>
                     </table>
                     <input type="hidden" name="pending_date_to_display" id="pending_date_to_display">
-                    {{-- <input type="hidden" name="pending_order_id" id="pending_order_id"> --}}
                     <input type="hidden" name="pending_contact" id="pending_contact">
                     <input type="hidden" name="pending_client_id" id="pending_client_id">
                     <input type="hidden" name="pending_invoice" id="pending_invoice">
                     <input type="hidden" name="pending_amount" id="pending_amount">
-                    {{-- <input type="hidden" name="pending_order_id" id="pending_order_id">
-                    <input type="hidden" name="pending_product_id" id="pending_product_id">
-                    <input type="hidden" name="pending_product_qty" id="pending_product_qty">
-                    <input type="hidden" name="pending_contact" id="pending_contact">
-                    
-                    <input type="hidden" name="pending_amount" id="pending_amount">
-                    <input type="hidden" name="pending_client_id" id="pending_client_id">
-                    <div class="form-group">
-                        <label for="txt_pending_product" class="col-sm-12 control-label">Product</label>
-                        <div class="col-sm-12">
-                            <input class="form-control" id="txt_pending_product" readonly disabled>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_pending_qty" class="col-sm-12 control-label">Quantity</label>
-                        <div class="col-sm-12">
-                            <input class="form-control" id="txt_pending_qty" readonly disabled>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_pending_amount" class="col-sm-12 control-label">Amount</label>
-                        <div class="col-sm-12">
-                            <input class="form-control" id="txt_pending_amount" readonly disabled>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="txt_pending_delivery_date" class="col-sm-12 control-label">Delivery date</label>
-                        <div class="col-sm-12">
-                            <input type="date" name="delivery_date" class="form-control" id="delivery_date">
-                        </div>
-                    </div> --}}
                     <div class="wrap_modal">
                     <div class="form-group">
                         <label for="txt_pending_delivery_date" class="col-sm-12 control-label">Delivery date</label>
@@ -527,6 +469,36 @@
             }
         });
 
+        $(document).on('click', '.removeOrder', function(e){
+            e.preventDefault();
+            var invoice_id = $(this).data("id");
+            swal({
+                title: "Are you sure?",
+                text: 'Once confirm, this order will be deleted!',
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((isTrue) => {
+                if (isTrue) {
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ url('transaction_history/delete') }}" +'/' +  invoice_id,
+                        success: function (data) {
+                            table.draw();
+                            swal(data.message, {
+                                icon: "success",
+                            });
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                }
+            });
+        })
+
         /* -------------------------------------------------------------------------------
                                         PENDING ORDER LIST
         -------------------------------------------------------------------------------- */
@@ -547,6 +519,7 @@
                         return full.fullname
                     }
                 },
+                {data: 'store_name', name: 'store_name'},
                 {
                     data: 'date_ordered', name: 'date_ordered',
                     "render": function (data, type, full, meta) {
@@ -619,24 +592,11 @@
 
             var invoice_no = $(this).data('invoice');
             $("#pending_invoice").val(invoice_no);
-            // const product_id = $(this).attr("data-prodid");
             const contact = $(this).attr("data-num");
-            // const prodname = $(this).attr("data-prodname");
-            // const qty = $(this).attr("data-qty");
             const total = $(this).attr("data-total");
             const client_id = $(this).attr("data-client");
             $("#pending_client_id").val(client_id);
-            // //set the data
-            // $("#pending_order_id").val(order_id);
             $("#pending_contact").val(contact);
-            // $("#pending_product_id").val(product_id);
-            // $("#pending_product_qty").val(qty);
-            // $("#pending_contact").val(contact);
-            // $("#txt_pending_product").val(prodname);
-            // $("#pending_amount").val(total);
-            // $("#txt_pending_qty").val(qty);
-            // $("#txt_pending_amount").val(total);
-            // $("#pending_client_id").val(client_id);
         });
 
         function getCompletedOrders(invoice_id){
@@ -705,7 +665,7 @@
                 $("#pending_date_to_display").val(delivery_date);
 
                 //disable the button
-                $("#btnConfirmPendingOrder").attr("disabled", "disabled");
+                $("#btnConfirmPendingOrder").text("Please wait..").attr("disabled", "disabled");
 
                 $.ajax({
                     url:"{{ url('order') }}",
@@ -726,7 +686,7 @@
                         })
 
                         //disable the button
-                        $("#btnConfirmPendingOrder").removeAttr("disabled");
+                        $("#btnConfirmPendingOrder").text("Confirm").removeAttr("disabled");
 
                     },
                     error: function (data) {
@@ -759,6 +719,7 @@
                         return full.fullname
                     }
                 },
+                {data: 'store_name', name: 'store_name'},
                 
                 {
                     data: 'date_ordered', name: 'date_ordered',
@@ -825,26 +786,6 @@
             // viewDetails
             // undeliveredModal
         })
-
-        // edit resched order
-        // $('body').on('click', '.editReschedOrder', function () {
-        //     //get the data
-        //     const order_id = $(this).attr("data-id");
-        //     const contact = $(this).attr("data-num");
-        //     const prodname = $(this).attr("data-prodname");
-        //     const qty = $(this).attr("data-qty");
-        //     const total = $(this).attr("data-total");
-
-        //     //set the data
-        //     $("#resched_order_id").val(order_id);
-        //     $("#resched_contact").val(contact);
-        //     $("#txt_resched_product").val(prodname);
-        //     $("#resched_amount").val(total);
-        //     $("#txt_resched_qty").val(qty);
-        //     $("#txt_resched_amount").val(total);
-            
-        //     $('#updateReschedModal').modal('show');
-        // });
 
         //when button confirm order is clicked
         $("#frmReschedOrder").on('submit', function(e) {
@@ -961,22 +902,6 @@
                             <div class="col-2"><b> Total </b></div>
                         </div>`
             $('#divModalProducts').append(header)
-
-            // products.map(product => {
-            //     var jsx =`
-            //         <div class="row">
-            //             <div class="col-4">
-            //                 ${product.name}
-            //             </div>
-            //              <div class="col-4">
-            //                 ${product.size}
-            //             </div>
-            //              <div class="col-4">
-            //                 <input type="number" id="${product.id}" value="${product.quantity}" name="quantity" class="form-control" />
-            //             </div>
-            //         </div>`;
-            //     $('#divModalProducts').append(jsx)
-            // })
             var total = 0;
             var jsx = ''
             products.map(product => {
@@ -1144,66 +1069,7 @@
                 }
             });
         })
-
-        // datatable
-        // var replacementTable = $('#replacementTable').DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     ajax: "{{ url('order_replacement') }}",
-        //     columns: [
-        //         // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-        //         {data: 'id', name: 'id'},
-        //         {data: 'report_type', name: 'report_type'},
-        //         {data: 'issued_name', name: 'issued_name'},
-        //         {data: 'client_name', name: 'client_name'},
-        //         // {
-        //         //     data: 'client', name: 'client',
-        //         //     render: function(data, type, full, meta){
-        //         //         var a = JSON.parse(full.client)
-        //         //         return a.lname + ', ' + a.fname;
-        //         //     }
-        //         // },
-        //         {
-        //             data: 'products', 
-        //             name: 'products',
-        //             render: function(data, type, full, meta) {
-        //                 return "<a href='#' class='displayProducts' data-val='"+full.products+"'>View Lists</a>"
-        //             }
-        //         },
-        //         {
-        //             data: 'file_report_image', name: 'file_report_image',
-        //             render: function(data, type, full, meta){
-        //                 let output = ''
-        //                 if(data != ""){
-        //                     output = "<a href='#' class='btnDisplayImages' data-val='"+full.images+"'>View Files</a>"
-        //                 }
-
-        //                 return output
-        //             }
-        //         },
-        //         {data: 'reason', name: 'reason'},
-        //         {
-        //             data: 'is_replaced', name: 'is_replaced',
-        //             "render": function (data, type, full, meta) {
-        //                 var output = '';
-
-        //                 // if (full.delivery_date != null) {
-        //                     if(data == 0){
-        //                         output = '<span class="text-warning font-weight-bold">Pending</span>'
-        //                     }else if(data == 1){
-        //                         output = '<span class="text-success font-weight-bold">Approved</span>'
-        //                     }else{
-        //                         output = '<span class="text-danger font-weight-bold">Not Approved</span>'
-        //                     }
-        //                 // } else {
-        //                 //     output = '<span class="text-success font-weight-bold">On-delivery</span>'
-        //                 // }
-        //                 return output;
-        //             }
-        //         },
-        //         {data: 'action', name: 'action', orderable: false, searchable: false},
-        //     ]
-        // });
+        //datatable
 
         var replacementTable = $('#replacementTable').DataTable({
             processing: true,
@@ -1219,6 +1085,7 @@
                         return full.fullname
                     }
                 },
+                {data: 'store_name', name: 'store_name'},
                 {
                     data: 'date_ordered', name: 'date_ordered',
                     "render": function (data, type, full, meta) {
@@ -1448,38 +1315,6 @@
                                     DAMAGE LIST
         -------------------------------------------------------------------------------- */
         // datatable
-        // var damageTable = $('#damageTable').DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     ajax: "{{ url('order_damage') }}",
-        //     columns: [
-        //         // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-        //         {data: 'damageid', name: 'damageid'},
-        //         {
-        //             data: 'clientName', name: 'clientName',
-        //             render: function(data, type, full, meta){
-        //                 return full.lname + ', ' + full.fname;
-        //             }
-        //         },
-        //         {data: 'prodname', name: 'prodname'},
-        //         {
-        //             data: 'is_replaced', name: 'is_replaced',
-        //             "render": function (data, type, full, meta) {
-        //                 var output = '';
-        //                 if(data === 0){
-        //                     output = '<span class="text-warning font-weight-bold">Pending</span>'
-        //                 }else if(data === 1){
-        //                     output = '<span class="text-success font-weight-bold">Approved</span>'
-        //                 }else{
-        //                     output = '<span class="text-danger font-weight-bold">Not Approved</span>'
-        //                 }
-        //                 return output;
-        //             }
-        //         },
-        //         {data: 'action', name: 'action', orderable: false, searchable: false},
-        //     ]
-        // });
-
         var damageTable = $('#damageTable').DataTable({
             processing: true,
             serverSide: true,
@@ -1493,7 +1328,7 @@
             },
             columns: [
                 // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'id', name: 'id'},
+                {data: 'report_no', name: 'report_no'},
                 {data: 'report_type', name: 'report_type'},
                 {data: 'issued_by', name: 'issued_by'},
                 {data: 'client_name', name: 'client_name'},
@@ -1688,7 +1523,7 @@
             },
             columns: [
                 // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'id', name: 'id'},
+                {data: 'report_no', name: 'report_no'},
                 {data: 'report_type', name: 'report_type'},
                 {data: 'issued_by', name: 'issued_by'},
                 // {data: 'client_name', name: 'client_name'},

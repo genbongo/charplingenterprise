@@ -89,9 +89,11 @@
 
         // create new area
         $('#createNewArea').click(function () {
+            $("#error_message").html("").hide()
             $('#saveBtn').html("Create");
             $('#area_id').val('');
             $('#area_name').val('');
+            $('#area_name1').val('');
             $('#areaForm').trigger("reset");
             $('#modelHeading').html("Create New Area");
             $('#ajaxModel').modal('show');
@@ -129,6 +131,7 @@
         // edit area
         $('body').on('click', '.editArea', function () {
             var area_id = $(this).data('id');
+            $("#error_message").html("").hide()
             $.get("{{ url('area') }}" + '/' + area_id + '/edit', function (data) {
                 $('#modelHeading').html("Edit Area");
                 $('#saveBtn').html('Update');

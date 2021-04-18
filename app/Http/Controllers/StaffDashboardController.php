@@ -92,6 +92,7 @@ class StaffDashboardController extends Controller
                 users.email, 
                 SUM(orders.attempt) as attempt, 
                 orders.delivery_date,
+                orders.store_id,
                 orders.is_completed,
                 orders.is_cancelled,
                 orders.is_replacement,
@@ -103,7 +104,14 @@ class StaffDashboardController extends Controller
                 ->where('orders.delivery_date', '=', $now)
                 ->where('stores.area_id', @$area->id)
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->store_name = 'NA';
+                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    }
+                    return $item;
+                });
 
         if ($request->ajax()) {
             return Datatables::of($order)
@@ -280,6 +288,7 @@ class StaffDashboardController extends Controller
                 users.email, 
                 SUM(orders.attempt) as attempt, 
                 orders.delivery_date,
+                orders.store_id,
                 orders.is_completed,
                 orders.is_cancelled,
                 users.id as client_id,
@@ -299,7 +308,14 @@ class StaffDashboardController extends Controller
                     }
                 })
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->store_name = 'NA';
+                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    }
+                    return $item;
+                });
 
         if ($request->ajax()) {
             return Datatables::of($order)

@@ -106,6 +106,13 @@
                    }
                    else {
                     $("#error_message").hide()
+                    if(data.user.user_role == 99){ //admin
+                        window.location.herf = "{{url('/home')}}"
+                    } else if(data.user.user_role == 2){ //staff 
+                        window.location.herf = "{{url('/home')}}"
+                    } else { //client
+                        window.location.herf = "{{url('/main')}}"
+                    }
                        window.location.reload(true)
                    }
                 },

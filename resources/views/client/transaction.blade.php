@@ -198,16 +198,16 @@
             //if dropdown is changed
             $("#select_store").change(() => {
                 //get the dom values
-                const area_id = $("#select_store option:selected").attr("data-area");
+                // const area_id = $("#select_store option:selected").attr("data-area");
 
-                $.get(`get/staff/assign/${area_id}`, function (data) {
-                    if(Object.keys(data).length != 0){
-                        $("#assigned_staff").val(data.fname + ' ' + data.lname)
-                    } else {
-                        $("#assigned_staff").val('NA');
-                    }
-                    $("#show_assigned_staff").show();
-                })
+                // $.get(`get/staff/assign/${area_id}`, function (data) {
+                //     if(Object.keys(data).length != 0){
+                //         $("#assigned_staff").val(data.fname + ' ' + data.lname)
+                //     } else {
+                //         $("#assigned_staff").val('NA');
+                //     }
+                //     $("#show_assigned_staff").show();
+                // })
             });
 
             //if dropdown is changed

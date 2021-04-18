@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Order;
-use App\Stock;
+use App\{Order,User};
+// use App\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\Mail\SenderHelper as MailDispatch;
 use Illuminate\Support\Facades\DB;
 use DataTables;
 use App\Traits\GlobalFunction;
@@ -141,6 +142,7 @@ class OrderController extends Controller
                 SUM(orders.ordered_total_price) as total_price, 
                 CONCAT(users.fname, ' ', users.lname) as fullname, 
                 users.email, 
+                orders.store_id,
                 orders.delivery_date,
                 users.id as client_id,
                 users.contact_num as num")
@@ -149,7 +151,14 @@ class OrderController extends Controller
                 ->where('orders.is_approved', 0)
                 ->where('orders.is_completed', 0)
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->store_name = 'NA';
+                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    }
+                    return $item;
+                });
 
         if ($request->ajax()) {
             return Datatables::of($pending)
@@ -157,6 +166,7 @@ class OrderController extends Controller
                 ->addColumn('action', function ($row) {
    
                     $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm editPendingOrder">Approve</a>';
+                    $btn .= ' <a  href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-danger btn-sm removeOrder">Remove Order</a>';
                     return $btn;
                 })
                 ->addColumn('total_price', function($row){
@@ -177,66 +187,36 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $contact_num        = $request->input("pending_contact");
         $client_id          = $request->input("pending_client_id");
         $date_to_display    = $request->input("pending_date_to_display");
         $delivery_date      = $request->input("delivery_date");
         $invoice_no         = $request->pending_invoice;
+        
+        if($user = User::find($client_id)){
+            //set text message
+            $text_message = "Hi, ". $user->fname . "\n \nYour order ".$invoice_no." has been approved.\nDelivery date is on ".$date_to_display.".\nThank you. Please see your account for more info
+            \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+            //send it to customer
+            $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+
+            new MailDispatch('order_approval', trim($user->email), array(
+                'subject'       => $invoice_no. ' - Your Order has been Approved.',
+                'title'         => $invoice_no. ' - Your Order has been Approved.',
+                "site"          => '',
+                "name"          => trim($user->fname),
+                'invoice_no'    => $invoice_no,
+                'delivery_date' => $date_to_display
+            ));
+        }
 
         foreach ($request->order as $key => $value) {
-            if($stock = Stock::where('product_id', $value['product_id'])->first()){
-                $quantity = $stock->quantity - $value['quantity'];
-                Stock::where('product_id', $value['product_id'])->update([ 'quantity' => $quantity]);
-            }
             Order::where('id', $value['order_id'])->update(['is_cancelled' => 0,'is_approved' => 1, 'delivery_date' => $delivery_date]);
         }
-        // exit;
-        // $order_id = $request->input("pending_order_id");
-        // $product_id = $request->input("pending_product_id");
-        // $product_qty = $request->input("pending_product_qty");
-        $amount             = $request->input("pending_amount");
-        
-       
-        // $contact_num = '09232415169';
-
-        $text_message = 'Thank you for ordering Creamline Products. Your Invoice # '.$invoice_no.' has been accepted. Total amount purchased of PHP '.$amount.'. Please expect it to be delivered on '.$date_to_display.'.';
-
-        // if(env("DB_CONNECTION") == "pgsql"){
-        //     $current_quantity = DB::table('stocks')
-        //         ->where('id', $product_id)
-        //         ->select('*')
-        //         ->get();
-
-        //     $deducted_qty = intval($current_quantity[0]->quantity) - intval($product_qty);
-
-        //     Stock::where('id', $product_id)->update([ 'quantity' => $deducted_qty]);
-        // }else{
-        //     Stock::where('id', $product_id)->update([ 'quantity' => DB::raw('quantity - "'.$product_qty.'"')]);
-        // }
-        // Order::where('id', $order_id)->update(['is_approved' => 1]);
-        // Order::where('id', $order_id)->update(['delivery_date' => $delivery_date]);
-
-        //call the global function for setting the notification
-        $this->set_notification("approved_customer_order", $text_message, $client_id);
-        
-        // $result = $this->global_itexmo($contact_num, $text_message." \n\n\n\n","ST-CAPST343228_559B2", "twy{ccd#)4");
-        $result = $this->global_itexmo($contact_num, $text_message." \n\n\n\n","ST-CREAM343228_LGZPB", '#5pcg2mpi]');
-        if ($result == ""){
-            // echo "iTexMo: No response from server!!!
-            // Please check the METHOD used (CURL or CURL-LESS). If you are using CURL then try CURL-LESS and vice versa.   
-            // Please CONTACT US for help. ";   
-        }else if ($result == 0){
-            // echo "Message Sent!";
-        }
-        else{    
-            // echo "Error Num ". $result . " was encountered!";
-        }
-
-        // return response
+    
         $response = [
             'success'   => true,
-            'message'   => 'Order successfully approved.',
-            'test'      => $text_message
+            'message'   => 'Order successfully approved.'
         ];
         return response()->json($response, 200);
 

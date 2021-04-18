@@ -109,12 +109,13 @@ class StaffController extends Controller
                 'img'               => "NA",
                 'remember_token'    => "NA",
                 'user_role'         => 1,
-                'is_active'         => 0,
-                'is_pending'        => 0
             ];
 
             if(!$request->staff_id){
-                $data = array_merge($data, ['password' => Hash::make($request->password)]);
+                $data = array_merge($data, [
+                    'password' => Hash::make($request->password), 
+                    'is_active'         => 0,
+                    'is_pending'        => 0]);
             }
 
             if($request->staff_id){

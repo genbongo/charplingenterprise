@@ -33,7 +33,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin.home');
+        if(Auth::user()->user_role == 1){
+            return redirect('/main');
+        } else {
+            return view('admin.home');
+
+        }
     }
 
     /*
@@ -106,23 +111,64 @@ class HomeController extends Controller
     */
     public function profile_update(Request $request)
     {
-        User::updateOrCreate([
-            'id' => $request->user_id
-        ],[
-            'fname' => $request->fname,
-            'mname' => $request->mname,
-            'lname' => $request->lname,
-            'address' => $request->address,
-            'contact_num' => $request->contact_num,
-        ]);
-
+        if($request->email != $request->email1){
+            if(User::where('email', $request->email)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Email Address Already Exist.'
+                ]);
+            } else {
+                User::updateOrCreate([
+                    'id' => $request->user_id
+                ],[
+                    'fname' => $request->fname,
+                    'mname' => $request->mname,
+                    'lname' => $request->lname,
+                    'address' => $request->address,
+                    'contact_num' => $request->contact_num,
+                    'email' => $request->email
+                ]);
+            }
+        }  else if($request->contact_num != $request->contact_num1) { 
+            if(User::where('contact_num', $request->contact_num)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Phone Number Already Exist.'
+                ]);
+            } else {
+                User::updateOrCreate([
+                    'id' => $request->user_id
+                ],[
+                    'fname' => $request->fname,
+                    'mname' => $request->mname,
+                    'lname' => $request->lname,
+                    'address' => $request->address,
+                    'contact_num' => $request->contact_num,
+                    'email' => $request->email
+                ]);
+            }
+        } else {
+            User::updateOrCreate([
+                'id' => $request->user_id
+            ],[
+                'fname' => $request->fname,
+                'mname' => $request->mname,
+                'lname' => $request->lname,
+                'address' => $request->address,
+                'contact_num' => $request->contact_num,
+                'email' => $request->email
+            ]);
+        }
+    
         return response()->json([
+            'status'    => 'success',
             'message'   => 'Profile Successfully Updated!',
             'fname' => $request->fname,
             'mname' => $request->mname,
             'lname' => $request->lname,
             'address' => $request->address,
             'contact_num' => $request->contact_num,
+            'email' => $request->email
         ]);
     }
 

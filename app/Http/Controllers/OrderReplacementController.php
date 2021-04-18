@@ -60,6 +60,7 @@ class OrderReplacementController extends Controller
                 SUM(orders.ordered_total_price) as total_price, 
                 CONCAT(users.fname, ' ', users.lname) as fullname, 
                 users.email, 
+                orders.store_id,
                 orders.delivery_date,
                 orders.attempt,
                 users.id as client_id,
@@ -69,7 +70,14 @@ class OrderReplacementController extends Controller
                 ->where('is_cancelled', 1)
                 ->where('order_cancel', 0)
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->store_name = 'NA';
+                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    }
+                    return $item;
+                });
 
             if ($request->ajax()) {
                 return Datatables::of($file_replacement)
