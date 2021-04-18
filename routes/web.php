@@ -59,6 +59,7 @@ Route::resource('sales',                                                'SalesRe
 Route::resource('loss',                                                 'LossReportController');
 Route::resource('emergency',                                            'EmergencyController');
 Route::resource('notification',                                         'NotificationController');
+Route::post('notification/update',                                      'NotificationController@notificationUpdate');
 Route::resource('order_replacement',                                    'OrderReplacementController');
 Route::resource('order_damage',                                         'ProductDamagesController');
 Route::resource('ads',                                                  'AdController');

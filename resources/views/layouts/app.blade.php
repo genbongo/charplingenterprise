@@ -362,18 +362,6 @@
                 return false;
                     return true;
             }
-
-            // function onlyLetters(evt) {
-            //     evt = (evt) ? evt : event;
-            //     var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
-            //         ((evt.which) ? evt.which : 0));
-            //     if (charCode > 31 && (charCode < 65 || charCode > 90) &&
-            //         (charCode < 97 || charCode > 122)) {
-            //         // alert("Enter letters only.");
-            //         return false;
-            //     }
-            //     return true;
-            // }
         </script>
     </div>
 
@@ -398,11 +386,34 @@
             var notificationCount = 0;
             var currentCount = 0;
 
-            //when notificationDropdown is clicked
-            $("#notificationDropdown").click(function(){
-                //remove the badge
-                $(".badge-here").html(0);
-            });
+            $(document).on('click', '#notificationDropdown', function(e){
+                e.preventDefault()
+                console.log(0)
+                var updated_notif = $(".badge-here").text();
+                $.ajax({
+                    data: { counter: updated_notif},
+                    url: "{{ url('notification/update') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.status == 'exist'){
+                            $('#saveBtn').html('Create');
+                            $("#error_message").html(data.message).show()
+                            return
+                        } else {
+                            $('#staffForm').trigger("reset");
+                            $('#ajaxModel').modal('hide');
+                            table.draw();
+                            $('#saveBtn').html('Create');
+                            swal("Information", data.message);
+                        }
+                    },
+                    error: function (data) {
+                        $("#error_message").html(data).hide()
+                        $('#saveBtn').html('Create');
+                    }
+                });
+            })
 
             //call the function for displaying the notifications
             displayNotifications();
@@ -413,25 +424,19 @@
                     type: "GET",
                     url: "{{ url('notification') }}",
                     success: function (data) {
-                        notificationCount = data.length;
-                        $(".badge-here").text(notificationCount)
-                        //check if the count has been added
-                        // if(currentCount != 0 && notificationCount > currentCount){
-                        //     $(".badge-here").html(notificationCount - currentCount);
-                        // }
-
+                        $(".badge-here").text(data.counter)
                         let output = '';
-                        if(data.length > 0){
-                            for (var i=0; i < data.length; i++){
+                        if(data.notifications.length > 0){
+                            for (var i=0; i < data.notifications.length; i++){
                                 if ($(window).width() < 600) {
                                 output += `<div class="">
-                                ‣ ${data[i].message}
+                                ‣ ${data.notifications[i].message}
                                     </div>`
                                 $('nav').removeClass('sidebar');
 
                                 }else{
                                     output += `<div class="dropdown-item notifications notif_wrapper">
-                                    ‣ ${data[i].message}
+                                    ‣ ${data.notifications[i].message}
                                     </div>`
                                 }
                             }

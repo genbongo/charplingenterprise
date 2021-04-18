@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Notification;
 use App\{Area, User, Product, Order};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use App\Helpers\Mail\SenderHelper as MailDispatch;
@@ -30,7 +31,7 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
-     
+        return;
         $orders = Order::where('orders.is_approved', 1)
                 ->where('orders.is_completed', 0)
                 ->where('is_cancelled',0)
@@ -141,19 +142,56 @@ class NotificationController extends Controller
                     'message' => "There are ".$users." registrations for today. <a href='/client'>Click</a> to review details"]
                 ));
             }
-            return response()->json($notification);
+            
         } 
         else if(Auth::user()->user_role == 2){#client notifications
             $user = User::find(@Auth::user()->id);
             $notification = SystemNotification::where('user_id', $user->id)->where('email_to', 'client')->orderBy('id', 'desc')->get();
-            return response()->json($notification);
+            // return response()->json($notification);
         } 
         else { //staff notifications
             $user = User::find(@Auth::user()->id);
             $notification = SystemNotification::where('area_id', $user->area_id)->where('email_to', 'staff')->orderBy('id', 'desc')->get();
-            return response()->json($notification);
+            // return response()->json($notification);
         }
 
         $users = User::where('is_pending','0')->where('is_active','1')->get();
+
+        if(!DB::table('notification_counter')->where('user_id',Auth::user()->id)->first()){
+            DB::table('notification_counter')->updateOrInsert(
+                [
+                    'current_notif' => count($notification),
+                    'updated_notif' => count($notification)
+                ],
+                ['user_id' => Auth::user()->id]
+            );
+        } else {
+            DB::table('notification_counter')->updateOrInsert(
+                [
+                    'current_notif' => count($notification)
+                ],
+                ['user_id' => Auth::user()->id]
+            );
+        }
+
+        if($notif = DB::table('notification_counter')->where('user_id',Auth::user()->id)->first()){
+            if($notif->modified){
+                $counter = $notif->current_notif - $notif->updated_notif;
+            } else {
+                $counter = $notif->current_notif;
+            }
+        }
+        
+        return response()->json(['notifications' => $notification, 'counter' => $counter]);
+    }
+
+    public function notificationUpdate(Request $request){
+        if($notif = DB::table('notification_counter')->where('user_id',Auth::user()->id)->first()){
+           $updated_notif = $notif->updated_notif + $request->updated_notif;
+            DB::table('notification_counter')
+                ->where('user_id',Auth::user()->id)
+                    ->update(['modified' => date('Y-m-d'),'updated_notif' => $updated_notif]);
+
+        }
     }
 }
