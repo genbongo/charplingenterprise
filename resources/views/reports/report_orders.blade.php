@@ -19,9 +19,12 @@
                 </select>
             </div>
             <div class="col-md-6" style="padding:0px;">
+                From: <input type="date" value="{{date('Y-m-d')}}" id="date_from" style="padding:5px;">
+                To:<input type="date" value="{{date('Y-m-d')}}" id="date_to" style="padding:5px;">
+                <button class="btn btn-success" id="btnFilter">Filter</button>
                 <button class="btn btn-info ml-auto float-right" onclick="printData();" id="print_data">Print</button> &nbsp;
                 <!-- <button class="btn btn-danger ml-auto float-right mr-2" id="pdf">PDF</button> -->
-                <button class="btn btn-success ml-auto float-right mr-2" onclick="exportEx('xls');" id="export_data">XLS</button>
+                {{-- <button class="btn btn-success ml-auto float-right mr-2" onclick="exportEx('xls');" id="export_data">XLS</button> --}}
             </div>
         </div>
     </div>
@@ -86,13 +89,18 @@
             order_reports($(this).val())
         })
 
+        $(document).on('click', '#btnFilter', function(e){
+            e.preventDefault();
+            order_reports($("#filter_status").val())
+        })
+
         order_reports($("#filter_status").val())
 
-        // $(document).on('change')
-
         function order_reports(filter_status){
+            var date_from = $("#date_from").val()
+            var date_to = $("#date_to").val()
             $("#selected_status").text(filter_status)
-            $.getJSON( "{{ url('order/reports/json') }}" + '/'+ filter_status, function( data ) {
+            $.getJSON( "{{ url('order/reports/json') }}" + '/'+ filter_status + '/'+ date_from + '/' + date_to, function( data ) {
                 if(!data.length){
                     $("#export_data").prop('disabled', true)
                     $("#print_data").prop('disabled', true)

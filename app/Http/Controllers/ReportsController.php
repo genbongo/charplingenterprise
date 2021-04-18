@@ -29,6 +29,9 @@ class ReportsController extends Controller
     }
 
     public function getOrders(Request $request){
+        $start_date = date('Y-m-d 00:00:00', strtotime($request->date_from));
+        $end_date = date('Y-m-d 23:59:59', strtotime($request->date_to));
+        
         $response = DB::table('order_invoice')
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')
                 ->leftJoin('users', 'orders.client_id', '=', 'users.id')
@@ -40,6 +43,8 @@ class ReportsController extends Controller
                     users.contact_num,
                     stores.store_name
                 ")
+                ->where('order_invoice.created_at','>=', $start_date)
+                ->where('order_invoice.created_at','<=',$end_date)
                 ->when($request->filter_status != 'ALL', function($sql) use ($request){
                     switch ($request->filter_status) {
                         case 'PENDING':
