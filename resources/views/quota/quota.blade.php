@@ -230,7 +230,7 @@
                         htmlData += `
                             <tr>
                                 <td scope="row">${key}</td>
-                                <td>${row}</td>
+                                <td>Php ${row}</td>
                             </tr>
                         `
                     })

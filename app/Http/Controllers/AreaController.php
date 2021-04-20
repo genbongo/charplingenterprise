@@ -69,8 +69,8 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         if($request->area_id) {
-            if($request->area_name != $request->area_name1){
-                if(Area::where('area_name', $request->area_name)->first()){
+            if($request->area_name != $request->area_name1 || $request->area_code != $request->area_code1){
+                if(Area::where(['area_name' => $request->area_name, 'area_code' => $request->area_code])->first()){
                     return response()->json(['success' => 'exist',
                     'message' => 'Area Already Exist.'], 200);
                 } else {
@@ -90,7 +90,7 @@ class AreaController extends Controller
                 ]);
             }
         } else {
-            if(Area::where('area_name', $request->area_name)->first()){
+            if(Area::where(['area_name' => $request->area_name, 'area_code' => $request->area_code])->first()){
                 return response()->json(['success' => 'exist',
                 'message' => 'Area Already Exist.'], 200);
             } else {

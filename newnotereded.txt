@@ -1,8 +1,8 @@
 ADMIN YEARLY QUOTA
--yearly quota table maguba after creating quota
+-yearly quota table maguba after creating quota ---- DONE
 
 ADMIN MANAGE AREA
--can still create area with same area code.
+-can still create area with same area code. --- DONE
 
 ADMIN CHECKOUT MODULE
 -Can still deliver choosing a pending store/can still choose a pending store on checkout

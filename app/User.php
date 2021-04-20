@@ -40,11 +40,11 @@ class User extends Authenticatable
 
     public function area()
     {
-        return $this->belongsTo(Area::class);
+        return $this->belongsTo(Area::class)->where('is_deleted',1);
     }
 
     public function stores()
     {
-        return $this->hasMany(Store::class);
+        return $this->hasMany(Store::class)->where('is_deleted',1);
     }
 }
