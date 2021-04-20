@@ -112,200 +112,164 @@ class ProductController extends Controller
     {  
         if ($request->ajax()) {
 
-            
-
-            if(empty($request->product_id)){
-                $image = $request->file('product_image');
-            } else {
-                if($request->hasFile("product_image")){
-                    $image = $request->file('product_image');
+            if($request->product_id){
+                if($request->name != $request->name1){
+                    if(Product::where('name', $request->name)->first()){
+                        return response()->json([
+                            'status'    => 'exist',
+                            'message'   => 'Product Already Exist.'
+                        ]);
+                    } else {
+                        if(empty($request->product_id)){
+                            $image = $request->file('product_image');
+                        } else {
+                            if($request->hasFile("product_image")){
+                                $image = $request->file('product_image');
+                            } else {
+                                $pdct = Product::find($request->product_id);
+                                $new_name = $pdct->product_image;
+                            }
+                        }
+    
+                        if($request->hasFile("product_image")){
+                            // $image = $request->file('img');
+                            $path = \Storage::disk('public')->put('img/product', $image);
+                        
+                            #start here ============================================================
+                            $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                            
+                            $storage = new StorageClient([
+                                'keyFile' => json_decode($googleConfigFile, true)
+                            ]);
+    
+                            $storageBucketName  = config('googlecloud.storage_bucket');
+                            $bucket             = $storage->bucket($storageBucketName);
+                            $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                            
+                            $googleCloudStoragePath = $path;
+    
+                            $bucket->upload($fileSource, [
+                                'predefinedAcl'  => 'publicRead',
+                                'name'           => $googleCloudStoragePath
+                            ]);
+                            #end here ===============================================================
+                            $new_name = str_replace("img/product/", "", $path);
+                        }
+    
+                        Product::updateOrCreate([
+                            'id' => $request->product_id
+                        ],[
+                            'name'          => $request->name,
+                            'description'   => $request->description,
+                            'product_image' => $new_name,
+                            'is_deleted'    => $request->is_deleted
+                        ]);
+                    }
                 } else {
-                    $pdct = Product::find($request->product_id);
-                    $new_name = $pdct->product_image;
+                    if(empty($request->product_id)){
+                        $image = $request->file('product_image');
+                    } else {
+                        if($request->hasFile("product_image")){
+                            $image = $request->file('product_image');
+                        } else {
+                            $pdct = Product::find($request->product_id);
+                            $new_name = $pdct->product_image;
+                        }
+                    }
+
+                    if($request->hasFile("product_image")){
+                        // $image = $request->file('img');
+                        $path = \Storage::disk('public')->put('img/product', $image);
+                    
+                        #start here ============================================================
+                        $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                        
+                        $storage = new StorageClient([
+                            'keyFile' => json_decode($googleConfigFile, true)
+                        ]);
+
+                        $storageBucketName  = config('googlecloud.storage_bucket');
+                        $bucket             = $storage->bucket($storageBucketName);
+                        $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                        
+                        $googleCloudStoragePath = $path;
+
+                        $bucket->upload($fileSource, [
+                            'predefinedAcl'  => 'publicRead',
+                            'name'           => $googleCloudStoragePath
+                        ]);
+                        #end here ===============================================================
+                        $new_name = str_replace("img/product/", "", $path);
+                    }
+
+                    Product::updateOrCreate([
+                        'id' => $request->product_id
+                    ],[
+                        'name'          => $request->name,
+                        'description'   => $request->description,
+                        'product_image' => $new_name,
+                        'is_deleted'    => $request->is_deleted
+                    ]);
+                }
+            } else {
+                if(Product::where('name', $request->name)->first()){
+                    return response()->json([
+                        'status'    => 'exist',
+                        'message'   => 'Product Already Exist.'
+                    ]);
+                } else {
+                    if(empty($request->product_id)){
+                        $image = $request->file('product_image');
+                    } else {
+                        if($request->hasFile("product_image")){
+                            $image = $request->file('product_image');
+                        } else {
+                            $pdct = Product::find($request->product_id);
+                            $new_name = $pdct->product_image;
+                        }
+                    }
+
+                    if($request->hasFile("product_image")){
+                        // $image = $request->file('img');
+                        $path = \Storage::disk('public')->put('img/product', $image);
+                    
+                        #start here ============================================================
+                        $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                        
+                        $storage = new StorageClient([
+                            'keyFile' => json_decode($googleConfigFile, true)
+                        ]);
+
+                        $storageBucketName  = config('googlecloud.storage_bucket');
+                        $bucket             = $storage->bucket($storageBucketName);
+                        $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                        
+                        $googleCloudStoragePath = $path;
+
+                        $bucket->upload($fileSource, [
+                            'predefinedAcl'  => 'publicRead',
+                            'name'           => $googleCloudStoragePath
+                        ]);
+                        #end here ===============================================================
+                        $new_name = str_replace("img/product/", "", $path);
+                    }
+
+                    Product::updateOrCreate([
+                        'id' => $request->product_id
+                    ],[
+                        'name'          => $request->name,
+                        'description'   => $request->description,
+                        'product_image' => $new_name,
+                        'is_deleted'    => $request->is_deleted
+                    ]);
                 }
             }
-            if($request->hasFile("product_image")){
-                // $image = $request->file('img');
-                $path = \Storage::disk('public')->put('img/product', $image);
-            
-                #start here ============================================================
-                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
-                
-                $storage = new StorageClient([
-                    'keyFile' => json_decode($googleConfigFile, true)
-                ]);
-
-                $storageBucketName  = config('googlecloud.storage_bucket');
-                $bucket             = $storage->bucket($storageBucketName);
-                $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
-                
-                $googleCloudStoragePath = $path;
-
-                $bucket->upload($fileSource, [
-                    'predefinedAcl'  => 'publicRead',
-                    'name'           => $googleCloudStoragePath
-                ]);
-                #end here ===============================================================
-                $new_name = str_replace("img/product/", "", $path);
-            }
-            Product::updateOrCreate([
-                'id' => $request->product_id
-            ],[
-                'name'          => $request->name,
-                'description'   => $request->description,
-                'product_image' => $new_name,
-                'is_deleted'    => $request->is_deleted
-            ]);
 
             return response()->json([
+                'status'    => 'success',
                 'message'   => 'Product Successfully submitted.',
                 200
             ]);
-        }
-
-
-
-
-
-
-        //old 
-        //if there is a product image selected
-        if($request->hasFile("product_image")){
-            $validation = Validator::make($request->all(), [
-                'product_image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120'
-            ]);
-
-            if($validation->passes())
-            {
-                $image = $request->file('product_image')[0];
-
-                $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('img/product'), $new_name);
-
-                //insert to product table
-                $productModel = Product::updateOrCreate([
-                    'id' => $request->product_id
-                ],[
-                    'name' => $request->name,
-                    'description' => $request->description,
-                    'product_image' => $new_name,
-                ]);
-
-                //
-
-                $images = $request->file('product_image');
-
-                foreach ($images as $key => $image) {
-                    if($key != 0 )
-                    {
-                        $file_name = rand() . '.' . $image->getClientOriginalExtension();
-                        $image->move(public_path('img/product'), $file_name);
-
-                        $productModel->images()->create([
-                            'path' => $file_name
-                        ]); 
-                    }
-                }
-               
-                //insert to stock table
-                $stockModel = Stock::updateOrCreate([
-                    'id' => $request->stock_id
-                ],[
-                    'product_id' => $productModel->id,
-                    'quantity' => 0,
-                    'threshold' => 0,
-                ]);
-
-                //-------------get the value for price----------------//
-                $price_value = '';
-                $size_value = explode(",", $request->size);
-                $price_value = $this->return_price_value($size_value);
-
-                //insert to variation table
-                Variation::updateOrCreate([
-                    'id' => $request->product_id
-                ],[
-                    'product_id' => $productModel->id,
-                    'size' => str_replace(" ", "", $request->size),
-                    'flavor' => str_replace(" ", "", $request->flavor),
-                    'price' => $request->price ? $request->price : $price_value,
-                ]);
-
-                return response()->json([
-                    'message'   => 'Image Successfully Uploaded.',
-                    'uploaded_image' => '<img src="/images/'.$new_name.'" class="img-thumbnail" width="300" />',
-                    'class_name'  => 'alert-success'
-                ]);
-            }
-            else
-            {
-                return response()->json([
-                    'message'   => $validation->errors()->all(),
-                    'uploaded_image' => '',
-                    'class_name'  => 'alert-danger'
-                ]);
-            }
-        }else{
-
-            if($request->action == "update_price"){
-                //insert to variation table
-                Variation::where("product_id", $request->product_id)->update([
-                    'price' => $request->price,
-                    'promo' => $request->promo
-                ]);
-
-                // return response
-                $response = [
-                    'success' => true,
-                    'message' => 'Price successfully saved.',
-                ];
-
-                return $response;
-
-            }else if($request->action == "update_size_flavor"){
-
-                //-------------get the value for price----------------//
-                $price_value = '';
-                $size_value = explode(",", $request->size);
-
-                $size_value = Arr::where($size_value, function ($value, $key){
-                    return $value != '';
-                });
-
-                $price_value = $this->return_price_value($size_value);
-
-                //insert to variation table
-                Variation::where("product_id", $request->product_id)->update([
-                    'size' => $request->size, 
-                    'flavor' => $request->flavor,
-                    'price' => $request->price ? $request->price : $price_value,
-                ]);
-
-                // return response
-                $response = [
-                    'success' => true,
-                    'message' => 'Variations successfully saved.',
-                ];
-
-                return $response;
-
-            }else{
-
-                Product::updateOrCreate([
-                    'id' => $request->product_id
-                ],[
-                    'name' => $request->name,
-                    'description' => $request->description
-                ]);
-
-                // return response
-                $response = [
-                    'success' => true,
-                    'message' => 'Product successfully saved.',
-                ];
-
-                return $response;
-            }
         }
     }
 

@@ -8,7 +8,7 @@ ADMIN CHECKOUT MODULE
 -Can still deliver choosing a pending store/can still choose a pending store on checkout
 
 ADMIN PRODUCT PAGE
--product can still add existing product.
+-product can still add existing product. --- DONE
 
 FRIDGE
 -History?? Fridge

@@ -61,12 +61,14 @@
             
             <div class="modal-body">
                 <form id="productForm" name="productForm" class="form-horizontal" enctype="multipart/form-data">
+                    <div class="alert alert-danger" role="alert" id="error_message" style="display:none;"></div>
                     <div class="row">
                         <div class="col-md-12">
                             <input type="hidden" name="product_id" id="product_id">
                             <div class="form-group">
                                 <label for="name" class="col-sm-12 control-label">Product Name</label>
                                 <div class="col-sm-12">
+                                    <input type="hidden" class="form-control" id="name1" name="name1">
                                     <input type="text" class="form-control" id="name" name="name" placeholder="Enter Product name"
                                            value="" maxlength="50" required="" autocomplete="off" onkeypress="return onlyLetters(event)">
                                 </div>
@@ -98,7 +100,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-offset-12 col-sm-10">
-                                <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+                                <button type="submit" class="btn btn-primary" id="saveBtn">Submit</button>
                             </div>
                         </div>
                     </div>
@@ -231,7 +233,9 @@
         $('#createNewProduct').click(function () {
             $(".list-group-flush").html("")
             $('#product_image').attr("required", "");
-            $('#saveBtn').html("Create");
+            $('#saveBtn').html("Submit");
+            $('#product_id').val("");
+            $('#name1').val("");
             $('#productForm').trigger("reset");
             $('#modelHeading').html("Create Product");
             $('#ajaxModel').modal('show');
@@ -246,6 +250,7 @@
                 $('#saveBtn').html('Update');
                 $('#product_id').val(data.id);
                 $('#name').val(data.name);
+                $('#name1').val(data.name);
                 $('#description').val(data.description);
                 $('#is_deleted').val(data.is_deleted);
                 $('#ajaxModel').modal('show');
@@ -256,6 +261,8 @@
         $(document).on('submit', '#productForm', function (e) {
             e.preventDefault();
             // $(this).html('Saving..');
+            $('#saveBtn').html('Submitting..').prop('disabled',true);
+            $("#error_message").html("").hide()
             $.ajax({
                 url:"{{ url('product') }}",
                 method:"POST",
@@ -265,34 +272,27 @@
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    swal("Information", data.message);
-                    $('#product_id').val('');
-                    $('#productForm').trigger("reset");
-                    $('#ajaxModel').modal('hide');
-                    table.draw();
-                    $('#saveBtn').html('Save');
+                    if(data.status == 'exist'){
+                        $('#saveBtn').html('Submit').prop('disabled',false);
+                        $("#error_message").html(data.message).show()
+                        return
+                    } else {
+                        swal("Information", data.message);
+                        $('#product_id').val('');
+                        $('#name1').val('');
+                        $('#productForm').trigger("reset");
+                        $('#ajaxModel').modal('hide');
+                        table.draw();
+                        $('#saveBtn').html('Submit').prop('disabled',false);
+                    }
                 },
                 error: function (data) {
                     console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Submit').prop('disabled',false);
                 }
             });
         });
         
-        // edit stock
-        // $('body').on('click', '.StockProduct', function () {
-        //     var product_id = $(this).data('id');
-        //     const prodname = $(this).data('name');
-        //     $.get("{{ url('stock') }}" + '/' + product_id + '/edit', function (data) {
-        //         $('#stockModal').modal('show');
-        //         $('#stock_product_id').val(product_id);
-        //         $('#stock_id').val(data.id);
-        //         $('#stock_product_name').val(prodname);
-        //         $('#stocks').val(data.quantity);
-        //         $('#threshold').val(data.threshold);
-        //     })
-        // });
-
         //when form for stock is submitted
         $("#stockForm").on('submit', function(e){
             e.preventDefault();
