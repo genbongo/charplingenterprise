@@ -12,7 +12,7 @@
     <table id="dataTable" class="table table-striped table-bordered">
         <thead class="bg-indigo-1 text-white">
         <tr>
-            <th></th>
+            <th>&nbsp;</th>
             <th>Cart ID</th>
             <th width='40'>Image</th>
             <th>Name</th>
@@ -58,36 +58,38 @@
             serverSide: true,
             ajax: "{{ url('cart') }}",
             columns: [
-                // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {
-                    data: 'select', 
-                    name: 'select', 
-                    orderable: false, 
-                    render: function(data, type, full, meta) {
-                        return `<input type="checkbox" name="checkoutIds[]" class="checkout" value="${full.id}" style="margin: 9px; transform: scale(1.5)">`;
-                    }
-                },
+                {data: 'select', name: 'select', orderable: false},
                 {data: 'id', name: 'id'},
                 {
                     data: 'product_image', name: 'product_image',
-                    "render": function (data, type, full, meta) {
+                    render: function (data, type, full, meta) {
                         var url  = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data
                         return "<a data-fancybox='' href='"+ url +"' align='center'><img src='"+ url +"' height='40' width='40'></a>";
                     },
+                    orderable: false
                 },
-                {data: 'product_name', name: 'product_name'},
+                {data: 'product_name', name: 'product_name',},
                 {data: 'size', name: 'size'},
-                // {data: 'flavor', name: 'flavor'},
                 {data: 'quantity', name: 'quantity'},
                 {
                     data: 'subtotal', name: 'subtotal',
                     "render": function (data, type, full, meta) {
                         return "&#8369; " + data +".00" ;
                     },
+                    orderable: false
                 },
                 {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
+            ],
+            initComplete: function( settings, json ) {
+                setTimeout(() => {
+                    $('th').removeClass('sorting_asc');
+                },100)
+                
+            }
         });
+
+        $('th').removeClass('sorting_asc');
+        
         // create or update cart
         $('#btnCheckout').click(function (e) {
 

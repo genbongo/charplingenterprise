@@ -43,14 +43,11 @@ class CartController extends Controller
         if ($request->ajax()) {
             return Datatables::of($cart)
                 ->addIndexColumn()
-                ->addColumn('select', function(){
-                    return false;
+                ->addColumn('select', function($row){
+                    return "<input type='checkbox' name='checkoutIds[]' class='checkout' value='".$row->id."' style='margin: 9px; transform: scale(1.5)'>";
                 })
                 ->addColumn('action', function ($row) {
-
-                    $btn = ' <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Remove Cart" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Remove" class="btn btn-danger btn-sm deleteCart">Remove</a>';
-
-                    return $btn;
+                    return '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Remove Cart" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Remove" class="btn btn-danger btn-sm deleteCart">Remove</a>';
                 })
                 ->rawColumns(['select', 'action'])
                 ->make(true);
