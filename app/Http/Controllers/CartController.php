@@ -47,7 +47,10 @@ class CartController extends Controller
                     return "<input type='checkbox' name='checkoutIds[]' class='checkout' value='".$row->id."' style='margin: 9px; transform: scale(1.5)'>";
                 })
                 ->addColumn('action', function ($row) {
-                    return '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Remove Cart" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Remove" class="btn btn-danger btn-sm deleteCart">Remove</a>';
+                    $btn = "";
+                    $btn .= '<a href="javascript:void(0)"  data-id="'.$row->id.'" class="btn btn-danger btn-sm deleteCart">Remove</a>';
+                    $btn .= ' <a href="javascript:void(0)" data-id="'.$row->id.'" data-stock_id="'.$row->product_stock_id.'" data-quantity="'.$row->quantity.'" data-val="'.$row->product_id.'" class="btn btn-primary btn-sm div-prod">Edit</a>';
+                    return $btn;
                 })
                 ->rawColumns(['select', 'action'])
                 ->make(true);
@@ -152,29 +155,41 @@ class CartController extends Controller
     {
         $product = Product::find($request->product_id);
 
-        $cart = Cart::where('product_id', $request->product_id)
-                        ->where('product_stock_id', $request->product_stock_id)
-                        ->where('user_id', Auth::user()->id)
-                        ->where('is_checkout', '0')
-                        ->first();
+        if($request->has('cart_id')){
+            Cart::where([
+                'id'        => $request->cart_id
+            ])->update([
+                'size'                  => $request->size,
+                'quantity'              => $request->quantity,
+                'price'                 => $request->price,
+                'subtotal'              => ($request->quantity * $request->price)
+            ]);    
+        } else {
+            
+            $cart = Cart::where('product_id', $request->product_id)
+                            ->where('product_stock_id', $request->product_stock_id)
+                            ->where('user_id', Auth::user()->id)
+                            ->where('is_checkout', '0')
+                            ->first();
 
-        $quantity = $cart ? $cart->quantity + $request->quantity : $request->quantity;
-        Cart::updateOrCreate([
-            'user_id'           => Auth::user()->id,
-            'product_id'        => $request->product_id,
-            'product_stock_id'  => $request->product_stock_id,
-            'is_checkout'       => '0',
-        ],[
-            'product_stock_id'      => $request->product_stock_id,
-            'product_image'         => $product->product_image,
-            'product_name'          => $request->product_name,
-            'product_description'   => $request->product_description,
-            'size'                  => $request->size,
-            'flavor'                => $request->flavor,
-            'quantity'              => $quantity,
-            'price'                 => $request->price,
-            'subtotal'              => ($quantity * $request->price)
-        ]);
+            $quantity = $cart ? $cart->quantity + $request->quantity : $request->quantity;
+            Cart::updateOrCreate([
+                'user_id'           => Auth::user()->id,
+                'product_id'        => $request->product_id,
+                'product_stock_id'  => $request->product_stock_id,
+                'is_checkout'       => '0',
+            ],[
+                'product_stock_id'      => $request->product_stock_id,
+                'product_image'         => $product->product_image,
+                'product_name'          => $request->product_name,
+                'product_description'   => $request->product_description,
+                'size'                  => $request->size,
+                'flavor'                => $request->flavor,
+                'quantity'              => $quantity,
+                'price'                 => $request->price,
+                'subtotal'              => ($quantity * $request->price)
+            ]);
+        }
 
         // return response
         $response = [
