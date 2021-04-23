@@ -15,6 +15,7 @@
                     <option value="UNDELIVERED">UNDELIVERED</option>
                     <option value="REPLACEMENT">REPLACEMENT</option>
                     <option value="DAMAGES">DAMAGES</option>
+                    <option value="CANCELLED">CANCELLED</option>
                     <option value="COMPLETED">COMPLETED</option>
                 </select>
             </div>

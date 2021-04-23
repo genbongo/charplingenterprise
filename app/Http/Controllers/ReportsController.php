@@ -72,6 +72,9 @@ class ReportsController extends Controller
                                         ->where('orders.is_replacement', 1)
                                         ->where('orders.is_damages', 1);
                         break;
+                        case 'CANCELLED':
+                            return $sql->where('orders.order_cancel', 1);
+                        break;
                         case 'COMPLETED':
                             return $sql->where('orders.is_completed', 1)
                                         ->where('orders.is_replacement', 0)
