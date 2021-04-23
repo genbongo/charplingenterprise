@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
-use App\User;
-
+use App\{User, Order};
+use App\Traits\GlobalFunction;
 class TransactionHistoryController extends Controller
 {
+    use GlobalFunction;
     /**
      * Create a new controller instance.
      *
@@ -99,6 +100,20 @@ class TransactionHistoryController extends Controller
 
     public function deleteOrder(Request $request){
         if($request->id){
+            if($order = DB::table('order_invoice')
+                ->selectRaw('users.area_id,order_invoice.user_id, order_invoice.invoice_no')
+                    ->join('users', ['users.id' => 'order_invoice.user_id'])
+                        ->where('order_invoice.id', $request->id)->first()){
+                            $this->notificationDispatch([
+                                'user_id'   => $order->user_id,
+                                'type'      => 'order_approval',
+                                'area_id'   => $order->area_id,
+                                'email_to'  => 'client',
+                                'message'   => "Your order ".$order->invoice_no." was declined. Please contact the staff assigned in your store area.",
+                                'status'    => 'unread'
+                            ]);   
+                        }
+            
             // return response
             $order = DB::table('order_invoice')->where('id', $request->id)->delete();
             if($order){

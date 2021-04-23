@@ -195,6 +195,16 @@ class OrderController extends Controller
         $invoice_no         = $request->pending_invoice;
         
         if($user = User::find($client_id)){
+
+            $this->notificationDispatch([
+                'user_id'   => $user->id,
+                'type'      => 'order_approval',
+                'area_id'   => $user->area_id,
+                'email_to'  => 'client',
+                'message'   => "Your order ".$invoice_no." was approved. Delivery is scheduled on ".$date_to_display.".",
+                'status'    => 'unread'
+            ]);   
+
             //set text message
             $text_message = "Hi, ". $user->fname . "\n \nYour order ".$invoice_no." has been approved.\nDelivery date is on ".$date_to_display.".\nThank you. Please see your account for more info
             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
