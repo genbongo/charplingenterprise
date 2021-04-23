@@ -573,8 +573,8 @@ class ClientController extends Controller
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Edit Store" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editStore">Edit</a> ';
                     if($row->is_deleted == 0){
                         $btn .= '<div class="dropdown">
-                            <button class="dropbtn" type="button" id="status_update_'.$row->id.'">Status</button>
-                            <div class="dropdown-content">
+                            <button class="dropbtn" type="button" >Status</button>
+                            <div class="dropdown-content" id="status_update_'.$row->id.'">
                                 <a href="javascript://;" data-store_id="'.$row->id.'" data-id="'.$row->user_id.'" class="status_update" data-status="accept">Accept</a>
                                 <a href="javascript://;" data-store_id="'.$row->id.'" data-id="'.$row->user_id.'" class="status_update" data-status="decline">Decline</a>
                             </div>

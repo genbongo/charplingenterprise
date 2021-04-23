@@ -265,7 +265,7 @@
             })
             .then((isTrue) => {
                 if (isTrue) {
-                    $("#status_update_"+store_id).text("Sending");
+                    $("#status_update_"+store_id).remove();
                     $.ajax({
                         type: "GET",
                         url: "{{ url('client/stores/modified') }}" + '/' + client_id +'/'+status+'/'+store_id,
