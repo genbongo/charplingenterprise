@@ -42,6 +42,18 @@ class NotificationController extends Controller
             Order::whereId($value->id)->update([
                 'is_cancelled' => 1
             ]);
+            if($user = User::find($value->client_id)){
+                $this->notificationDispatch([
+                    'user_id'   => $user->id,
+                    'type'      => 'order_auto_cancel',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'staff',
+                    'message'   => "There are ".count($orders)." orders that were automatically cancelled and added to the undelivered list. It has
+                    passed the delivery date and no actions were done. Please contact your administration for
+                    clarification.",
+                    'status'    => 'unread'
+                ]);   
+            }
         }
         $users = User::where('is_pending','0')
                         ->where('is_active','1')
