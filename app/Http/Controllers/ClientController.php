@@ -603,7 +603,8 @@ class ClientController extends Controller
         $stores = Store::selectRaw('stores.*')
                     // ->leftJoin('user_fridges', ['user_fridges.store_id' => 'stores.id'])
                     // ->leftJoin('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
-                    ->where(['user_id' => $id])->get()
+                    ->where(['user_id' => $id, 'is_deleted' => 1])
+                    ->get()
                     ->map(function($item){
                         $item->fridges = UserFridge::join('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
                                         ->selectRaw('fridges.id, fridges.model, fridges.description, fridges.status')

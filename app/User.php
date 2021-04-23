@@ -45,6 +45,6 @@ class User extends Authenticatable
 
     public function stores()
     {
-        return $this->hasMany(Store::class)->where('is_deleted',1);
+        return $this->hasMany(Store::class)->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')->where('stores.is_deleted',1);
     }
 }

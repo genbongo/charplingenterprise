@@ -55,8 +55,10 @@ class StoreController extends Controller
                     //     $delete_status = 'Activate';
                     //     $delete_btn = 'btn-success';
                     // }
-   
-                    $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editStore">Edit</a>';
+                    $btn = "";
+                    if($row->is_deleted != 0){    
+                        $btn .= '<a href="javascript:void(0)" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editStore">Edit</a>';
+                    }
                     $btn .= ' <a href="javascript:void(0)" data-id="'.$row->id.'" data-original-title="View" class="edit btn btn-success btn-sm viewFridge">Fridges</a>';
 
                     // $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="'.$delete_status.' Store" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Delete" class="btn '.$delete_btn.' btn-sm deleteStore">'.$delete_status.'</a>';

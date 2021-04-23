@@ -145,7 +145,7 @@
 
         // create new store
         $('#createNewStore').click(function () {
-            $('#saveBtn').html("Create");
+            $('#saveBtn').html("Save");
             $('#store_id').val('');
             $('#storeForm').trigger("reset");
             $('#modelHeading').html("Create New Store");
@@ -155,8 +155,7 @@
         // create or update store
         $('#saveBtn').click(function (e) {
             e.preventDefault();
-            $(this).html('Saving..');
-
+            $(this).html('Saving..').attr("disabled", true);
             $.ajax({
                 data: $('#storeForm').serialize(),
                 url: "{{ url('store') }}",
@@ -166,11 +165,11 @@
                     $('#storeForm').trigger("reset");
                     $('#ajaxModel').modal('hide');
                     table.draw();
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').attr("disabled", false);
                 },
                 error: function (data) {
                     console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').attr("disabled", false);
                 }
             });
         });
