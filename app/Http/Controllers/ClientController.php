@@ -318,6 +318,14 @@ class ClientController extends Controller
         $user = User::find($client->id);
         // $client->delete();
         if($client->is_active == 0){
+            $this->notificationDispatch([
+                'user_id'   => $user->id,
+                'type'      => 'client_activation',
+                'area_id'   => $user->area_id,
+                'email_to'  => 'staff',
+                'message'   => "(" . $user->id . ") " . $user->fname. " ". $user->lname . "  is now activated as one of your clients. ",
+                'status'    => 'unread'
+            ]);   
             $user->update(["is_active" => 1]);
             $output = 'Successfully Activated!';
         }else{
@@ -327,7 +335,7 @@ class ClientController extends Controller
                 'type'      => 'client_deactivation',
                 'area_id'   => $user->area_id,
                 'email_to'  => 'staff',
-                'message'   => "(" . $user->id . ") " . $user->fname. " ". $user->lname . "  is deactivated from the client’s list. ",
+                'message'   => "(" . $user->id . ") " . $user->fname. " ". $user->lname . "  is now added to the deactivated list. He is removed as one of your clients. ",
                 'status'    => 'unread'
             ]);   
 
