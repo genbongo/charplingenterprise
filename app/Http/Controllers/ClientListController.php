@@ -30,9 +30,12 @@ class ClientListController extends Controller
     public function index(Request $request)
     {
 
-        $area = auth()->user()->area;
+        // $area = auth()->user()->area;
 
-        $clients =  $area->clients();
+        // $clients =  $area->clients();
+
+        $clients = User::where('area_id', auth()->user()->area_id)
+                        ->where('user_role',2)->get();
 
         if ($request->ajax()) {
             return Datatables::of($clients)

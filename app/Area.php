@@ -27,7 +27,7 @@ class Area extends Model
     {
         $owner_ids =  $this->stores->pluck('user_id');
 
-        return User::find($owner_ids);
+        return count($owner_ids) ? User::find($owner_ids) : [];
     }
 
     public function orders()

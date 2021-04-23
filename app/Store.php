@@ -26,4 +26,8 @@ class Store extends Authenticatable
     {
     	return $this->belongsTo(User::class);
     }
+
+    public function getArea(){
+        return Area::find(auth()->user()->area_id);
+    }
 }
