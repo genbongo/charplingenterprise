@@ -604,7 +604,7 @@ class ClientController extends Controller
                     // ->leftJoin('user_fridges', ['user_fridges.store_id' => 'stores.id'])
                     // ->leftJoin('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
                     ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
-                    ->where(['user_id' => $id, 'is_deleted' => 1])
+                    ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => auth()->user()->area_id])
                     ->get()
                     ->map(function($item){
                         $item->fridges = UserFridge::join('fridges', ['user_fridges.fridge_id' => 'fridges.id'])

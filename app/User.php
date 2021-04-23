@@ -45,6 +45,18 @@ class User extends Authenticatable
 
     public function stores()
     {
-        return $this->hasMany(Store::class)->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')->where('stores.is_deleted',1);
+        return $this->hasMany(Store::class)->where('stores.is_deleted',1);
+        // return $this->hasMany(Store::class)->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')->where('stores.is_deleted',1);
     }
+
+    public function getStores(){
+        return Store::selectRaw('stores.id, stores.store_address, stores.store_name')
+                ->join('orders', ['orders.store_id' => 'stores.id'])
+                ->where('stores.user_id',auth()->user()->id)
+                ->groupBy('orders.store_id')
+                ->where('stores.is_deleted',1)
+                ->get();
+    }
+
+
 }

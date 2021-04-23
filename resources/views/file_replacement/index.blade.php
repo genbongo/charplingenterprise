@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @inject('products','App\Product')
-
+@inject('stores','App\User')
 @section('content')
 <div class="container">
     <div class="container-fluid">
@@ -72,7 +72,7 @@
                         <select class="form-control" id="store_list" name="store" required>
                             <option value="">Please select a Store</option>
                             @if(Auth::user()->user_role == 2)
-                                @foreach(Auth::user()->stores as $store)
+                                @foreach($stores->getStores() as $store)
                                     <option value="{{ $store->id }}">{{ $store->store_name }}</option>
                                 @endforeach
                             @endif
