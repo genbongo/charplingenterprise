@@ -603,6 +603,7 @@ class ClientController extends Controller
         $stores = Store::selectRaw('stores.*')
                     // ->leftJoin('user_fridges', ['user_fridges.store_id' => 'stores.id'])
                     // ->leftJoin('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
+                    ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
                     ->where(['user_id' => $id, 'is_deleted' => 1])
                     ->get()
                     ->map(function($item){
