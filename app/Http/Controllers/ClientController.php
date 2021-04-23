@@ -620,7 +620,7 @@ class ClientController extends Controller
     public function staffClientStore(Request $request)
     {
         $client = User::join('stores', ['users.id' => 'stores.user_id'])
-                        ->selectRaw('stores.*')
+                        ->selectRaw('stores.*, users.fname as client_name')
                         ->where([
                             // 'stores.user_id' => $request->user_id,
                             'stores.area_id' => $request->area_id
