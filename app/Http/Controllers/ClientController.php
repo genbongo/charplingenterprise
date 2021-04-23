@@ -326,6 +326,14 @@ class ClientController extends Controller
                 'message'   => "(" . $user->id . ") " . $user->fname. " ". $user->lname . "  is now activated as one of your clients. ",
                 'status'    => 'unread'
             ]);   
+            $this->notificationDispatch([
+                'user_id'   => $user->id,
+                'type'      => 'client_activation',
+                'area_id'   => $user->area_id,
+                'email_to'  => 'client',
+                'message'   => "Welcome to Creamline ". $user->fname. " ". $user->lname ."! Your client ID is ".$user->id.". You can now start ordering.",
+                'status'    => 'unread'
+            ]);   
             $user->update(["is_active" => 1]);
             $output = 'Successfully Activated!';
         }else{
