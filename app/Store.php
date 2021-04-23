@@ -14,7 +14,7 @@ class Store extends Authenticatable
     use Notifiable;
     
     protected $fillable = [
-        'store_name', 'store_address', 'user_id', 'area_id',
+        'store_name', 'store_address', 'user_id', 'area_id','is_deleted'
     ];
 
     public function area()

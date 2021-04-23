@@ -295,7 +295,7 @@ class ClientController extends Controller
             'store_address'     => $request->store_address,
             'area_id'           => $request->area_id,
             'user_id'           => $request->user_id,
-            'is_deleted'        => 0
+            'is_deleted'        => 1
         ]);
 
         // return response

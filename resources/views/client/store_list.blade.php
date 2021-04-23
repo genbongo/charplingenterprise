@@ -300,19 +300,21 @@
         
         $(document).on('submit', '#storeForm', function(e){
             e.preventDefault();
+            $('#saveBtn').html('Saving').prop('disabled',true);
             $.ajax({
                     data: $(this).serialize(),
                     url: "{{ url('client/stores/add') }}",
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+                        $('#saveBtn').html('Save').prop('disabled',false);
                         $('#storeForm').trigger("reset");
                         $('#formModal').modal('hide');
                         table.draw();
                     },
                     error: function (data) {
                         console.log('Error:', data);
-                        $('#saveBtn').html('Save');
+                        $('#saveBtn').html('Save').prop('disabled',false);
                     }
                 });
             return
