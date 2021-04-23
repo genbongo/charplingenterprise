@@ -76,6 +76,10 @@ class OrderReplacementController extends Controller
                     if($store = DB::table('stores')->where('id', $item->store_id)->first()){
                         $item->store_name = $store->store_name . ' ('.$store->store_address.')';
                     }
+                    $item->assigned_staff = "NA";
+                    if($client = User::find($item->client_id)){
+                        $item->assigned_staff = User::where(['area_id' => $client->area_id, 'user_role' => 1])->first()->fname;
+                    }
                     return $item;
                 });
 

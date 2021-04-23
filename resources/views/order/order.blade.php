@@ -35,6 +35,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Invoice #</th>
+                                <th>Staff</th>
                                 <th>Client</th>
                                 <th>Store</th>
                                 <th>Date Ordered</th>
@@ -52,6 +53,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Invoice #</th>
+                                    <th>Staff</th>
                                     <th>Client</th>
                                     <th>Store</th>
                                     <th>Date Ordered</th>
@@ -71,6 +73,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Invoice #</th>
+                            <th>Staff</th>
                             <th>Client</th>
                             <th>Store</th>
                             <th>Date Ordered</th>
@@ -87,13 +90,6 @@
                     <div class="tab-pane fade show" id="order-damage" role="tabpanel">
                         <table style="width: 100%;" id="damageTable" class="table table-striped table-bordered">
                         <thead class="bg-indigo-1 text-white">
-                        {{-- <tr>
-                            <th>ID</th>
-                            <th>Client</th>
-                            <th>Product Name</th>
-                            <th>Images</th>
-                            <th width="280px">Action</th>
-                        </tr> --}}
                         <tr>
                             <th>Rep ID</th>
                             <th>Report Type</th>
@@ -102,7 +98,6 @@
                             <th>Store</th>
                             <th>Products</th>
                             <th>Files</th>
-                            {{-- <th>Quantity</th> --}}
                             <th>Status</th>
                             <th>Reason</th>
                             <th>Action</th>
@@ -513,6 +508,7 @@
                 // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
+                {data: 'assigned_staff', name: 'assigned_staff'},
                 {
                     data: 'fullname', name: 'fullname',
                     "render": function(data, type, full, meta){
@@ -713,6 +709,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
+                {data: 'assigned_staff', name: 'assigned_staff'},
                 {
                     data: 'fullname', name: 'fullname',
                     "render": function(data, type, full, meta){
@@ -1079,6 +1076,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
+                {data: 'assigned_staff', name: 'assigned_staff'},
                 {
                     data: 'fullname', name: 'fullname',
                     "render": function(data, type, full, meta){

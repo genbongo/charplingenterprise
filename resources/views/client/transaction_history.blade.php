@@ -26,6 +26,7 @@
             <tr>
                 <th>ID</th>
                 <th>Invoice #</th>
+                <th>Staff</th>
                 <th>Store</th>
                 <th>Total</th>
                 <th>Date Ordered</th>
@@ -165,6 +166,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
+                {data: 'assigned_staff', name: 'assigned_staff'},
                 {data: 'store_name', name: 'store_name'},
                 {data: 'total_price', name: 'total_price'},
                 {

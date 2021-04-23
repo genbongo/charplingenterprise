@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Order;
+use App\{Order, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -77,6 +77,10 @@ class UndeliveredOrderController extends Controller
                     $item->store_name = 'NA';
                     if($store = DB::table('stores')->where('id', $item->store_id)->first()){
                         $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    }
+                    $item->assigned_staff = "NA";
+                    if($client = User::find($item->client_id)){
+                        $item->assigned_staff = User::where(['area_id' => $client->area_id, 'user_role' => 1])->first()->fname;
                     }
                     return $item;
                 });
