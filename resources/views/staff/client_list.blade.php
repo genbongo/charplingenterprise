@@ -188,9 +188,10 @@
                                         <option value='4' ${row.status == 2 ? 'selected' : ''}>Deployed</option>
                                         <option value='1' ${row.status == 3 ? 'selected' : ''}>Pullout</option>`
                             htmlData += `</select>
-                                <button type='button' ${ (row.status == 2 || row.status == 3 ? '' : 'disabled') } data-id='${row.id}' id='confirm_fridge' class='btn btn-primary' style='padding: 2px;'>Confirm</button>
+                                
                         </div>
                     </div>`
+                    // <button type='button' ${ (row.status == 2 || row.status == 3 ? '' : 'disabled') } data-id='${row.id}' id='confirm_fridge' class='btn btn-primary' style='padding: 2px;'>Confirm</button>
                 }); 
             }
             

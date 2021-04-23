@@ -37,28 +37,29 @@ class FridgeController extends Controller
                     $status = '';
                     $delete_status = '';
                     $delete_btn = '';
-                    if($row->is_deleted == 0){
+                    if($row->status == 1){
                         $status = 0;
-                        $delete_status = 'De-Activate';
+                        $delete_status = 'UnAvailable';
                         $delete_btn = 'btn-danger';
-                    }else{
+                    }else if($row->status == 2){
                         $status = 1;
-                        $delete_status = 'Activate';
+                        $delete_status = 'Available';
                         $delete_btn = 'btn-success';
                     }
    
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Fridge" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editFridge">Edit</a>';
-
-                    // $btn = $btn.' <a href="javascript:void(0)" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'" class="btn '.$delete_btn.' btn-sm deleteFridge">'.$delete_status.'</a>';
-
-                    if ($row->status == 1) {
-                        $btn = $btn.' <a href="javascript:void(0)" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'"data-original-title="Assign" class="btn btn-warning btn-sm assignFridge">Assign</a>';
-                    } 
-                    elseif ($row->status == 4) {
-                        $btn = $btn.' <a href="javascript:void(0)" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'"data-original-title="Pull Out" class="btn btn-warning btn-sm pullOutFridge">Pull Out</a>';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Fridge" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editFridge mt-1">Edit</a>';
+                    if(in_array($row->status, [1,2])){
+                        $btn = $btn.' <a href="javascript:void(0)" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'" class="btn '.$delete_btn.' btn-sm deleteFridge mt-1">'.$delete_status.'</a>';
                     }
 
-                    $btn = $btn.' <a href="javascript:void(0)" data-id="'.$row->id.'"class="btn btn-success btn-sm fridge_history">History</a>';
+                    if ($row->status == 1) {
+                        $btn .=' <a href="javascript:void(0)" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'"data-original-title="Assign" class="btn btn-warning btn-sm assignFridge mt-1">Assign</a>';
+                    } 
+                    elseif ($row->status == 4) {
+                        $btn .= ' <a href="javascript:void(0)" data-stat="'.$status.'" data-toggle="tooltip" data-id="'.$row->id.'"data-original-title="Pull Out" class="btn btn-warning btn-sm pullOutFridge mt-1">Pull Out</a>';
+                    }
+
+                    $btn .= ' <a href="javascript:void(0)" data-id="'.$row->id.'"class="btn btn-info btn-sm fridge_history mt-1">History</a>';
 
                     return $btn;
                 })
@@ -125,11 +126,11 @@ class FridgeController extends Controller
         $output = '';
 
         // $fridge->delete();
-        if($fridge->is_deleted == 0){
-            Fridge::where('id', $fridge->id)->update(["is_deleted" => 1]);
+        if($fridge->status == 2){
+            Fridge::where('id', $fridge->id)->update(["status" => 1]);
             $output = 'Successfully Deactivated!';
         }else{
-            Fridge::where('id', $fridge->id)->update(["is_deleted" => 0]);
+            Fridge::where('id', $fridge->id)->update(["status" => 2]);
             $output = 'Successfully Activated!';
         }
 
