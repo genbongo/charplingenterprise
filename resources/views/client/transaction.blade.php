@@ -305,7 +305,8 @@
 
                                 //display a successful message
                                 swal("Information", data.message).then(function() {
-                                    if(isAdmin === true){
+                                    var role = "{{auth()->user()->user_role}}"
+                                    if(role === "99"){
                                         window.location = "order#order-tab-undelivered";
                                     }else{
                                         window.location = "order-success";
