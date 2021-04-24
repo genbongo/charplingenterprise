@@ -64,7 +64,13 @@ class FridgeController extends Controller
                     return $btn;
                 })
                 ->addColumn('assignee', function($row) {
-                    return $row->client ? $row->client->fname." ".$row->client->lname : '-';
+                    $client = 'NA';
+                    if($data = UserFridge::join('users',['users.id' => 'user_fridges.user_id'])
+                            ->where('user_fridges.fridge_id', $row->id)->first()){
+                                $client = $data->fname. ' '. $data->lname;
+                            }
+                            return $client;
+                    // return $row->client ? $row->client->fname." ".$row->client->lname : '-';
                 })
                 ->addColumn('store_address', function($row) {
                     return $row->store ? $row->store->store_address : '-';

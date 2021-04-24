@@ -93,7 +93,7 @@
                                 <th>Model</th>
                                 <th>Description</th>
                                 {{-- <th>Status</th> --}}
-                                <th>Date Created</th>
+                                <th>Date Deployed</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -237,7 +237,6 @@
                         <td>${row.id}</td>
                         <td>${row.model}</td>
                         <td>${row.description}</td>
-                        // <td>${row.status}</td>
                         <td>${moment(row.created_at).format('MMMM D YYYY')}</td></tr>`
                 });
                $("#store_list_html").find('tbody').html("").append(htmlData) 
