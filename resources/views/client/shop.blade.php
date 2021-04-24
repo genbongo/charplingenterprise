@@ -87,7 +87,7 @@
                         </div>
                         <div class="form-group">
                             <div id="totalPrice"></div>
-                            <button class="btn btn-success full-width-button" id="btnAddToCart">Add to Cart</button>
+                            <button disabled class="btn btn-success full-width-button" id="btnAddToCart">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -206,6 +206,12 @@
             e.preventDefault();
             var current_val = $(this).val();
             calc(current_val)
+
+            if(parseFloat($(this).val()) > parseFloat($("#size_id").find(':selected').attr("data-stock"))){
+                $("#btnAddToCart").prop('disabled',true)
+            } else {
+                $("#btnAddToCart").prop('disabled',false)
+            }
         });
 
         //when button add to cart is clicked
