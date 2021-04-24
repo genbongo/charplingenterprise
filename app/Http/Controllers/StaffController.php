@@ -136,7 +136,7 @@ class StaffController extends Controller
                         User::updateOrCreate([
                             'id' => $request->staff_id
                         ],$data);
-                        $message = 'Staff successfully updated.';
+                        $message = 'Staff successfully submitted.';
                     }
                 } else if($request->contact_num != $request->contact_num1) {
                     if(User::where('contact_num', $request->contact_num)->first()){
@@ -148,14 +148,14 @@ class StaffController extends Controller
                         User::updateOrCreate([
                             'id' => $request->staff_id
                         ],$data);
-                        $message = 'Staff successfully updated.';
+                        $message = 'Staff successfully submitted.';
                     }
                 }
                  else {
                     User::updateOrCreate([
                         'id' => $request->staff_id
                     ],$data);
-                    $message = 'Staff successfully updated.';
+                    $message = 'Staff successfully submitted.';
                 }
             } else {
                 if(User::where('email', $request->email)->first()){
@@ -172,7 +172,7 @@ class StaffController extends Controller
                     User::updateOrCreate([
                         'id' => $request->staff_id
                     ],$data);
-                    $message = 'Staff successfully updated.';
+                    $message = 'Staff successfully submitted.';
                 }
             }
         }
