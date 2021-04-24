@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <label class="col-sm-12 control-label">Description</label>
                         <div class="col-sm-12">
-                            <input name="description" placeholder="Enter Description" class="form-control"required/>
+                            <input name="description" placeholder="Enter Description" class="form-control" required/>
                         </div>
                     </div>
                     {{-- <input type="hidden" name="status" value=1> --}}
@@ -126,7 +126,10 @@
                                     disabled
                                     selected 
                                 >Please Select Store</option>
-                                @foreach(\App\User::where('user_role', '=', 2)->first()->stores as $store)
+                                @php
+                                    $stores = \App\User::where('user_role', '=', 2)->first();
+                                @endphp
+                                @foreach(($stores ? $stores->stores : []) as $store)
                                     <option 
                                         value="{{ $store }}"
                                     >
