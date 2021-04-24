@@ -67,7 +67,13 @@ class StaffController extends Controller
                      return $btn;
                 })
                 ->addColumn('area', function ($row) {
-                    return $row->area ? $row->area->area_name : 'Not Assigned'; 
+                    $str = 'Not Assigned';
+                    if($area_asigned = AssignedArea::selectRaw('areas.area_name')
+                                ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+                                ->where(['assigned_areas.user_id' => $row->id, 'assigned_areas.status' => 'active'])->first()){
+                        $str = $area_asigned->area_name;
+                    }
+                    return $str; 
                 })
                 ->rawColumns(['action', 'area'])
                 ->make(true);
@@ -86,6 +92,7 @@ class StaffController extends Controller
     {
         if($request->action == 'assign_staff'){
             $assigned = new AssignedArea;
+            AssignedArea::where('user_id',$request->assign_id)->update(['status' => 'inactive']);
             $assigned->user_id = $request->assign_id;
             $assigned->area_id = $request->area_id;
             $assigned->save();

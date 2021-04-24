@@ -369,6 +369,7 @@
         // assign staff
         $('body').on('submit', '#assignForm', function (e) {
             e.preventDefault();
+            $('#saveBtn').html('Save').prop("disabled",true);
             $.ajax({
                 data: $('#assignForm').serialize(),
                 url: "{{ url('staff') }}",
@@ -378,7 +379,7 @@
                     $('#assignForm').trigger("reset");
                     $('#assignModal').modal('hide');
                     table.draw();
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').prop("disabled",false);
                     // swal("Information", data.message);
                     swal("Information", data.message, "success").then(function(){
                         window.location.reload();
@@ -386,7 +387,7 @@
                 },
                 error: function (data) {
                     console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').prop("disabled",false);
                 }
             });
         });
