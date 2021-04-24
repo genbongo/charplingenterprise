@@ -142,6 +142,12 @@ class CartController extends Controller
                     'message'   => "Your replacement ".$invoiceNo." was approved. Delivery is scheduled on ".date("M d, Y", strtotime($request->damage_delivery_date)).".",
                     'status'    => 'unread'
                 ]);   
+                //set text message
+                $text_message = "Your replacement ".$invoiceNo." was approved. Delivery is scheduled on ".date("M d, Y", strtotime($request->damage_delivery_date)).".           
+                \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                //send it to customer
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
             }
             
             Product_Report::where('id', $request->product_report_id)->update(['is_replaced' => '1']);

@@ -94,6 +94,12 @@ class ProductDamagesController extends Controller
             case "disapprove_damage":
 
                 if($user = User::find($request->clientid)){
+                    //set text message
+                    $text_message = "Your replacement ".$request->report_no." was declined. Please contact the staff assigned in your store area.           
+                    \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                    //send it to customer
+                    $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
                     // $order = DB::table('order_invoice')->where('id', $request->damageid)->first();
                     $this->notificationDispatch([
                         'user_id'   => $request->clientid,

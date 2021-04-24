@@ -105,7 +105,7 @@ class TransactionHistoryController extends Controller
                     ->join('users', ['users.id' => 'order_invoice.user_id'])
                         ->where('order_invoice.id', $request->id)->first()){
 
-                             //set text message
+                            //set text message
                             $text_message = "Your order ".@$order->invoice_no." was declined.\nPlease contact the staff assigned in your store area.             
                             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
