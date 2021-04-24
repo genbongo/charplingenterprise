@@ -114,10 +114,10 @@
                                         <a class="dropdown-item" href="{{ route('area.index') }}">
                                             {{ __('Manage Area') }}
                                         </a>
-                                        {{-- <a class="dropdown-item" href="{{ route('ads.index') }}">
+                                        <a class="dropdown-item" href="{{ route('ads.index') }}">
                                             {{ __('Manage Ads') }}
                                         </a>
-                                        <hr/> --}}
+                                        <hr/>
                                     @endif
                                     <a class="dropdown-item" href="{{ route('profile') }}">
                                         {{ __('Profile') }}
