@@ -1,0 +1,20 @@
+Client
+ - Stores > Error : Can create same store name and address
+ - File Replacement > Create damage report >
+	Test result error: the store,size,qty & picture  is filled with 	information bu without selecting product then Create.. 
+	
+	Findings = It wont close or notify error but it would save the data as 	pending
+
+ - My orders > Approved > View Details > QTY is null
+	Reason: Client ordered 2000 qty with a stock of 1000
+
+Admin
+ - Beside the notif dropdown > Manage area > Create area > No validation &
+ - Fridge > Create Fridge > No validation : Can create without adding fridemodel and description | areaname & area code
+ - (Optional) Fridge > Under Datatable Action > No delete button? What if I created fridge by mistake example 100 then all I want is 20?
+ - Fridge > Available: Assign > Change client name is not working when saved
+ - Orders > Pending > Accept button > Findings: After Changing the qty to -999 it will change to 0 but if i retype -999 and press confirmed it will notify successfully. and save the qty as null. Kindly check the staff for orders if it duplicates
+
+Question: 
+	How would admin know if client created a "Store" which is awaiting for 	Confrimation?
+
