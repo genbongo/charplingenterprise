@@ -674,6 +674,15 @@
                 swal("Error", "There`s no enough stock in your inventory. please update stocks.")
                 return
             }
+
+            var a = moment($("#delivery_date").val()).format('DD/MM/YYYY')
+            var b = moment(new Date()).format('DD/MM/YYYY')
+
+            if (a < b){
+                swal("Error", "Chosen date is invalid")
+                return
+            }
+           
             if(!$("#delivery_date").val()){
 
                 swal("Error", "Please select a date to deliver!")
@@ -1094,6 +1103,14 @@
                 });
                 if(checker == 1){
                     swal("Error", "Invalid Quantity. Please check.")
+                    return
+                }
+
+                var a = moment($("#damage_delivery_date").val()).format('DD/MM/YYYY')
+                var b = moment(new Date()).format('DD/MM/YYYY')
+
+                if (a < b){
+                    swal("Error", "Chosen date is invalid")
                     return
                 }
 
