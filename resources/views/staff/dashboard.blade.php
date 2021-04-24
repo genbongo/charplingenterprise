@@ -353,7 +353,8 @@
 
         $(document).on('keyup', '.modal_qty', function(e){
             e.preventDefault()
-            var order_id            = $(this).data('id'),
+            if(parseFloat($(this).val()) > 0){
+                var order_id            = $(this).data('id'),
                 invoice_id          = $(this).data('iid'),
                 quantity_ordered    = $(this).val()
                 $.ajax({
@@ -368,7 +369,7 @@
                         console.log('Error:', data);
                     }
                 });
-            
+            }
         })
 
         //when complete order button is clicked
