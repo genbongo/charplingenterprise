@@ -69,10 +69,10 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         if($request->area_id) {
-            if($request->area_name != $request->area_name1 || $request->area_code != $request->area_code1){
-                if(Area::where(['area_name' => $request->area_name, 'area_code' => $request->area_code])->first()){
+            if($request->area_name != $request->area_name1){
+                if(Area::where(['area_name' => $request->area_name])->first()){
                     return response()->json(['success' => 'exist',
-                    'message' => 'Area Already Exist.'], 200);
+                    'message' => 'Area Name Already Exist.'], 200);
                 } else {
                     Area::updateOrCreate([
                         'id' => $request->area_id
@@ -81,7 +81,19 @@ class AreaController extends Controller
                         'area_code' => $request->area_code
                     ]);
                 }
-            } else {
+            } elseif($request->area_code != $request->area_code1){
+                if(Area::where(['area_code' => $request->area_code])->first()){
+                    return response()->json(['success' => 'exist',
+                    'message' => 'Area Code Already Exist.'], 200);
+                } else {
+                    Area::updateOrCreate([
+                        'id' => $request->area_id
+                    ],[
+                        'area_name' => $request->area_name,
+                        'area_code' => $request->area_code
+                    ]);
+                }
+            }else {
                 Area::updateOrCreate([
                     'id' => $request->area_id
                 ],[
@@ -90,7 +102,7 @@ class AreaController extends Controller
                 ]);
             }
         } else {
-            if(Area::where(['area_name' => $request->area_name, 'area_code' => $request->area_code])->first()){
+            if(Area::where('area_name',$request->area_name)->orWhere('area_code',$request->area_code)->first()){
                 return response()->json(['success' => 'exist',
                 'message' => 'Area Already Exist.'], 200);
             } else {

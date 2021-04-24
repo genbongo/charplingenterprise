@@ -74,6 +74,13 @@
             }
         });
 
+        $("#area_code").on("keypress keyup blur",function (event) {    
+           $(this).val($(this).val().replace(/[^\d].+/, ""));
+            if ((event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+
         // datatable
         var table = $('#dataTable').DataTable({
             processing: true,
@@ -105,6 +112,10 @@
         // create or update area
         $('#saveBtn').click(function (e) {
             e.preventDefault();
+            if(parseFloat($("#area_code").val()) < 0 ){
+                swal("Error", "Invalid Area Code!")
+                return   
+            }
             $(this).html('Saving..').prop('disabled',true);
             $("#error_message").html("")
             $.ajax({
