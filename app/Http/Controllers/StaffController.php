@@ -58,7 +58,7 @@ class StaffController extends Controller
    
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Edit Staff" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editStaff">Edit</a>';
 
-                    $btn .=' <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Assign Staff" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Assign" class="btn btn-warning btn-sm assignStaff">Assign</a>';
+                    $btn .=' <button type="button" data-toggle="tooltip" '.($row->is_active == 0 ? 'disabled' : '').' data-placement="top" title="Assign Staff" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Assign" class="btn btn-warning btn-sm assignStaff">Assign</button>';
                     
                     $btn .=' <button type="button" data-toggle="tooltip" data-placement="top" '.(!$store ? 'disabled' : '').' title="Assigned Staff" data-toggle="tooltip" data-area="'.$row->area_id.'" data-id="'.($store ? $store->user_id : 0).'" data-original-title="Assigned Store" class="btn btn-success btn-sm viewStore">Assigned Store</button>';
 
