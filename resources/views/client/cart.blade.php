@@ -231,71 +231,75 @@
         */
         //when button add to cart is clicked
         $("#btnAddToCart").click(function(){
+            var quantity = $("#quantity").val();
+            if(parseInt(quantity) <= 0){
+                swal("Error", "Sorry, There was an error adding this product to your cart. ");
+                return
+            } else {
+                    swal({
+                        title: "Are you sure?",
+                        text: "It will update your cart.",
+                        icon: "info",
+                        buttons: true,
+                        dangerMode: false,
+                    })
+                    .then((isTrue) => {
+                        if (isTrue) {
 
-            swal({
-                title: "Are you sure?",
-                text: "It will update your cart.",
-                icon: "info",
-                buttons: true,
-                dangerMode: false,
-            })
-            .then((isTrue) => {
-                if (isTrue) {
+                            //get all the values
+                            var cart_id = $("#cart_id").val();
+                            var size = $("#size_id").val();
+                            var price = $("#size_id").find(':selected').attr("data-price");
+                            var promo = $("#size_id").find(':selected').attr("data-promo");
+                            var prod_stocks_qty = $("#size_id").find(':selected').attr("data-stock");
+                            var product_stock_id = $("#size_id").find(':selected').attr("data-id");
+                            // var flavor = $("#flavor_id").val();
+                            var quantity = $("#quantity").val();
+                        
+                            //check if the current quantity selected is greater than the current stocks
+                            if(parseFloat(quantity) > parseFloat(prod_stocks_qty)){
+                                return swal("Error", "Sorry! You’ve reached the stock limit. Please enter a lesser quantity.");
+                            }
 
-                    //get all the values
-                    var cart_id = $("#cart_id").val();
-                    var size = $("#size_id").val();
-                    var price = $("#size_id").find(':selected').attr("data-price");
-                    var promo = $("#size_id").find(':selected').attr("data-promo");
-                    var prod_stocks_qty = $("#size_id").find(':selected').attr("data-stock");
-                    var product_stock_id = $("#size_id").find(':selected').attr("data-id");
-                    // var flavor = $("#flavor_id").val();
-                    var quantity = $("#quantity").val();
-                
-                    //check if the current quantity selected is greater than the current stocks
-                    if(parseFloat(quantity) > parseFloat(prod_stocks_qty)){
-                        return swal("Error", "Sorry! You’ve reached the stock limit. Please enter a lesser quantity.");
-                    }
+                            if(!size || !price || !quantity){
+                                return swal("Error", "Sorry, There was an error adding this product to your cart. ");
+                            }
 
-                    if(!size || !price || !quantity){
-                        return swal("Error", "Sorry, There was an error adding this product to your cart. ");
-                    }
+                            if(parseFloat(promo) > 0){
+                                price = promo
+                            }
+                            //declare a parameters to be stored in session
+                            var params = {};
 
-                    if(parseFloat(promo) > 0){
-                        price = promo
-                    }
-                    //declare a parameters to be stored in session
-                    var params = {};
+                            //set value to parameter
+                            params.cart_id              = cart_id;
+                            params.product_id           = prod_id;
+                            params.product_stock_id     = product_stock_id;
+                            params.product_image        = prod_image;
+                            params.product_name         = prod_name;
+                            params.product_description  = prod_desc;
+                            params.size                 = size;
+                            params.flavor               = '';
+                            params.price                = price;
+                            params.quantity             = quantity;
+                            params.subtotal             = price * quantity;
 
-                    //set value to parameter
-                    params.cart_id              = cart_id;
-                    params.product_id           = prod_id;
-                    params.product_stock_id     = product_stock_id;
-                    params.product_image        = prod_image;
-                    params.product_name         = prod_name;
-                    params.product_description  = prod_desc;
-                    params.size                 = size;
-                    params.flavor               = '';
-                    params.price                = price;
-                    params.quantity             = quantity;
-                    params.subtotal             = price * quantity;
-
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ url('cart') }}",
-                        data: params,
-                        success: function (response) {
-                            table.draw();
-                            $('#preOrderModal').modal('hide');
-                            swal("Information", response.message);
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ url('cart') }}",
+                                data: params,
+                                success: function (response) {
+                                    table.draw();
+                                    $('#preOrderModal').modal('hide');
+                                    swal("Information", response.message);
+                                },
+                                error: function (data) {
+                                    console.log('Error:', data);
+                                }
+                            });
                         }
                     });
                 }
-            });
-
             });
 
         $('#dataTable').on('click', '.div-prod', function(){
