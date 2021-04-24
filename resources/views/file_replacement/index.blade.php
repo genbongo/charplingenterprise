@@ -295,7 +295,7 @@
     $('#client_id').on('change', function() {
         const id = this.value;
 
-        $.get(`/client/${id}/stores/json`, function (stores) {
+        $.get(`/client/${id}/stores/json?action=1`, function (stores) {
 
             var storeInput = '';
             storeInput += '<option value="" disabled>Please select a Store</option>'

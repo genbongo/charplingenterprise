@@ -610,21 +610,12 @@ class ClientController extends Controller
     }
 
 
-    public function storeListJson($id)
+    public function storeListJson(Request $request, $id)
     {
-        // $client = User::find($id);
-
-        // return response()->json( $client->stores);
-        $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
-        ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
-        ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
-            ->first();
-        // return $area_asigned;
-        $stores = Store::selectRaw('stores.*')
-                    // ->leftJoin('user_fridges', ['user_fridges.store_id' => 'stores.id'])
-                    // ->leftJoin('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
-                    // ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
-                    ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => @$area_asigned->id])
+        if($request->has('action')){
+            $stores = Store::selectRaw('stores.*')
+                    ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
+                    ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => auth()->user()->area_id])
                     ->get()
                     ->map(function($item){
                         $item->fridges = UserFridge::join('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
@@ -634,6 +625,25 @@ class ClientController extends Controller
                                         ->get();
                         return $item;
                     });
+        } else {
+         
+            $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
+            ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+            ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+                ->first();
+            $stores = Store::selectRaw('stores.*')
+                        ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => @$area_asigned->id])
+                        ->get()
+                        ->map(function($item){
+                            $item->fridges = UserFridge::join('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
+                                            ->selectRaw('fridges.id, fridges.model, fridges.description, fridges.status')
+                                            ->where(['store_id' => $item->id, 'user_fridges.status' => 'available'])
+                                            ->where('fridges.is_pullout',0)
+                                            ->get();
+                            return $item;
+                        });
+        }
+        
         return response()->json( $stores);
     }
 
