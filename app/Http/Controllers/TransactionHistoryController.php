@@ -129,8 +129,7 @@ class TransactionHistoryController extends Controller
             }
             $response = [
                 'success'   => true,
-                'message'   => 'Store delete successfully.',
-                'order'     => $order
+                'message'   => 'Store delete successfully.'
             ];
             return response()->json($response, 200);
         }
