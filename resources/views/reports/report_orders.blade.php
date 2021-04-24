@@ -23,7 +23,7 @@
                 From: <input type="date" value="{{date('Y-m-d')}}" id="date_from" style="padding:5px;">
                 To:<input type="date" value="{{date('Y-m-d')}}" id="date_to" style="padding:5px;">
                 <button class="btn btn-success" id="btnFilter">Filter</button>
-                <button class="btn btn-info ml-auto float-right" onclick="printData();" id="print_data">Print</button> &nbsp;
+                {{-- <button class="btn btn-info ml-auto float-right" onclick="printData();" id="print_data">Print</button> &nbsp; --}}
                 <!-- <button class="btn btn-danger ml-auto float-right mr-2" id="pdf">PDF</button> -->
                 {{-- <button class="btn btn-success ml-auto float-right mr-2" onclick="exportEx('xls');" id="export_data">XLS</button> --}}
             </div>
@@ -31,52 +31,49 @@
     </div>
     <br>
     <br>
-    <table style="width: 100%" border="1" id="order_list_html" cellpadding="10">
+    <table style="width: 100%" border="1" id="order_list_html" cellpadding="10" class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th colspan="8" style="text-align: center;"> <span id="selected_status"></span> ORDERS </th>
-            </tr>
-            <tr>
                 <th>INVOICE NO.</th>
-                <th>CLIENT NAME</th>
-                <th>EMAIL</th>
-                <th>CONTACT NO.</th>
-                <th>STORE NAME</th>
+                <th>DATE OF TRANSACTION</th>
+                <th>CLIENT</th>
+                <th>STAFF</th>
                 <th>TOTAL</th>
-                <th>DATE ORDERED</th>
-                <th>DELIVERY DATE</th>
+                <th>DETAILS</th>
             </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
 </div>
-<script src="{{ asset('js/jspdf.min.js') }}"></script>
-<script src="{{ asset('js/jspdf.plugin.autotable.min.js') }}"></script>
-<script src="{{ asset('js/tableHTMLExport.js') }}"></script>
+<div class="modal fade" id="listDetailsModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Order Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-stripped" id="store_list_html">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Product</th>
+                            <th>Size</th>
+                            <th>Qty</th>
+                            <th style="text-align:right;">Sub Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
-    $('#pdf').on('click',function(){
-        $("#salesReportTableReport").tableHTMLExport({
-            type:'pdf',
-            filename:'top_product.pdf',
-            orientation:'p'
-        });
-    })
-    function printData()
-    {
-        var divToPrint=document.getElementById("order_list_html");
-        newWin= window.open("");
-        newWin.document.write(divToPrint.outerHTML);
-        newWin.print();
-        newWin.close();
-    }
-    function exportEx(type) {
-        $('#order_list_html').tableExport({
-            filename: 'Orders_%DD%-%MM%-%YY%',
-            format: type,
-            cols: '1,2,3,4,5,6,7,8'
-        });
-    }
     $(function () {
         //ajax setup
         $.ajaxSetup({
@@ -84,76 +81,63 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        $(document).on('change', '#filter_status', function(e){
-            e.preventDefault();
-            order_reports($(this).val())
-        })
-
-        $(document).on('click', '#btnFilter', function(e){
-            e.preventDefault();
-            order_reports($("#filter_status").val())
-        })
-
-        order_reports($("#filter_status").val())
-
-        function order_reports(filter_status){
-            var date_from = $("#date_from").val()
-            var date_to = $("#date_to").val()
-            $("#selected_status").text(filter_status)
-            $.getJSON( "{{ url('order/reports/json') }}" + '/'+ filter_status + '/'+ date_from + '/' + date_to, function( data ) {
-                if(!data.length){
-                    $("#export_data").prop('disabled', true)
-                    $("#print_data").prop('disabled', true)
-                } else {
-                    $("#export_data").prop('disabled', false)
-                    $("#print_data").prop('disabled', false)
+        
+        // datatable
+        var table = $('#order_list_html').DataTable({
+            processing: true,
+            serverSide: true,
+            // ajax: "{{ url('order/reports/json') }}" + '/'+ filter_status + '/'+ date_from + '/' + date_to,
+            ajax: {
+                url: "{{ url('order/reports/json') }}",
+                data: function(e){
+                    e.filter_status = $('#filter_status').val();
+                    e.date_from = $('#date_from').val();
+                    e.date_to = $('#date_to').val();
                 }
+            },
+            columns: [
+                {data: 'invoice_no', name: 'invoice_no'},
+                {data: 'date_ordered', name: 'date_ordered'},
+                {data: 'fullname', name: 'fullname'},
+                {data: 'assigned_staff', name: 'assigned_staff'},
+                {data: 'total_price', name: 'total_price'},
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ]
+        });
+
+        
+
+        $(document).on('click', '.viewDetails', function(e){
+            e.preventDefault();
+            var invoice_id = $(this).data('id')
+            $.getJSON( "{{ url('order/reports/get-details') }}" + '/' + invoice_id, function( data ) {
                 var htmlData = ''
-                $.each(data, function( index, row ) {
-                    htmlData += `<tr>
-                        <td>${row.invoice_no}</td>
-                        <td>${row.fullname ?  row.fullname : 'NA'}</td>
-                        <td>${row.email ? row.email: 'NA'}</td>
-                        <td>${row.contact_num ? row.contact_num: 'NA'}</td>
-                        <td>${row.store_name ? row.store_name : 'NA'}</td>
-                        <td>${parseFloat(row.total_price).toFixed(2)}</td>
-                        <td>${row.date_ordered}</td>
-                        <td>${row.delivery_date}</td>
-                        </tr>`
-                    htmlData += `<tr>
-                            <th colspan="9" style="text-align:left;">
-                                ITEMS
-                            </th>
-                        </tr>`   
-                    htmlData +=`<tr>
-                        <td colspan="9">
-                            <table style="width: 100%;border:0px;" border="1" cellpadding="3">
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Product</th>
-                                    <th>Size</th>
-                                    <th>Qty</th>
-                                    <th style="text-align:right;">Sub Total</th>
-                                </tr>` 
-                    $.each(row.items, function( x, y ) {
+                $.each(data, function( x, y ) {
                         htmlData += `
                                     <tr>
                                         <td>${y.id}</td>
                                         <td>${y.product_name}</td>
                                         <td>${y.size}</td>
                                         <td>${y.quantity_ordered}</td>
-                                        <td style="text-align:right;">${y.ordered_total_price}</td>
+                                        <td style="text-align:right;">${parseFloat(y.ordered_total_price).toFixed(2)}</td>
                                     </tr>
                                 `
                     }); 
-                    htmlData += `</table>
-                            </td>
-                        </tr>` 
-                });
-               $("#order_list_html").find('tbody').html("").append(htmlData) 
+               $("#store_list_html").find('tbody').html("").append(htmlData) 
+               $('#listDetailsModal').modal('show');
             });
-        }
+        })
+
+        $(document).on('click', '#btnFilter', function(e){
+            e.preventDefault();
+            table.draw()
+        })
+
+        $(document).on('change', '#filter_status', function(e){
+            e.preventDefault();
+            table.draw()
+        })
+
     });
 </script>
 @endsection

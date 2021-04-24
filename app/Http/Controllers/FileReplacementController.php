@@ -102,7 +102,7 @@ class FileReplacementController extends Controller
                 ->editColumn('store_name', function($item){
                     // return $row->store_name ? $row->store_name : 'NA';
                     $item->store_name = 'NA';
-                    if($store = DB::table('stores')->selectRaw('stores.store_name, stores.store_address, areas.area_name')
+                    if($store = DB::table('stores')->selectRaw('stores.area_id, stores.store_name, stores.store_address, areas.area_name')
                                 ->join('areas', ['areas.id' => 'stores.area_id'])
                                     ->where('stores.id', $item->store_id)->first()){
                         $item->store_name = "Name: ". $store->store_name .'<br/>Area: '.$store->area_name. '<br/>Address: '.$store->store_address;

@@ -140,7 +140,8 @@ Route::get('product/json/{product_id}',                                 'Product
 
 //reports here
 Route::get('report/orders',                                             'ReportsController@index');
-Route::get('order/reports/json/{filter_status}/{date_from}/{date_to}',  'ReportsController@getOrders');
+Route::get('order/reports/get-details/{id}',                            'ReportsController@getDetails');
+Route::get('order/reports/json',                                        'ReportsController@getOrders');
 Route::get('statistic_reports/{year}',                                  'HomeController@getYearStatistics');
 
 
