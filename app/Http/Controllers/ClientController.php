@@ -318,6 +318,13 @@ class ClientController extends Controller
         $user = User::find($client->id);
         // $client->delete();
         if($client->is_active == 0){
+            //set text message
+            $text_message = "Welcome to Creamline ". $user->fname. " ". $user->lname ."!\nYour client ID is ".$user->id.".\nYou can now start ordering.             
+            \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+            //send it to customer
+            $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+
             $this->notificationDispatch([
                 'user_id'   => $user->id,
                 'type'      => 'client_activation',
