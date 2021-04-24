@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{User, Store,UserFridge};
+use App\{User, Store,UserFridge,AssignedArea};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -615,12 +615,16 @@ class ClientController extends Controller
         // $client = User::find($id);
 
         // return response()->json( $client->stores);
-
+        $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
+        ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+        ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+            ->first();
+        // return $area_asigned;
         $stores = Store::selectRaw('stores.*')
                     // ->leftJoin('user_fridges', ['user_fridges.store_id' => 'stores.id'])
                     // ->leftJoin('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
-                    ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
-                    ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => auth()->user()->area_id])
+                    // ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
+                    ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => @$area_asigned->id])
                     ->get()
                     ->map(function($item){
                         $item->fridges = UserFridge::join('fridges', ['user_fridges.fridge_id' => 'fridges.id'])

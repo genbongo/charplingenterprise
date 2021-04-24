@@ -42,7 +42,7 @@ class ClientListController extends Controller
                                 ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
                                     ->first();
 
-        $clients  = User::join('stores', ['stores.user_id' => 'users.id'])
+        $clients  = User::selectRaw('users.*')->join('stores', ['stores.user_id' => 'users.id'])
                         ->where('stores.area_id', @$area_asigned->id)
                         ->where('users.user_role',2)->get();
 
