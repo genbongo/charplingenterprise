@@ -294,18 +294,19 @@
         });
 
         // create or update fridge
-        $('#saveBtn').click(function (e) {
+        $(document).on('submit', '#fridgeForm', function(e){
+        // $('#saveBtn').click(function (e) {
             e.preventDefault();
-
+            $('#saveBtn').html('Save').prop("disabled", true);
             var cmb_user = $("#cmb_user option:selected").val();
 
             if(cmb_user == 0){
                 swal("Error", "Please select a User to proceed!");
             }else{
-                $(this).html('Saving..');
+                $('#saveBtn').html('Saving').prop("disabled", false);
 
                 $.ajax({
-                    data: $('#fridgeForm').serialize(),
+                    data: $(this).serialize(),
                     url: "{{ url('fridge') }}",
                     type: "POST",
                     dataType: 'json',
@@ -313,11 +314,11 @@
                         $('#fridgeForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
                         table.draw();
-                        $('#saveBtn').html('Save');
+                        $('#saveBtn').html('Save').prop("disabled", false);
                     },
                     error: function (data) {
                         console.log('Error:', data);
-                        $('#saveBtn').html('Save');
+                        $('#saveBtn').html('Save').prop("disabled", false);
                     }
                 });
             }
