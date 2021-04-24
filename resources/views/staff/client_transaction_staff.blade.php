@@ -326,6 +326,11 @@
 
         $(document).on('keyup', '.modal_qty', function(e){
             e.preventDefault()
+            $(this).val($(this).val().replace(/[^\d].+/, ""));
+            if ((event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+            if(parseFloat($(this).val()) > 0){
             var order_id            = $(this).data('id'),
                 invoice_id          = $(this).data('iid'),
                 quantity_ordered    = $(this).val()
@@ -341,7 +346,7 @@
                         console.log('Error:', data);
                     }
                 });
-            
+            }
         })
 
         $(document).on('click', '#emergency_report', function() {
@@ -385,6 +390,17 @@
 
         //when complete order button is clicked
         $(document).on('click', '#btnConfirmPendingOrder', function() {
+            var checker = 0;
+            $('.modal_qty').each(function() {
+                if (parseFloat($(this).val()) < 1){
+                    checker = 1
+                } 
+            });
+            if(checker == 1){
+                swal("Error", "Invalid Quantity. Please check.")
+                return
+            }
+            
             swal({
                 title: "Are you sure?",
                 text: "Once confirmed, it will set the order as completed.",
