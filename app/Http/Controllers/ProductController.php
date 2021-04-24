@@ -70,7 +70,7 @@ class ProductController extends Controller
                     $stock = $this->getLowStocks($row->id, 'single');
                     $btn = '<a href="javascript://;" data-toggle="tooltip" data-placement="top" title="Update Product" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
                     $btn .=' <a href="product/'.$row->id.'/edit" data-toggle="tooltip" data-placement="top" title="Stock" data-toggle="tooltip" data-id="'.$row->id.'" data-name="'.$row->name.'" data-original-title="Stock" class="btn btn-warning btn-sm"> Manage Stock</a>';
-                    $btn .=' <button type="button" '.($stock == 0 ? 'disabled' : '').' data-toggle="tooltip" data-placement="top" data-toggle="tooltip" data-id="'.$row->id.'"  class="btn btn-info btn-sm viewLowStocks">Low Stocks ('.$stock.')</button>';
+                    $btn .=' <button type="button" '.($stock == 0 ? 'disabled' : '').' data-toggle="tooltip" data-placement="top" data-toggle="tooltip" data-id="'.$row->id.'"  class="btn btn-info btn-sm viewLowStocks">Low / Out of stocks                    ('.$stock.')</button>';
 
                     return $btn;
                 })

@@ -142,7 +142,6 @@ class ClientController extends Controller
                         'mname' => $request->mname,
                         'lname' => $request->lname,
                         'email' => $request->email,
-                        'address' => $request->address,
                         'contact_num' => $request->contact_num,
                         'address' => "NA",
                         'email_verified_at' => "2020-06-08 07:57:47",
@@ -169,10 +168,9 @@ class ClientController extends Controller
                         'fname' => $request->fname,
                         'mname' => $request->mname,
                         'lname' => $request->lname,
-                        'address' => $request->address,
                         'email' => $request->email,
+                        'address' => $request->address,
                         'contact_num' => $request->contact_num,
-                        'address' => "NA",
                         'email_verified_at' => "2020-06-08 07:57:47",
                         'img' => "NA",
                         'remember_token' => "NA"
@@ -191,10 +189,9 @@ class ClientController extends Controller
                     'fname' => $request->fname,
                     'mname' => $request->mname,
                     'lname' => $request->lname,
-                    'address' => $request->address,
                     'email' => $request->email,
+                    'address' => $request->address,
                     'contact_num' => $request->contact_num,
-                    'address' => "NA",
                     'email_verified_at' => "2020-06-08 07:57:47",
                     'img' => "NA",
                     'remember_token' => "NA"
@@ -226,8 +223,8 @@ class ClientController extends Controller
                     'fname' => $request->fname,
                     'mname' => $request->mname,
                     'lname' => $request->lname,
-                    'address' => $request->address,
                     'email' => $request->email,
+                    'address' => $request->address,
                     'contact_num' => $request->contact_num,
                     'user_role' => 2,   //2 for client
                     'is_pending' => 0,   //0 means not pending

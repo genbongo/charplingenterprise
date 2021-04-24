@@ -37,9 +37,9 @@
                                 <th>Invoice #</th>
                                 <th>Staff</th>
                                 <th>Client</th>
-                                <th>Store</th>
+                                <th>Delivery Details</th>
                                 <th>Date Ordered</th>
-                                <th>Delivery Date</th>
+                                {{-- <th>Delivery Date</th> --}}
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -55,7 +55,7 @@
                                     <th>Invoice #</th>
                                     <th>Staff</th>
                                     <th>Client</th>
-                                    <th>Store</th>
+                                    <th>Delivery Details</th>
                                     <th>Date Ordered</th>
                                     <th>Delivery Date</th>
                                     <th>Attempt</th>
@@ -75,7 +75,7 @@
                             <th>Invoice #</th>
                             <th>Staff</th>
                             <th>Client</th>
-                            <th>Store</th>
+                            <th>Delivery Details</th>
                             <th>Date Ordered</th>
                             <th>Delivery Date</th>
                             <th>Attempt</th>
@@ -523,19 +523,19 @@
                         return moment(data).format('MMMM D YYYY, h:mm:ss a');
                     },
                 },
-                {
-                    data: 'delivery_date', name: 'delivery_date',
-                    "render": function (data, type, full, meta) {
-                        let output = '';
-                        if(full.delivery_date == null){
-                            output = '<span class="text-info font-weight-bold">(Not set)</span>'
-                        }else{
-                            output = moment(data).format('MMMM D YYYY');
-                        }
+                // {
+                //     data: 'delivery_date', name: 'delivery_date',
+                //     "render": function (data, type, full, meta) {
+                //         let output = '';
+                //         if(full.delivery_date == null){
+                //             output = '<span class="text-info font-weight-bold">(Not set)</span>'
+                //         }else{
+                //             output = moment(data).format('MMMM D YYYY');
+                //         }
 
-                        return output
-                    },
-                },
+                //         return output
+                //     },
+                // },
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });

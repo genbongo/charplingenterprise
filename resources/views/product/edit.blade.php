@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="name" class="col-sm-12 control-label">Price</label>
+                            <label for="name" class="col-sm-12 control-label">Unit Price</label>
                             <div class="col-sm-12">
                                 <input type="number" class="form-control" id="price" name="price" maxlength="50" required placeholder="ex. 10">
                             </div>
@@ -55,7 +55,7 @@
                             <div class="col-sm-12">
                                 <select class="form-control" name="status" id="status">
                                     <option value="0">Available</option>
-                                    <option value="1">UnAvailable</option>
+                                    <option value="1">Phase out</option>
                                 </select>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
                                 {{-- <th>ID</th> --}}
                                 <th>Size</th>
                                 <th>Quantity</th>
-                                <th>Price</th>
+                                <th>Unit Price</th>
                                 <th>Threshold</th>
                                 <th>Promo</th>
                                 <th>Status</th>

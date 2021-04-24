@@ -145,18 +145,9 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        // $pending = DB::table('orders')
-        //         ->join('products', 'orders.product_id', '=', 'products.id')
-        //         ->join('users', 'orders.client_id', '=', 'users.id')
-        //         ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered',
-        //             'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
-        //         ->where('is_approved', 0)
-        //         ->get();
-
         $pending = DB::table('order_invoice')
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')
                 ->join('users', 'orders.client_id', '=', 'users.id')
-                // ->selectRaw("order_invoice.id, order_invoice.created_at as date_ordered, order_invoice.invoice_no, SUM(orders.ordered_total_price) as , CONCAT(users.fname, ' ', users.lname) as fullname, users.email")
                 ->selectRaw("order_invoice.id, 
                 order_invoice.created_at as date_ordered, 
                 order_invoice.invoice_no, 
@@ -167,8 +158,6 @@ class OrderController extends Controller
                 orders.delivery_date,
                 users.id as client_id,
                 users.contact_num as num")
-                // ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered',
-                //     'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
                 ->where('orders.is_approved', 0)
                 ->where('orders.is_completed', 0)
                 ->groupBy('orders.invoice_id')
@@ -176,8 +165,10 @@ class OrderController extends Controller
                 ->map(function($item){
                     $item->store_name = 'NA';
                     $item->assigned_staff = "NA";
-                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
-                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    if($store = DB::table('stores')->selectRaw('stores.store_name, stores.store_address, areas.area_name')
+                                ->join('areas', ['areas.id' => 'stores.area_id'])
+                                    ->where('stores.id', $item->store_id)->first()){
+                        $item->store_name = "Name: ". $store->store_name .'<br/>Area: '.$store->area_name. '<br/>Address: '.$store->store_address;
                         $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
                     }
                     return $item;
@@ -188,14 +179,14 @@ class OrderController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
    
-                    $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-accept="pending" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm editPendingOrder">Approve</a>';
-                    $btn .= ' <a  href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-danger btn-sm removeOrder">Remove Order</a>';
+                    $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-accept="pending" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm mt-1 editPendingOrder">Approve</a>';
+                    $btn .= ' <a  href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-danger mt-1 btn-sm removeOrder">Decline</a>';
                     return $btn;
                 })
                 ->addColumn('total_price', function($row){
                     return '<strong>'.number_format($row->total_price,2).'</strong>';
                   })
-                ->rawColumns(['action', 'total_price'])
+                ->rawColumns(['action', 'total_price', 'store_name'])
                 ->make(true);
         }
 

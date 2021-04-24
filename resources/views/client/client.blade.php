@@ -35,6 +35,7 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Addres</th>
             <th>Contact</th>
             <th>Status</th>
             <th width="220px">Action</th>

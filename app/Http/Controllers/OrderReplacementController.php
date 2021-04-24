@@ -72,10 +72,19 @@ class OrderReplacementController extends Controller
                 ->groupBy('orders.invoice_id')
                 ->get()
                 ->map(function($item){
+                    // $item->store_name = 'NA';
+                    // $item->assigned_staff = "NA";
+                    // if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                    //     $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    //     $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
+                    // }
+                    // return $item;
                     $item->store_name = 'NA';
                     $item->assigned_staff = "NA";
-                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
-                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    if($store = DB::table('stores')->selectRaw('stores.store_name, stores.store_address, areas.area_name')
+                                ->join('areas', ['areas.id' => 'stores.area_id'])
+                                    ->where('stores.id', $item->store_id)->first()){
+                        $item->store_name = "Name: ". $store->store_name .'<br/>Area: '.$store->area_name. '<br/>Address: '.$store->store_address;
                         $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
                     }
                     return $item;
@@ -95,7 +104,7 @@ class OrderReplacementController extends Controller
                     ->addColumn('total_price', function($row){
                         return '<strong>'.number_format($row->total_price,2).'</strong>';
                     })
-                    ->rawColumns(['action', 'total_price'])
+                    ->rawColumns(['action', 'total_price', 'store_name'])
                     ->make(true);
             }
 
