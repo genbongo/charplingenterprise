@@ -109,10 +109,28 @@ class StaffDashboardController extends Controller
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')
                 ->join('products', 'orders.product_id', '=', 'products.id')
                 ->join('users', 'orders.client_id', '=', 'users.id')
-                ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered','orders.size',
-                    'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
+                ->select('products.id AS prodID', 
+                'products.name', 
+                'products.product_image', 
+                'orders.quantity_ordered','orders.size',
+                'orders.ordered_total_price', 
+                'orders.created_at', 'orders.is_approved', 
+                'orders.is_completed', 'orders.delivery_date', 
+                'orders.id', 
+                'orders.product_stock_id',
+                'users.fname', 
+                'users.lname', 
+                'users.contact_num',
+                'orders.client_id')
                 ->where('orders.invoice_id', $request->invoice_id)
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->remaining_stock = 0 ;
+                    if($stock = ProductStock::whereId($item->product_stock_id)->first()){
+                        $item->remaining_stock = $stock->quantity;
+                    }
+                    return $item;
+                });
 
             return response()->json($pending, 200);
         }

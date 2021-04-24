@@ -197,33 +197,11 @@
 
         //display the date here...
         $("#date_here").html(moment().format('MMMM D YYYY'));
-
-        // datatable
-        // var table = $('#dataTable').DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     ajax: "{{ url('main') }}",
-        //     columns: [
-        //         // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-        //         {
-        //             data: 'id', name: 'id',
-        //             "render": function(data, type, full, meta){
-        //                 return '<a href="#" class="btnDisplayOrderDetail" data-prod="'+ full.name +'" data-qty="'+ full.quantity_ordered +'" data-total="'+ full.ordered_total_price +'">'+ data +'</a>'
-        //             }
-        //         },
-        //         {data: 'name', name: 'name'},
-        //         {data: 'store_name', name: 'store_name'},
-        //         {data: 'store_address', name: 'store_address'},
-        //         {data: 'status', name: 'status'},
-        //         {data: 'action', name: 'action', orderable: false, searchable: false},
-        //     ]
-        // });
         var table = $('#dataTable').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ url('main') }}",
             columns: [
-                // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'id', name: 'id'},
                 {data: 'invoice_no', name: 'invoice_no'},
                 {
@@ -322,7 +300,7 @@
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
-                        <td>${row.size}</td>
+                        <td>${row.size} ${ (row.remaining_stock < row.quantity_ordered ? ('<br/><span style="color:red;" class="out_of_stock">Out of stock</span><br/><span style="color:green;">Stock:' + row.remaining_stock + "</span>")  : '')}</td>
                         <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='20'></a></td>`
                     if(type == 0){
                         htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
@@ -373,7 +351,12 @@
         })
 
         //when complete order button is clicked
-        $(document).on('click', '#btnConfirmPendingOrder', function() {
+        $(document).on('click', '#btnConfirmPendingOrder', function(e) {
+            e.preventDefault();
+            if($(".out_of_stock").length){
+                swal("Error", "There`s no enough stock in your inventory. please update stocks.")
+                return
+            }
             swal({
                 title: "Are you sure?",
                 text: "Once confirmed, it will set the order as completed.",
@@ -414,13 +397,10 @@
 
         //when cancel order is clicked
         $(document).on('click', '.editCancelOrder', function() {
-
             //get the current id
             const order_id = $(this).attr("data-id");
-
             //set the id to DOM
             $("#failed_order_id").val(order_id)
-
             //show the modal
             $('#updateFailedOrder').modal("show");
         })
@@ -445,16 +425,13 @@
         //when confirm button is clicked
         $("#frmCancelledOrder").on('submit', function(e) {
             e.preventDefault();
-
             //get the data
             const order_id = $("#failed_order_id").val();
             const reason = $("#txt_cancelled_reason").val();
             const cancel_option = $("#cancel_option").val();
-
             if(reason === ''){
                 return swal("Error", "Please fill in the reason!")
             }
-
             //set parameters
             const params = {
                 order_id,
@@ -468,10 +445,8 @@
                 url: "{{ url('main') }}",
                 data: params,
                 success: function (data) {
-
                     //hide the modal
                     $('#updateFailedOrder').modal("hide");
-
                     table.draw();
                     swal(data.message, {
                         icon: "success",
@@ -481,7 +456,6 @@
                     console.log('Error:', data);
                 }
             });
-
         })
     })
 </script>
