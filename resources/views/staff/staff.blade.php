@@ -138,7 +138,7 @@
 
                         <div class="col-md-12">
                             <select class="form-control" id="area_id" name="area_id">
-                                @foreach($areas->all() as $area)
+                                @foreach($areas->all()->where('is_deleted',0) as $area)
                                     @if (!in_array($area->id, $areas->getNoAvailableArea()))
                                     <option value="{{ $area->id }}">{{ $area->area_name." : ".$area->area_code }}</option>
                                     @endif
