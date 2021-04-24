@@ -47,7 +47,14 @@ class OrderController extends Controller
                     'orders.client_id')
                 // ->where('orders.is_approved', $request->setId)
                 ->where('orders.invoice_id', $request->invoice_id)
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->remaining_stock = 0 ;
+                    if($stock = ProductStock::whereId($item->product_stock_id)->first()){
+                        $item->remaining_stock = $stock->quantity;
+                    }
+                    return $item;
+                });
             } else {
                 $pending = DB::table('order_invoice')
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')

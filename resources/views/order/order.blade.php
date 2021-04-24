@@ -165,6 +165,7 @@
                             </tr>
                         </tfoot>
                     </table>
+                    <input type="hidden" id="setters">
                     <input type="hidden" name="pending_date_to_display" id="pending_date_to_display">
                     <input type="hidden" name="pending_contact" id="pending_contact">
                     <input type="hidden" name="accept_type" id="accept_type">
@@ -558,7 +559,7 @@
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
-                        <td>${row.size} ${ (row.remaining_stock < row.quantity_ordered ? '<span style="color:red;" class="out_of_stock">Out of stock</span>' : '')}</td>
+                        <td>${row.size} ${ (row.remaining_stock < row.quantity_ordered ? ('<br/><span style="color:red;" class="out_of_stock">Out of stock</span><br/><span style="color:green;">Stock:' + row.remaining_stock + "</span>")  : '')}</td>
                         <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>`
                         if(['all','pending'].indexOf(type) !== -1){
                             htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
@@ -595,6 +596,7 @@
             $("#pending_invoice").val(invoice_no);
             $("#pending_client_id").val(client_id);
             $("#pending_contact").val(contact);
+            $("#setters").val(setId)
 
             getPendingOrders(invoice_id, type, setId)
         });
@@ -640,7 +642,7 @@
                     data:{id: order_id, quantity_ordered: quantity_ordered},
                     dataType:'JSON',
                     success: function (data) {
-                        getPendingOrders(invoice_id, 'pending', 0)
+                        getPendingOrders(invoice_id, ($("#setters").val() == 2 ? 'all' : 'pending'), $("#setters").val())
                     },
                     error: function (data) {
                         console.log('Error:', data);
