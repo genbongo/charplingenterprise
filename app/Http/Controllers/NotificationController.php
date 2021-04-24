@@ -31,6 +31,24 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
+        $orders = User::select('users.id')
+                    ->join('order_invoice', ['order_invoice.user_id' => 'users.id'])
+                    ->groupBy('order_invoice.user_id')
+                            ->pluck('id')
+                                ->toArray();
+
+        $deactivate =  User::where('user_role',2)
+                    ->whereRaw("created_at <= DATE_SUB(NOW(), INTERVAL 60 DAY)")
+                    ->where('is_active',1)
+                    ->whereNotIn('id', $orders)
+                    ->get();
+
+        foreach ($deactivate as $key => $value) {
+            User::whereId($value->id)->update([
+                'is_active' => 0
+            ]);
+        }            
+    
         $orders = Order::selectRaw('orders.*,order_invoice.invoice_no')
             ->where('orders.is_approved', 1)
             ->join('order_invoice', ['orders.invoice_id' => 'order_invoice.id'])
