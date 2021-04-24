@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Store;
+use App\{Store,AssignedArea};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -34,8 +34,17 @@ class ClientListController extends Controller
 
         // $clients =  $area->clients();
 
-        $clients = User::where('area_id', auth()->user()->area_id)
-                        ->where('user_role',2)->get();
+        // $clients = User::where('area_id', auth()->user()->area_id)
+        //                 ->where('user_role',2)->get();
+
+        $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
+                                ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+                                ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+                                    ->first();
+
+        $clients  = User::join('stores', ['stores.user_id' => 'users.id'])
+                        ->where('stores.area_id', @$area_asigned->id)
+                        ->where('users.user_role',2)->get();
 
         if ($request->ajax()) {
             return Datatables::of($clients)
