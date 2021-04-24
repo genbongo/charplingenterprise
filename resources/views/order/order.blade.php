@@ -896,6 +896,10 @@
         -------------------------------------------------------------------------------- */
         $(document).on('keyup', '.qty_update', function(e){
             e.preventDefault();
+            $(this).val($(this).val().replace(/[^\d].+/, ""));
+            if ((event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
 
             var id       = $(this).data('id')
             var price    = $(this).data('price')
@@ -1082,6 +1086,17 @@
                         }
                     });
             } else {
+                    var checker = 0;
+                $('.qty_update').each(function() {
+                    if (parseFloat($(this).val()) < 1){
+                        checker = 1
+                    } 
+                });
+                if(checker == 1){
+                    swal("Error", "Invalid Quantity. Please check.")
+                    return
+                }
+
                 if(!$("#damage_delivery_date").val()){
                     swal("Error", "Please select a date to schedule the delivery!")
                     return 
