@@ -131,9 +131,13 @@ class OrderController extends Controller
 
             $product_price = $order->ordered_total_price / $order->quantity_ordered;
 
-            $order->quantity_ordered = $request->quantity_ordered;
-            $order->ordered_total_price = $request->quantity_ordered * $product_price;
-            if($order->save())
+            // $order->quantity_ordered    = $request->quantity_ordered;
+            // $order->ordered_total_price = $request->quantity_ordered * $product_price;
+            if(Order::where('id',$request->id)->update([
+                'quantity_ordered'      => $request->quantity_ordered,
+                'ordered_total_price'   => $request->quantity_ordered * $product_price
+
+            ]))
                 return response()->json(['response' => 'success'], 200);
         }
     }
