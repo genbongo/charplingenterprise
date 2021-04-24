@@ -551,7 +551,12 @@ class ClientController extends Controller
                                 ->where($where)
                                     ->get()->map(function($item){
                                         $item->fullname = 'NA';
-                                        if($user = User::where(['area_id' => $item->area_id, 'user_role' => 1])->first()){
+                                        // if($user = User::where(['area_id' => $item->area_id, 'user_role' => 1])->first()){
+                                        //     $item->fullname = $user->fname . ' ' .  $user->lname;
+                                        // }
+                                        if($user = User::selectRaw('users.fname,users.lname')
+                                                ->join('assigned_areas', ['assigned_areas.user_id' => 'users.id'])
+                                        ->where(['assigned_areas.status' => 'active', 'user_role' => 1])->first()){
                                             $item->fullname = $user->fname . ' ' .  $user->lname;
                                         }
                                         return $item;
