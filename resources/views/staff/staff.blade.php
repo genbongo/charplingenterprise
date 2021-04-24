@@ -354,7 +354,7 @@
 
                 var htmlData = ''
                 $.each(data.areas, function( index, row ) {
-                    htmlData += `<tr>
+                    htmlData += `<tr style="color:${(row.status == 'active' ? 'green;' : 'red;')}">
                         <td>${row.id}</td>
                         <td>${row.area_name + '(' + row.area_code + ')'}</td>
                         <td>${moment(row.date_assigned).format('MMMM D YYYY')}</td>

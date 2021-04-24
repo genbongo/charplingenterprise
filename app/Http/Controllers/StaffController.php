@@ -194,8 +194,12 @@ class StaffController extends Controller
     public function edit($id)
     {
         $staff = User::find($id);
-        $assigned = AssignedArea::selectRaw('assigned_areas.id, 
-        assigned_areas.created_at as date_assigned, areas.area_name, areas.area_code')->join('areas', ['areas.id' => 'assigned_areas.area_id'])->where('user_id', $id)->get();
+        $assigned = AssignedArea::selectRaw('assigned_areas.id, assigned_areas.status,
+        assigned_areas.created_at as date_assigned, areas.area_name, areas.area_code')
+        ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+        ->where('user_id', $id)
+        ->orderBy('assigned_areas.id','desc')
+        ->get();
         return response()->json(['staff' => $staff, 'areas' => $assigned]);
     }
 
