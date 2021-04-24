@@ -502,6 +502,7 @@
         var table = $('#dataTable').DataTable({
             processing: true,
             serverSide: true,
+            order: [[ 0, "desc" ]],
             paging      : false,
             ajax: "{{ url('order') }}",
             columns: [
@@ -557,7 +558,7 @@
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
-                        <td>${row.size}</td>
+                        <td>${row.size} ${ (row.remaining_stock < row.quantity_ordered ? '<span style="color:red;" class="out_of_stock">Out of stock</span>' : '')}</td>
                         <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>`
                         if(['all','pending'].indexOf(type) !== -1){
                             htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
@@ -581,19 +582,21 @@
         $('body').on('click', '.editPendingOrder, .editReschedOrder', function (e) {
             e.preventDefault();
             //get the data
-            const invoice_id = $(this).data("id");
-            var type         = $(this).data("type");
-            var setId        = $(this).data("set");
-            getPendingOrders(invoice_id, type, setId)
-            var xxx         = $(this).data("accept");
+            const invoice_id    = $(this).data("id");
+            var type            = $(this).data("type");
+            var setId           = $(this).data("set");
+            var invoice_no      = $(this).data('invoice');
+            var xxx             = $(this).data("accept");
+            const contact       = $(this).attr("data-num");
+            const total         = $(this).attr("data-total");
+            const client_id     = $(this).attr("data-client");
+            
             $("#accept_type").val(xxx)
-            var invoice_no = $(this).data('invoice');
             $("#pending_invoice").val(invoice_no);
-            const contact = $(this).attr("data-num");
-            const total = $(this).attr("data-total");
-            const client_id = $(this).attr("data-client");
             $("#pending_client_id").val(client_id);
             $("#pending_contact").val(contact);
+
+            getPendingOrders(invoice_id, type, setId)
         });
 
         function getCompletedOrders(invoice_id){
@@ -649,7 +652,10 @@
         //when button confirm order is clicked
         $("#frmPendingOrder").on('submit', function(e) {
             e.preventDefault();
-
+            if($(".out_of_stock").length){
+                swal("Error", "There`s no enough stock in your inventory. please update stocks.")
+                return
+            }
             if(!$("#delivery_date").val()){
 
                 swal("Error", "Please select a date to deliver!")
@@ -706,6 +712,7 @@
             processing: true,
             serverSide: true,
             paging    : false,
+            order: [[ 0, "desc" ]],
             ajax: "{{ url('undeliver') }}",
             columns: [
                 {data: 'id', name: 'id'},
@@ -1100,6 +1107,7 @@
             processing: true,
             serverSide: true,
             paging    : false,
+            order: [[ 0, "desc" ]],
             ajax: "{{ url('order_replacement') }}",
             columns: [
                 {data: 'id', name: 'id'},
@@ -1345,6 +1353,7 @@
             processing: true,
             serverSide: true,
             paging    : false,
+            order: [[ 0, "desc" ]],
             // ajax: "{{ url('file_replacement') }}",
             ajax: {
                 url: "{{ url('file_replacement') }}",

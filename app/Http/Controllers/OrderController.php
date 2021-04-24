@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Order,User};
+use App\{Order,User,ProductStock};
 // use App\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +36,15 @@ class OrderController extends Controller
                 ->join('products', 'orders.product_id', '=', 'products.id')
                 ->join('users', 'orders.client_id', '=', 'users.id')
                 ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered','orders.size',
-                    'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
+                    'orders.ordered_total_price', 'orders.created_at', 
+                    'orders.is_approved', 'orders.is_completed', 
+                    'orders.delivery_date', 
+                    'orders.id', 
+                    'users.fname', 
+                    'users.lname', 
+                    'users.contact_num',
+                    'orders.product_stock_id',
+                    'orders.client_id')
                 // ->where('orders.is_approved', $request->setId)
                 ->where('orders.invoice_id', $request->invoice_id)
                 ->get();
@@ -45,11 +53,32 @@ class OrderController extends Controller
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')
                 ->join('products', 'orders.product_id', '=', 'products.id')
                 ->join('users', 'orders.client_id', '=', 'users.id')
-                ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered','orders.size',
-                    'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
+                ->select('products.id AS prodID', 
+                'products.name', 
+                'products.product_image', 
+                'orders.quantity_ordered',
+                'orders.size',
+                'orders.ordered_total_price', 
+                'orders.created_at', 
+                'orders.is_approved', 
+                'orders.is_completed', 
+                'orders.delivery_date', 
+                'orders.id', 
+                'users.fname', 
+                'users.lname', 
+                'users.contact_num', 
+                'orders.product_stock_id',
+                'orders.client_id')
                 ->where('orders.is_approved', $request->setId)
                 ->where('orders.invoice_id', $request->invoice_id)
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->remaining_stock = 0 ;
+                    if($stock = ProductStock::whereId($item->product_stock_id)->first()){
+                        $item->remaining_stock = $stock->quantity;
+                    }
+                    return $item;
+                });
             }
             
 
@@ -129,7 +158,7 @@ class OrderController extends Controller
         if ($request->ajax()) {
             $order = Order::find($request->id);
 
-            $product_price = $order->ordered_total_price / $order->quantity_ordered;
+            $product_price = $order->item_price; //$order->ordered_total_price / $order->quantity_ordered;
 
             // $order->quantity_ordered    = $request->quantity_ordered;
             // $order->ordered_total_price = $request->quantity_ordered * $product_price;
@@ -164,6 +193,7 @@ class OrderController extends Controller
                 users.contact_num as num")
                 ->where('orders.is_approved', 0)
                 ->where('orders.is_completed', 0)
+                ->orderBy('id','desc')
                 ->groupBy('orders.invoice_id')
                 ->get()
                 ->map(function($item){
@@ -183,7 +213,7 @@ class OrderController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
    
-                    $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-accept="pending" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm mt-1 editPendingOrder">Approve</a>';
+                    $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-accept="pending" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" id="editPendingOrder_'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm mt-1 editPendingOrder">Approve</a>';
                     $btn .= ' <a  href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-danger mt-1 btn-sm removeOrder">Decline</a>';
                     return $btn;
                 })
