@@ -184,7 +184,12 @@
         //save edit stocks
         $(document).on('submit', '#productForm', function(e){
             e.preventDefault();
-            if(confirm("Do you want to submit this data?")){
+
+            if(parseFloat($("#promo").val()) > parseFloat($("#quantity").val())){
+                alert("Invalid promo!")
+                return;
+            } else {
+                if(confirm("Do you want to submit this data?")){
                 $.ajax({
                     data: $(this).serialize(),
                     url: "{{ url('save-edit-stocks') }}",
@@ -210,6 +215,8 @@
                     }
                 });
             }
+            }
+            
         });
     })
 
