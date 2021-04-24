@@ -143,7 +143,7 @@
                 responsive: true,
                 title: {
                     display: true,
-                    text: '2021 Statistic Reports'
+                    text: $('#filter_status').val() + ' Statistic Reports'
                 },
                 tooltips: {
                     mode: 'index',
