@@ -366,7 +366,7 @@ class ClientController extends Controller
             ]);  
 
             //set text message
-            $text_message = "Hi, ". $user->fname . "\n \nWe are sorry to inform you that you are now deactivated from our retailer’s list. You can no longer login to our website. If you wish to continue our business, please contact your sales agent or the administration to activate your account again.             
+            $text_message = "Hi, ". $user->fname . "\n \nWe are sorry to inform you that you are now deactivated from our retailer’s list. You can no longer login to our website. If you wish to continue our business, please contact your sales agent or the administration to activate your account again.\nYour fridge has been scheduled for pull out             
             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
             //send it to customer
