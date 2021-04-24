@@ -257,6 +257,19 @@ class ClientController extends Controller
                     
                     //send it to customer
                     $this->global_itexmo($request->contact_num, $text_message." \n\n\n\n","ST-CREAM343228_LGZPB", '#5pcg2mpi]');
+                } else {
+                    new MailDispatch('client_password', trim($request->email), array(
+                        'subject'   => 'Welcome to Charpling Square Enterprise',
+                        'title'     => 'Welcome to Charpling Square Enterprise', 
+                        "name"      => trim($request->fname),
+                        "password"  => $request->password
+                    ));
+                    //set text message
+                    $text_message = "Welcome to Creamline ". $user->fname. " ". $user->lname ."!\nYour client ID is ".$user->id.".\nYou can now start ordering.             
+                    \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                    //send it to customer
+                    $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
                 }
 
                 // return response
