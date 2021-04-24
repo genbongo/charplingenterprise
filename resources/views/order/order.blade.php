@@ -561,7 +561,7 @@
                         <td>${row.name}</td>
                         <td>${row.size} ${ (row.remaining_stock < row.quantity_ordered ? ('<br/><span style="color:red;" class="out_of_stock">Out of stock</span><br/><span style="color:green;">Stock:' + row.remaining_stock + "</span>")  : '')}</td>
                         <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>`
-                        if(['all','pending'].indexOf(type) !== -1){
+                        if(['pending'].indexOf(type) !== -1){
                             htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
                         } else {
                             htmlData += `<td>${row.quantity_ordered}</td>`
