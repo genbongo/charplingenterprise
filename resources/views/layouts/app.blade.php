@@ -297,15 +297,31 @@
                             </a>
                         </li>
 
-                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                            <span>Reports</span>
-                        </h6>
+{{--                         
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('product_list.index') }}">
                                 <span data-feather="clipboard"></span>
                                 Products
                             </a>
+                        </li> --}}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>SUBMIT ORDER TO CUSTOMER</span>
+                        </h6>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('shop') }}">
+                                <span data-feather="shopping-bag"></span>
+                                Shop
+                            </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('cart.index') }}">
+                                <span data-feather="shopping-cart"></span>
+                                Cart
+                            </a>
+                        </li>
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Reports</span>
+                        </h6>
                         <li class="nav-item">
                             <a class="nav-link" href="/staff-transaction">
                                 <span data-feather="bar-chart-2"></span>

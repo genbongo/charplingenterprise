@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Area;
-use App\Store;
+use App\{Store,AssignedArea};
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,6 +56,17 @@ class User extends Authenticatable
                 ->groupBy('orders.store_id')
                 ->where('stores.is_deleted',1)
                 ->get();
+    }
+
+    public function getClient(){
+        $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
+                                ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+                                ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+                                    ->first();
+
+        return User::selectRaw('users.*')->join('stores', ['stores.user_id' => 'users.id'])
+                        ->where('stores.area_id', @$area_asigned->id)
+                        ->where('users.user_role',2)->get();
     }
 
 
