@@ -102,7 +102,7 @@
                                     <span data-feather="bell"></span><span class="caret"></span><span class="badge badge-danger badge-here"></span>
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" id="notification-main-div" aria-labelledby="navbarDropdown" style="height: 350px; overflow-y: scroll;"></div>
+                                <div class="dropdown-menu dropdown-menu-right" id="notification-main-div" aria-labelledby="navbarDropdown" style="height: 350px; overflow: auto;"></div>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
