@@ -1380,7 +1380,7 @@
                         var output = ''
                         if(!full.is_replaced){
                             output += "<a href='javascript:void(0)' data-id='"+full.id+"' data-store='"+full.store_id+"' class='btn btn-primary btn-sm editDamageOrder' data-type='replacement' data-clientid='"+full.client_id+"'  data-val='"+full.products+"'>Approve </a>";
-                            output += "<a href='javascript:void(0)' data-id='"+full.id+"'  data-clientid='"+full.client_id+"' class='btn btn-danger btn-sm editDisapproveDamage mt-1'>Decline</a>";
+                            output += "<a href='javascript:void(0)' data-invoice='"+full.report_no+"' data-id='"+full.id+"'  data-clientid='"+full.client_id+"' class='btn btn-danger btn-sm editDisapproveDamage mt-1'>Decline</a>";
                         } else {
                             output = 'NA';
                         }
@@ -1466,10 +1466,12 @@
         $(document).on('click', '.editDisapproveDamage', function(){
             const damageid = $(this).attr("data-id")
             const clientid = $(this).attr("data-clientid")
+            const report_no = $(this).attr("data-invoice")
             const params = {
                 damageid,
                 clientid,
-                action: "disapprove_damage"
+                report_no: report_no,
+                action: "disapprove_damage",
             }
             swal({
                 title: "Are you sure?",

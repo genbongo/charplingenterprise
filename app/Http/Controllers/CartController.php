@@ -6,15 +6,18 @@ use App\{
     Cart,
     Product,
     Order,
-    Product_Report
+    Product_Report,
+    User
 };
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use App\Traits\GlobalFunction;
 class CartController extends Controller
 {
+    use GlobalFunction;
     /**
      * Create a new controller instance.
      *
@@ -130,6 +133,17 @@ class CartController extends Controller
         }
 
         if(Order::insert($cart_object_array)){
+            if($user = User::find($client_id)){
+                $this->notificationDispatch([
+                    'user_id'   => $client_id,
+                    'type'      => 'file_replacement_approved',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'client',
+                    'message'   => "Your replacement ".$invoiceNo." was approved. Delivery is scheduled on ".date("M d, Y", strtotime($request->damage_delivery_date)).".",
+                    'status'    => 'unread'
+                ]);   
+            }
+            
             Product_Report::where('id', $request->product_report_id)->update(['is_replaced' => '1']);
             $response = [
                 'success' => true,
