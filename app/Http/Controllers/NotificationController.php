@@ -68,7 +68,7 @@ class NotificationController extends Controller
                 ]);   
 
                 //set text message
-                $text_message = "Your order ".$value->invoice_no." is added to the undelivered list.\nIt has passed the delivery date. 
+                $text_message = "Your order ".$value->invoice_no." is added to the undelivered list.\nIt has passed the delivery date.\nPlease contact the staff assigned in your store area 
                 \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
                 //send it to customer

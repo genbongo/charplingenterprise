@@ -106,6 +106,12 @@ class OrderController extends Controller
                     the staff assigned in your store area.",
                     'status'    => 'unread'
                 ]);  
+                //set text message
+                $text_message = "Your order ".$user->invoice_no." was cancelled by the admin in the undelivered list.\nPlease contact the staff assigned in your store area.           
+                \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                //send it to customer
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
             }
             
             DB::table('orders')
@@ -211,6 +217,12 @@ class OrderController extends Controller
         
         if($user = User::find($client_id)){
             if($request->accept_type == "pending"){
+                //set text message
+                $text_message = "Hi, ". $user->fname . "\n \nYour order ".$invoice_no." has been approved.\nDelivery date is on ".$date_to_display.".\nThank you. Please see your account for more info
+                \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                //send it to customer
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
                 $this->notificationDispatch([
                     'user_id'   => $user->id,
                     'type'      => 'order_approval',
@@ -228,15 +240,15 @@ class OrderController extends Controller
                     'message'   => "Your order ".$invoice_no." was rescheduled. The new delivery date is on ".$date_to_display.".",
                     'status'    => 'unread'
                 ]);  
+                //set text message
+                $text_message = "Your order ".$invoice_no." was rescheduled. The new delivery date is on ".$date_to_display.".
+                \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                //send it to customer
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
             }
              
 
-            //set text message
-            $text_message = "Hi, ". $user->fname . "\n \nYour order ".$invoice_no." has been approved.\nDelivery date is on ".$date_to_display.".\nThank you. Please see your account for more info
-            \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
-
-            //send it to customer
-            $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
 
             new MailDispatch('order_approval', trim($user->email), array(
                 'subject'       => $invoice_no. ' - Your Order has been Approved.',
