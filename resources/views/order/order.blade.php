@@ -168,6 +168,7 @@
                     </table>
                     <input type="hidden" name="pending_date_to_display" id="pending_date_to_display">
                     <input type="hidden" name="pending_contact" id="pending_contact">
+                    <input type="hidden" name="accept_type" id="accept_type">
                     <input type="hidden" name="pending_client_id" id="pending_client_id">
                     <input type="hidden" name="pending_invoice" id="pending_invoice">
                     <input type="hidden" name="pending_amount" id="pending_amount">
@@ -585,7 +586,8 @@
             var type         = $(this).data("type");
             var setId        = $(this).data("set");
             getPendingOrders(invoice_id, type, setId)
-
+            var xxx         = $(this).data("accept");
+            $("#accept_type").val(xxx)
             var invoice_no = $(this).data('invoice');
             $("#pending_invoice").val(invoice_no);
             const contact = $(this).attr("data-num");

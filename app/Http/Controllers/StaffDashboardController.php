@@ -248,6 +248,17 @@ class StaffDashboardController extends Controller
                 'message'   => $staff->fname. " " . $staff->lname. " cancelled order " .$order->invoice_no. " of ".$client->fname. " " . $client->lname. " due to ".$cancel_option." (".$request->reason.").",
                 'status'    => 'unread'
             ]);  
+
+            //client reminder
+            $this->notificationDispatch([
+                'user_id'   => $client->id,
+                'type'      => 'staff_cancel_order',
+                'area_id'   => $client->area_id,
+                'email_to'  => 'client',
+                'message'   => "Your order ".$order->invoice_no." was cancelled by staff ".$staff->fname. " " . $staff->lname.". Please contact the staff
+                assigned in your store area.",
+                'status'    => 'unread'
+            ]);  
             
             // if 1 cancelled by client, if 2 cancelled by staff
             $cancelled_by = $request->input("cancel_option");

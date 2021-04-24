@@ -93,6 +93,21 @@ class OrderController extends Controller
 
     public function cancelOrder(Request $request){
         if ($request->ajax()) {
+
+            if($user = User::selectRaw('users.*,order_invoice.invoice_no')
+                        ->join('order_invoice', ['order_invoice.user_id' => 'users.id'])->first()){
+                //client reminder
+                $this->notificationDispatch([
+                    'user_id'   => $user->id,
+                    'type'      => 'admin_cancel_order',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'client',
+                    'message'   => "Your order ".$user->invoice_no." was cancelled by the admin in the undelivered list. Please contact
+                    the staff assigned in your store area.",
+                    'status'    => 'unread'
+                ]);  
+            }
+            
             DB::table('orders')
                 ->where('orders.invoice_id', $request->invoice_id)
                 ->update(['order_cancel' => 1]);
@@ -167,7 +182,7 @@ class OrderController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
    
-                    $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm editPendingOrder">Approve</a>';
+                    $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-accept="pending" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm editPendingOrder">Approve</a>';
                     $btn .= ' <a  href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-danger btn-sm removeOrder">Remove Order</a>';
                     return $btn;
                 })
@@ -195,15 +210,26 @@ class OrderController extends Controller
         $invoice_no         = $request->pending_invoice;
         
         if($user = User::find($client_id)){
-
-            $this->notificationDispatch([
-                'user_id'   => $user->id,
-                'type'      => 'order_approval',
-                'area_id'   => $user->area_id,
-                'email_to'  => 'client',
-                'message'   => "Your order ".$invoice_no." was approved. Delivery is scheduled on ".$date_to_display.".",
-                'status'    => 'unread'
-            ]);   
+            if($request->accept_type == "pending"){
+                $this->notificationDispatch([
+                    'user_id'   => $user->id,
+                    'type'      => 'order_approval',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'client',
+                    'message'   => "Your order ".$invoice_no." was approved. Delivery is scheduled on ".$date_to_display.".",
+                    'status'    => 'unread'
+                ]);  
+            } else {
+                $this->notificationDispatch([
+                    'user_id'   => $user->id,
+                    'type'      => 'order_approval',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'client',
+                    'message'   => "Your order ".$invoice_no." was rescheduled. The new delivery date is on ".$date_to_display.".",
+                    'status'    => 'unread'
+                ]);  
+            }
+             
 
             //set text message
             $text_message = "Hi, ". $user->fname . "\n \nYour order ".$invoice_no." has been approved.\nDelivery date is on ".$date_to_display.".\nThank you. Please see your account for more info

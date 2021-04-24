@@ -31,11 +31,13 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = Order::where('orders.is_approved', 1)
-                ->where('orders.is_completed', 0)
-                ->where('is_cancelled',0)
-                    ->whereRaw("delivery_date < CURDATE()")
-                        ->get();
+        $orders = Order::selectRaw('orders.*,order_invoice.invoice_no')
+            ->where('orders.is_approved', 1)
+            ->join('order_invoice', ['orders.invoice_id' => 'order_invoice.id'])
+                    ->where('orders.is_completed', 0)
+                    ->where('is_cancelled',0)
+                        ->whereRaw("delivery_date < CURDATE()")
+                            ->get();
 
                         // return $orders;
         foreach ($orders as $key => $value) {
@@ -43,6 +45,7 @@ class NotificationController extends Controller
                 'is_cancelled' => 1
             ]);
             if($user = User::find($value->client_id)){
+                //staff
                 $this->notificationDispatch([
                     'user_id'   => $user->id,
                     'type'      => 'order_auto_cancel',
@@ -51,6 +54,16 @@ class NotificationController extends Controller
                     'message'   => "There are ".count($orders)." orders that were automatically cancelled and added to the undelivered list. It has
                     passed the delivery date and no actions were done. Please contact your administration for
                     clarification.",
+                    'status'    => 'unread'
+                ]);   
+                //client
+                $this->notificationDispatch([
+                    'user_id'   => $user->id,
+                    'type'      => 'order_auto_cancel',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'client',
+                    'message'   => "Your order ".$value->invoice_no." is added to the undelivered list. It has passed the delivery date.
+                    Please contact the staff assigned in your store area",
                     'status'    => 'unread'
                 ]);   
             }
