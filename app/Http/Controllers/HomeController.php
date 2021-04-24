@@ -408,9 +408,9 @@ class HomeController extends Controller
             ->orderBy('total_price', 'desc')
             ->get();
         $products = '';    
-        $total = 0;
+        $total = number_format(0,2);
         foreach ($top_products as $key => $value) {
-           $total    .= '<br/>'.$value->total_price;  
+           $total    .= '<br/>'.number_format($value->total_price,2);  
            $products .= '<br/>'.$value->product_name; 
         }
         return [
