@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Area;
+use App\{Area,AssignedArea};
 use App\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +28,16 @@ class Store extends Authenticatable
     }
 
     public function getArea(){
-        return Area::find(auth()->user()->area_id);
+        $area_name = "";
+       if($area = AssignedArea::selectRaw('areas.area_name')
+                                ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+                                ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+                                ->first()){
+                                    $area_name = $area->area_name;
+                                }
+                        // $str = $area_asigned->area_name;
+                    // }
+        // return Area::find(auth()->user()->area_id);
+        return $area_name;
     }
 }

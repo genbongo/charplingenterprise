@@ -5,7 +5,7 @@
 <div class="container">
     <div class="container-fluid">
         <div class="row">
-            <h4 class="center">Manage Client ({{ $stores->getArea()->area_name }} Branch) </h4>
+            <h4 class="center">Manage Client ({{ @$stores->getArea() }} Branch) </h4>
         </div>
     </div>
     <br>
