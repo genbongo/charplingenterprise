@@ -259,6 +259,13 @@ class StaffDashboardController extends Controller
                 assigned in your store area.",
                 'status'    => 'unread'
             ]);  
+
+             //set text message
+             $text_message = "Your order ".$order->invoice_no." was cancelled by staff ".$staff->fname. " " . $staff->lname.".\nPlease contact the staff assigned in your store area.             
+             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+ 
+             //send it to customer
+             $this->global_itexmo($client->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
             
             // if 1 cancelled by client, if 2 cancelled by staff
             $cancelled_by = $request->input("cancel_option");

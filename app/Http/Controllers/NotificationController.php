@@ -66,6 +66,13 @@ class NotificationController extends Controller
                     Please contact the staff assigned in your store area",
                     'status'    => 'unread'
                 ]);   
+
+                //set text message
+                $text_message = "Your order ".$value->invoice_no." is added to the undelivered list.\nIt has passed the delivery date. 
+                \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                //send it to customer
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
             }
         }
         $users = User::where('is_pending','0')
@@ -206,7 +213,7 @@ class NotificationController extends Controller
             }
         }
         
-        return response()->json(['notifications' => $notification, 'counter' => $counter]);
+        return response()->json(['notifications' => $notification, 'counter' => ($counter > 0) ? $counter : 0 ]);
     }
 
     public function notificationUpdate(Request $request){
