@@ -98,11 +98,11 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a style="padding-right: 20px" id="notificationDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a style="padding-right: 20px" id="notificationDropdown" class="nav-link dropdown-toggle text-white"  href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <span data-feather="bell"></span><span class="caret"></span><span class="badge badge-danger badge-here"></span>
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" id="notification-main-div" aria-labelledby="navbarDropdown"></div>
+                                <div class="dropdown-menu dropdown-menu-right" id="notification-main-div" aria-labelledby="navbarDropdown" style="height: 350px; overflow-y: scroll;"></div>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
