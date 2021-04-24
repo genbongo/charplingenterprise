@@ -107,7 +107,7 @@ class CartController extends Controller
                 $cart_object_array[] = [
                     "client_id"                 => $client_id,
                     'invoice_id'                => $id,
-                    "delivery_date"             => $request->damage_delivery_date,
+                    "delivery_date"             => @$request->damage_delivery_date,
                     "store_id"                  => $store_id,
                     'product_stock_id'          => $order['product_stock_id'],
                     "product_id"                => $order["product_id"],

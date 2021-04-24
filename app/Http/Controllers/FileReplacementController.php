@@ -33,7 +33,8 @@ class FileReplacementController extends Controller
     {
         if(Auth::user()->user_role == 99) {
             $file_replacement = Product_Report::leftJoin('stores', ['stores.id' => 'product_reports.store_id'])
-                                    ->selectRaw('product_reports.*, stores.store_name')
+                                    ->selectRaw('product_reports.*, stores.id as store_id, stores.store_name')
+                                    ->where('is_replaced',0)
                                     ->when($request->type, function($sql) use($request){
                                         if($request->type == 'replacement'){
                                             return $sql->where('product_reports.report_type', 'Replacement');
@@ -62,7 +63,7 @@ class FileReplacementController extends Controller
 
             if(Auth::user()->user_role == 1){ //staff
                 $file_replacement = Product_Report::leftJoin('stores', ['stores.id' => 'product_reports.store_id'])
-                            ->selectRaw('product_reports.*, stores.store_name')
+                            ->selectRaw('product_reports.*, stores.id as store_id, stores.store_name')
                             ->where(['issued_by' => Auth::user()->id])
                             ->get()
                             ->map(function($item){
@@ -74,7 +75,7 @@ class FileReplacementController extends Controller
                             });
             } else { //client
                 $file_replacement = Product_Report::join('stores', ['stores.id' => 'product_reports.store_id'])
-                        ->selectRaw('product_reports.*, stores.store_name')
+                        ->selectRaw('product_reports.*, stores.id as store_id, stores.store_name')
                         ->where(['client_id' => Auth::user()->id])
                         ->get()
                         ->map(function($item){
@@ -98,8 +99,15 @@ class FileReplacementController extends Controller
                 ->addColumn('products', function($row) {
                     return $row ? $row->products : '';
                 })
-                ->editColumn('store_name', function($row){
-                    return $row->store_name ? $row->store_name : 'NA';
+                ->editColumn('store_name', function($item){
+                    // return $row->store_name ? $row->store_name : 'NA';
+                    $item->store_name = 'NA';
+                    if($store = DB::table('stores')->selectRaw('stores.store_name, stores.store_address, areas.area_name')
+                                ->join('areas', ['areas.id' => 'stores.area_id'])
+                                    ->where('stores.id', $item->store_id)->first()){
+                        $item->store_name = "Name: ". $store->store_name .'<br/>Area: '.$store->area_name. '<br/>Address: '.$store->store_address;
+                    }
+                    return $item->store_name;
                 })
                 ->addColumn('quantity', function($row) {
                    $total = 0;
@@ -122,7 +130,7 @@ class FileReplacementController extends Controller
                     //  return $btn;
                     return '';
                 })
-                ->rawColumns(['action','status', 'quantity', 'images'])
+                ->rawColumns(['action','status', 'quantity', 'images', 'store_name'])
                 ->make(true);
             } else {
                 return Datatables::of($file_replacement)
@@ -146,7 +154,7 @@ class FileReplacementController extends Controller
                     ->addColumn('images', function($row) {
                         return $row ? $row->images : '';
                     })
-                    ->rawColumns(['status', 'quantity', 'images'])
+                    ->rawColumns(['status', 'quantity', 'images', 'store_name'])
                     ->make(true);
             }
             
