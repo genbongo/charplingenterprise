@@ -624,6 +624,11 @@ class ClientController extends Controller
 
     public function storeListJson(Request $request, $id)
     {
+        if(Auth::user()->user_role == 99) {
+            $stores = Store::where(['user_id' => $id, 'is_deleted' => 1])->get();
+            return response()->json($stores);
+        }
+
         if($request->has('action')){
             $stores = Store::selectRaw('stores.*')
                     ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
@@ -638,7 +643,6 @@ class ClientController extends Controller
                         return $item;
                     });
         } else {
-         
             $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
             ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
             ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
