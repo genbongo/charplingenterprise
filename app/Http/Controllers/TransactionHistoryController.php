@@ -101,9 +101,17 @@ class TransactionHistoryController extends Controller
     public function deleteOrder(Request $request){
         if($request->id){
             if($order = DB::table('order_invoice')
-                ->selectRaw('users.area_id,order_invoice.user_id, order_invoice.invoice_no')
+                ->selectRaw('users.contact_num, users.area_id,order_invoice.user_id, order_invoice.invoice_no')
                     ->join('users', ['users.id' => 'order_invoice.user_id'])
                         ->where('order_invoice.id', $request->id)->first()){
+
+                             //set text message
+                            $text_message = "Your order ".@$order->invoice_no." was declined.\nPlease contact the staff assigned in your store area.             
+                            \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                            //send it to customer
+                            $this->global_itexmo($order->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+
                             $this->notificationDispatch([
                                 'user_id'   => $order->user_id,
                                 'type'      => 'order_approval',
@@ -120,8 +128,9 @@ class TransactionHistoryController extends Controller
                 DB::table('orders')->where('invoice_id', $request->id)->delete();
             }
             $response = [
-                'success' => true,
-                'message' => 'Store saved successfully.',
+                'success'   => true,
+                'message'   => 'Store delete successfully.',
+                'order'     => $order
             ];
             return response()->json($response, 200);
         }
