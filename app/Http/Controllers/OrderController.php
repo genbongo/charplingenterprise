@@ -147,7 +147,7 @@ class OrderController extends Controller
                 \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
                 //send it to customer
-                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
             }
             
             DB::table('orders')
@@ -254,7 +254,7 @@ class OrderController extends Controller
                 \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
                 //send it to customer
-                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
                 $this->notificationDispatch([
                     'user_id'   => $user->id,
                     'type'      => 'order_approval',
@@ -277,7 +277,7 @@ class OrderController extends Controller
                 \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
                 //send it to customer
-                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
             }
              
 

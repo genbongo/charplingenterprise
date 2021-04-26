@@ -147,7 +147,7 @@ class CartController extends Controller
                 \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
                 //send it to customer
-                $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
             }
             
             Product_Report::where('id', $request->product_report_id)->update(['is_replaced' => '1']);

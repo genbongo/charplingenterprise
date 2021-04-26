@@ -99,7 +99,7 @@ class ProductDamagesController extends Controller
                     \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
                     //send it to customer
-                    $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+                    $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
                     // $order = DB::table('order_invoice')->where('id', $request->damageid)->first();
                     $this->notificationDispatch([
                         'user_id'   => $request->clientid,

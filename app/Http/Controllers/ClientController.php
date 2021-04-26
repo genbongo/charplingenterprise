@@ -269,7 +269,7 @@ class ClientController extends Controller
                     \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
                     //send it to customer
-                    $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+                    $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
                 }
 
                 // return response
@@ -337,7 +337,7 @@ class ClientController extends Controller
             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
             //send it to customer
-            $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+            $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
 
             $this->notificationDispatch([
                 'user_id'   => $user->id,
@@ -383,7 +383,7 @@ class ClientController extends Controller
             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
             //send it to customer
-            $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+            $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
 
             new MailDispatch('client_deactivation', trim($user->email), array(
                 'subject'   => 'Account Deactivated',
@@ -468,7 +468,7 @@ class ClientController extends Controller
             $output = 'Successfully Declined!';            
         }
 
-        $this->global_itexmo($contact_number, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+        $this->global_itexmo($contact_number, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
         
         if($request->status != 'accept')
             User::where('id', $user->id)->delete();
@@ -538,7 +538,7 @@ class ClientController extends Controller
         }
 
         //send it to customer
-        $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+        $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
 
         
         if($request->status != 'accept'){

@@ -283,7 +283,7 @@ class StaffDashboardController extends Controller
              \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
  
              //send it to customer
-             $this->global_itexmo($client->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+             $this->global_itexmo($client->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
             
             // if 1 cancelled by client, if 2 cancelled by staff
             $cancelled_by = $request->input("cancel_option");

@@ -110,7 +110,7 @@ class RegisterController extends Controller
             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
             //send it to customer
-            $this->global_itexmo($request->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+            $this->global_itexmo($request->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
 
             new MailDispatch('registration', trim($request->email), array(
                 'subject'   => 'Welcome to Charpling Square Enterprise',
