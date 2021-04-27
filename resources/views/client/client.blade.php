@@ -33,6 +33,7 @@
         <tr>
             <th>Client ID</th>
             <th>First Name</th>
+            <th>Middle Name</th> <!-- //search mao rani changes-->
             <th>Last Name</th>
             <th>Email</th>
             <th>Addres</th>
@@ -71,10 +72,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="mname" class="col-sm-12 control-label">Middle Name</label>
+                                <label for="mname" class="col-sm-12 control-label">Middle Name</label> <!-- //mao rani changes 2-->
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" id="mname" name="mname" placeholder="Enter Middle Name"
-                                           value="" maxlength="50" required="" autocomplete="off" onkeypress="return onlyLetters(event)">
+                                           value="" maxlength="50" autocomplete="off" onkeypress="return onlyLetters(event)">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -163,6 +164,7 @@
                 // {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'id', name: 'id'},
                 {data: 'fname', name: 'fname'},
+                {data: 'mname', name: 'mname'}, //mao rani changes 1
                 {data: 'lname', name: 'lname'},
                 {data: 'email', name: 'email'},
                 {data: 'address', name: 'address'},
