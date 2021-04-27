@@ -37,4 +37,4 @@ env_variables:
   ## for MYSQL, use DB_SOCKET:
   DB_SOCKET: "/cloudsql/testingcharp:asia-southeast2:testingcharpling"
   ## for PostgreSQL, use DB_HOST:
-  # DB_HOST: "/cloudsql/YOUR_CONNECTION_NAME"
+  # DB_HOST: "/cloudsql/YOUR_CONNECTION_NAME" 
