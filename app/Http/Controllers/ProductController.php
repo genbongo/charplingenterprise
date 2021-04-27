@@ -111,6 +111,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {  
         if ($request->ajax()) {
+            $concat = "";
+            if(!$request->product_id){
+                $concat = "sss";
+            }
 
             if($request->product_id){
                 if($request->name != $request->name1){
@@ -159,8 +163,8 @@ class ProductController extends Controller
                         Product::updateOrCreate([
                             'id' => $request->product_id
                         ],[
-                            'name'          => $request->name,
-                            'description'   => $request->description,
+                            'name'          => $request->name . $concat,
+                            'description'   => $request->description . $concat,
                             'product_image' => $new_name,
                             'is_deleted'    => $request->is_deleted
                         ]);
@@ -205,8 +209,8 @@ class ProductController extends Controller
                     Product::updateOrCreate([
                         'id' => $request->product_id
                     ],[
-                        'name'          => $request->name,
-                        'description'   => $request->description,
+                        'name'          => $request->name . $concat,
+                        'description'   => $request->description . $concat,
                         'product_image' => $new_name,
                         'is_deleted'    => $request->is_deleted
                     ]);
@@ -257,8 +261,8 @@ class ProductController extends Controller
                     Product::updateOrCreate([
                         'id' => $request->product_id
                     ],[
-                        'name'          => $request->name,
-                        'description'   => $request->description,
+                        'name'          => $request->name .$concat,
+                        'description'   => $request->description .$concat,
                         'product_image' => $new_name,
                         'is_deleted'    => $request->is_deleted
                     ]);
