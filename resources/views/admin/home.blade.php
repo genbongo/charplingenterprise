@@ -42,14 +42,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-4">
-                            <div class="card text-black-50 border-primary mb-3" style="max-width: 50rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Sales & Loss Report:</h5>
-                                    <canvas id="salesChart" width="459" height="415"></canvas>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="col-sm-12">
                             <div class="card text-black-50 border-primary mb-3" style="width:100%;">
                                 <div class="card-body">
@@ -75,8 +67,6 @@
                                                 <ol class="carousel-indicators">
                                                     @foreach(\App\Ad::all() as $key => $value)
                                                     <li data-target="#carouselExampleCaptions" data-slide-to="{{$key}}" class="{{ $key == 0 ? 'active' : '' }}"></li>
-                                                    {{-- <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                                                    <li data-target="#carouselExampleCaptions" data-slide-to="2"></li> --}}
                                                     @endforeach
                                                 </ol>
                                                 <div class="carousel-inner">
