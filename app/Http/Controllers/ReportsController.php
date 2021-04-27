@@ -54,9 +54,31 @@ class ReportsController extends Controller
             ")
             ->where('order_invoice.created_at','>=', $start_date)
             ->where('order_invoice.created_at','<=',$end_date)
-            ->orWhere('orders.is_approved', 0) //pending
-            ->orwhere('orders.is_replacement', 1) //replacement
-            ->orwhere('orders.is_damages', 1) //damager
+            ->when($request->filter_status == 'ALL', function($sql) use ($request){ 
+                return $sql->orWhere('orders.is_approved', 0) //pending
+                ->orwhere('orders.is_replacement', 1) //replacement
+                ->orwhere('orders.is_damages', 1); //damages
+            })
+            ->when($request->filter_status != 'ALL', function($sql) use ($request){
+                    switch ($request->filter_status) {
+                        case 'PENDING':
+                            return $sql->where('orders.is_approved', 0)
+                                    ->where('orders.is_completed', 0)
+                                    ->where('orders.is_damages', 0);
+                        break;
+                        case 'REPLACEMENT':
+                            return $sql->where('orders.is_completed', 1)
+                                        ->where('orders.is_replacement', 1)
+                                        ->where('orders.is_damages', 0);
+                        break;
+                        case 'DAMAGES':
+                            return $sql->where('orders.is_completed', 0)
+                                        ->where('orders.is_replacement', 1)
+                                        ->where('orders.is_damages', 1);
+                        break;
+
+                    }
+                })
             ->groupBy('orders.invoice_id')
             ->get()
             ->map(function($item){
