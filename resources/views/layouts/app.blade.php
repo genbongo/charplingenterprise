@@ -285,6 +285,12 @@
                                 File Replacement
                             </a>
                         </li>
+                        <li class="nav-item"> <!--Mao rani changes-->
+                            <a class="nav-link" href="javascript://;" id="show_ads">
+                                <span data-feather="file-text"></span>
+                                Ads
+                            </a>
+                        </li>
                     </ul>
                     @endif
 
@@ -397,6 +403,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            //search Mao rani changes
+            $(document).on('click', '#show_ads', function(e){
+                e.preventDefault();
+                $("#exampleModalCenter").modal("show")
+            })
 
             //declare counter
             var notificationCount = 0;
