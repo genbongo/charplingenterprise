@@ -54,41 +54,9 @@ class ReportsController extends Controller
             ")
             ->where('order_invoice.created_at','>=', $start_date)
             ->where('order_invoice.created_at','<=',$end_date)
-            ->when($request->filter_status != 'ALL', function($sql) use ($request){
-                switch ($request->filter_status) {
-                    case 'PENDING':
-                        return $sql->where('orders.is_approved', 0)
-                                ->where('orders.is_completed', 0)
-                                ->where('orders.is_damages', 0);
-                    break;
-                    case 'FOR DELIVERY':
-                        return $sql->where('orders.is_approved', 1)
-                                ->where('orders.is_completed', 0)
-                                ->where('orders.is_damages', 0);
-                    break;
-                    case 'UNDELIVERED':
-                        return $sql->where('orders.is_cancelled', 1)
-                                ->where('orders.order_cancel', 0)
-                                ->where('orders.is_damages', 0);
-                    break;
-                    case 'REPLACEMENT':
-                                    return $sql->where('orders.is_replacement', 1)
-                                    ->where('orders.is_damages', 0);
-                    break;
-                    case 'DAMAGES':
-                        return $sql->where('orders.is_replacement', 1)
-                                    ->where('orders.is_damages', 1);
-                    break;
-                    case 'CANCELLED':
-                        return $sql->where('orders.order_cancel', 1);
-                    break;
-                    case 'COMPLETED':
-                        return $sql->where('orders.is_completed', 1)
-                                    ->where('orders.is_replacement', 0)
-                                    ->where('orders.is_damages', 0);
-                    break;
-                }
-            })
+            ->orWhere('orders.is_approved', 0) //pending
+            ->orwhere('orders.is_replacement', 1) //replacement
+            ->orwhere('orders.is_damages', 1) //damager
             ->groupBy('orders.invoice_id')
             ->get()
             ->map(function($item){
