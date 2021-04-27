@@ -11,12 +11,12 @@
                 <select class="form-control float-left" id="filter_status" style="width: 300px;">
                     <option value="ALL">ALL</option>
                     <option value="PENDING">PENDING</option>
-                    {{-- <option value="FOR DELIVERY">FOR DELIVERY</option> --}}
-                    {{-- <option value="UNDELIVERED">UNDELIVERED</option> --}}
+                    <option value="FOR DELIVERY">FOR DELIVERY</option>
+                    <option value="UNDELIVERED">UNDELIVERED</option>
                     <option value="REPLACEMENT">REPLACEMENT</option>
                     <option value="DAMAGES">DAMAGES</option>
-                    {{-- <option value="CANCELLED">CANCELLED</option>
-                    <option value="COMPLETED">COMPLETED</option> --}}
+                    <option value="CANCELLED">CANCELLED</option>
+                    <option value="COMPLETED">COMPLETED</option>
                 </select>
             </div>
             <div class="col-md-6" style="padding:0px;">
