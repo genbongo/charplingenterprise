@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
+use App\{Ad,User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Validator;
+use App\Traits\GlobalFunction;
 use Google\Cloud\Storage\StorageClient;
 class AdController extends Controller
-{
+{   
+    use GlobalFunction;
     /**
      * Create a new controller instance.
      *
@@ -78,38 +80,46 @@ class AdController extends Controller
 
         if($validation->passes())
         {
-            $image = $request->file('ads_image');
-            $new_name = rand() . '.' . $image->getClientOriginalExtension();
-            // $image->move(public_path('img/ads'), $new_name);
+            if($request->hasFile("ads_image")){
+                $image = $request->file('ads_image');
+                // $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                // $image->move(public_path('img/ads'), $new_name);
+                $path = \Storage::disk('public')->put('img/ads', $image);
+                #start here ============================================================
+                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                            
+                $storage = new StorageClient([
+                    'keyFile' => json_decode($googleConfigFile, true)
+                ]);
 
-            #start here ============================================================
-            $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
-            
-            $storage = new StorageClient([
-                'keyFile' => json_decode($googleConfigFile, true)
-            ]);
+                $storageBucketName  = config('googlecloud.storage_bucket');
+                $bucket             = $storage->bucket($storageBucketName);
+                $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                
+                $googleCloudStoragePath = $path;
 
-            $fileStoragePath = '/img/ads/' . $new_name;
-            $publicPath = public_path($fileStoragePath);
+                $bucket->upload($fileSource, [
+                    'predefinedAcl'  => 'publicRead',
+                    'name'           => $googleCloudStoragePath
+                ]);
+                #end here ===============================================================
 
-            $storageBucketName = config('googlecloud.storage_bucket');
-            $bucket = $storage->bucket($storageBucketName);
-            $fileSource = fopen($publicPath, 'r');
-            $newFolderName = 'img/ads';
-            $googleCloudStoragePath = $newFolderName.'/'.$new_name;
-            /* Upload a file to the bucket.
-            Using Predefined ACLs to manage object permissions, you may
-            upload a file and give read access to anyone with the URL.*/
-            $bucket->upload($fileSource, [
-                'predefinedAcl'     => 'publicRead',
-                'name'              => $googleCloudStoragePath
-            ]);
-            #end here ===============================================================
+                $new_name = str_replace("img/ads/", "", $path);    
+            } 
+            if(!$request->ads_id){
+                //set text message
+                $user = User::where(['user_role' => 2, 'is_active' => 1])->get();
+                foreach ($user as $key => $value) {
+                    $text_message = "Hi, ".$value->fname." ".$value->lname." Creamline has new promo sales for this week.\nCheck them out on our website.            
+                    \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
-            // $image->move(public_path('img/ads'), $new_name);
-
+                //send it to customer
+                $this->global_itexmo($value->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
+                } 
+                
+            }
             //insert to product table
-            $productModel = Ad::updateOrCreate([
+            Ad::updateOrCreate([
                 'id' => $request->ads_id
             ],[
                 'ads_image' => $new_name,

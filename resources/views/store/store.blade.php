@@ -92,8 +92,8 @@
                                 <th>ID</th>
                                 <th>Model</th>
                                 <th>Description</th>
-                                <th>Status</th>
-                                <th>Date Created</th>
+                                {{-- <th>Status</th> --}}
+                                <th>Date Deployed</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,7 +145,7 @@
 
         // create new store
         $('#createNewStore').click(function () {
-            $('#saveBtn').html("Create");
+            $('#saveBtn').html("Save");
             $('#store_id').val('');
             $('#storeForm').trigger("reset");
             $('#modelHeading').html("Create New Store");
@@ -155,8 +155,7 @@
         // create or update store
         $('#saveBtn').click(function (e) {
             e.preventDefault();
-            $(this).html('Saving..');
-
+            $(this).html('Saving..').attr("disabled", true);
             $.ajax({
                 data: $('#storeForm').serialize(),
                 url: "{{ url('store') }}",
@@ -166,11 +165,11 @@
                     $('#storeForm').trigger("reset");
                     $('#ajaxModel').modal('hide');
                     table.draw();
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').attr("disabled", false);
                 },
                 error: function (data) {
                     console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').attr("disabled", false);
                 }
             });
         });
@@ -238,7 +237,6 @@
                         <td>${row.id}</td>
                         <td>${row.model}</td>
                         <td>${row.description}</td>
-                        <td>${row.status}</td>
                         <td>${moment(row.created_at).format('MMMM D YYYY')}</td></tr>`
                 });
                $("#store_list_html").find('tbody').html("").append(htmlData) 

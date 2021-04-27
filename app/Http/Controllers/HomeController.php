@@ -33,7 +33,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin.home');
+        if(Auth::user()->user_role == 1){
+            return redirect('/main');
+        } else {
+            return view('admin.home');
+
+        }
     }
 
     /*
@@ -106,23 +111,64 @@ class HomeController extends Controller
     */
     public function profile_update(Request $request)
     {
-        User::updateOrCreate([
-            'id' => $request->user_id
-        ],[
-            'fname' => $request->fname,
-            'mname' => $request->mname,
-            'lname' => $request->lname,
-            'address' => $request->address,
-            'contact_num' => $request->contact_num,
-        ]);
-
+        if($request->email != $request->email1){
+            if(User::where('email', $request->email)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Email Address Already Exist.'
+                ]);
+            } else {
+                User::updateOrCreate([
+                    'id' => $request->user_id
+                ],[
+                    'fname' => $request->fname,
+                    'mname' => $request->mname,
+                    'lname' => $request->lname,
+                    'address' => $request->address,
+                    'contact_num' => $request->contact_num,
+                    'email' => $request->email
+                ]);
+            }
+        }  else if($request->contact_num != $request->contact_num1) { 
+            if(User::where('contact_num', $request->contact_num)->first()){
+                return response()->json([
+                    'status'    => 'exist',
+                    'message'   => 'Phone Number Already Exist.'
+                ]);
+            } else {
+                User::updateOrCreate([
+                    'id' => $request->user_id
+                ],[
+                    'fname' => $request->fname,
+                    'mname' => $request->mname,
+                    'lname' => $request->lname,
+                    'address' => $request->address,
+                    'contact_num' => $request->contact_num,
+                    'email' => $request->email
+                ]);
+            }
+        } else {
+            User::updateOrCreate([
+                'id' => $request->user_id
+            ],[
+                'fname' => $request->fname,
+                'mname' => $request->mname,
+                'lname' => $request->lname,
+                'address' => $request->address,
+                'contact_num' => $request->contact_num,
+                'email' => $request->email
+            ]);
+        }
+    
         return response()->json([
+            'status'    => 'success',
             'message'   => 'Profile Successfully Updated!',
             'fname' => $request->fname,
             'mname' => $request->mname,
             'lname' => $request->lname,
             'address' => $request->address,
             'contact_num' => $request->contact_num,
+            'email' => $request->email
         ]);
     }
 
@@ -237,42 +283,6 @@ class HomeController extends Controller
     */
     public function display_weekly_sales_data(Request $request){
 
-        // $sun = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("sunday")."' AND is_completed = '1' AND is_replacement = '0'");
-        // $mon = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("monday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $tue = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("tuesday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $wed = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("wednesday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $thu = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("thursday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $fri = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("friday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $sat = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("saturday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        
-        // return response()->json([
-        //     "sun"   =>      $sun[0],
-        //     "mon"   =>      $mon[0],
-        //     "tue"   =>      $tue[0],
-        //     "wed"   =>      $wed[0],
-        //     "thu"   =>      $thu[0],
-        //     "fri"   =>      $fri[0],
-        //     "sat"   =>      $sat[0],
-        // ]);
-
-        // $sun = DB::select("SELECT SUM(orders.ordered_total_price) as total_price FROM orders WHERE delivery_date = '".$request->input("sunday")."' AND is_completed = '1' AND is_replacement = '0' GROUP BY invoice_id");
-        // $mon = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("monday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $tue = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("tuesday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $wed = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("wednesday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $thu = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("thursday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $fri = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("friday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        // $sat = DB::select("SELECT COUNT(*) as counts FROM orders WHERE delivery_date = '".$request->input("saturday")."' AND is_completed = '1' AND is_replacement = '0' ");
-        
-        // $sun = DB::table('orders')->selectRaw('SUM(orders.ordered_total_price) as total_price')->where('delivery_date', $request->input("sunday"))->where('is_completed',  1)->where('is_replacement', 0)->groupBy('invoice_id')->first();
-        // $mon = DB::table('orders')->selectRaw('SUM(orders.ordered_total_price) as total_price')->where('delivery_date', $request->input("monday"))->where('is_completed',  1)->where('is_replacement', 0)->groupBy('invoice_id')->first();         
-        // $tue = DB::table('orders')->selectRaw('SUM(orders.ordered_total_price) as total_price')->where('delivery_date', $request->input("tuesday"))->where('is_completed',  1)->where('is_replacement', 0)->groupBy('invoice_id')->first();    
-        // $wed = DB::table('orders')->selectRaw('SUM(orders.ordered_total_price) as total_price')->where('delivery_date', $request->input("wednesday"))->where('is_completed',  1)->where('is_replacement', 0)->groupBy('invoice_id')->first();    
-        // $thu = DB::table('orders')->selectRaw('SUM(orders.ordered_total_price) as total_price')->where('delivery_date', $request->input("thursday"))->where('is_completed',  1)->where('is_replacement', 0)->groupBy('invoice_id')->first();    
-        // $fri = DB::table('orders')->selectRaw('SUM(orders.ordered_total_price) as total_price')->where('delivery_date', $request->input("friday"))->where('is_completed',  1)->where('is_replacement', 0)->groupBy('invoice_id')->first();    
-        // $sat = DB::table('orders')->selectRaw('SUM(orders.ordered_total_price) as total_price')->where('delivery_date', $request->input("saturday"))->where('is_completed',  1)->where('is_replacement', 0)->groupBy('invoice_id')->first();    
-
-
-
         return response()->json([
             "sun"   =>      ['counts' => $this->weeklySales($request->input("sunday")) ? $this->weeklySales($request->input("sunday"))->total_price : 0],
             "mon"   =>      ['counts' => $this->weeklySales($request->input("monday")) ? $this->weeklySales($request->input("monday"))->total_price : 0],
@@ -364,7 +374,7 @@ class HomeController extends Controller
         $products = '';    
         $total = 0;
         foreach ($top_products as $key => $value) {
-           $total    .= '<br/>'.$value->total_price;  
+           $total    .= '<br/>'.number_format($value->total_price,2);  
            $products .= '<br/>'.$value->product_name; 
         }
         return [

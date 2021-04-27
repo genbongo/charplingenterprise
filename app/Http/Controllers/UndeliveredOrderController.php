@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Order;
+use App\{Order, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +60,7 @@ class UndeliveredOrderController extends Controller
                 SUM(orders.ordered_total_price) as total_price, 
                 CONCAT(users.fname, ' ', users.lname) as fullname, 
                 users.email, 
+                orders.store_id,
                 orders.delivery_date,
                 orders.attempt,
                 orders.is_replacement,
@@ -68,9 +69,28 @@ class UndeliveredOrderController extends Controller
                 // ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered',
                 //     'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
                 ->where('orders.is_approved', 1)
+                ->where('orders.is_cancelled', 0)
                 ->where('orders.is_completed', 0)
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    // $item->store_name = 'NA';
+                    // $item->assigned_staff = "NA";
+                    // if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                    //     $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    //     $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
+                    // }
+                    // return $item;
+                    $item->store_name = 'NA';
+                    $item->assigned_staff = "NA";
+                    if($store = DB::table('stores')->selectRaw('stores.area_id, stores.store_name, stores.store_address, areas.area_name')
+                                ->join('areas', ['areas.id' => 'stores.area_id'])
+                                    ->where('stores.id', $item->store_id)->first()){
+                        $item->store_name = "Name: ". $store->store_name .'<br/>Area: '.$store->area_name. '<br/>Address: '.$store->store_address;
+                        $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
+                    }
+                    return $item;
+                });
 
         if ($request->ajax()) {
             return Datatables::of($undeliver)
@@ -84,7 +104,7 @@ class UndeliveredOrderController extends Controller
                 ->addColumn('total_price', function($row){
                     return '<strong>'.number_format($row->total_price,2).'</strong>';
                   })
-                ->rawColumns(['action', 'total_price'])
+                ->rawColumns(['action', 'total_price', 'store_name'])
                 ->make(true);
         }
 

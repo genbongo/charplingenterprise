@@ -48,6 +48,7 @@
                     <div class="form-group">
                         <label class="col-sm-12 control-label">Area Code</label>
                         <div class="col-sm-12">
+                            <input type="hidden" class="form-control" id="area_code1" name="area_code1">
                             <input for="area_code" type="number" class="form-control" id="area_code" name="area_code"
                                    placeholder="Enter Area Code"
                                    value="" maxlength="50" required="" autocomplete="off">
@@ -73,6 +74,13 @@
             }
         });
 
+        $("#area_code").on("keypress keyup blur",function (event) {    
+           $(this).val($(this).val().replace(/[^\d].+/, ""));
+            if ((event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+
         // datatable
         var table = $('#dataTable').DataTable({
             processing: true,
@@ -89,9 +97,13 @@
 
         // create new area
         $('#createNewArea').click(function () {
+            $("#error_message").html("").hide()
             $('#saveBtn').html("Create");
             $('#area_id').val('');
             $('#area_name').val('');
+            $('#area_name1').val('');
+            $('#area_code').val('');
+            $('#area_code1').val('');
             $('#areaForm').trigger("reset");
             $('#modelHeading').html("Create New Area");
             $('#ajaxModel').modal('show');
@@ -100,7 +112,11 @@
         // create or update area
         $('#saveBtn').click(function (e) {
             e.preventDefault();
-            $(this).html('Saving..');
+            if(parseFloat($("#area_code").val()) < 0 ){
+                swal("Error", "Invalid Area Code!")
+                return   
+            }
+            $(this).html('Saving..').prop('disabled',true);
             $("#error_message").html("")
             $.ajax({
                 data: $('#areaForm').serialize(),
@@ -109,19 +125,20 @@
                 dataType: 'json',
                 success: function (data) {
                     if(data.success == "exist"){
+                        $('#saveBtn').html('Save').prop('disabled',false);
                         $("#error_message").html(data.message).show()
                         return;
                     } else {
                         $('#areaForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
                         table.draw();
-                        $('#saveBtn').html('Save');
+                        $('#saveBtn').html('Save').prop('disabled',false);
                     }
                     
                 },
                 error: function (data) {
                     console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').prop('disabled',false);
                 }
             });
         });
@@ -129,6 +146,7 @@
         // edit area
         $('body').on('click', '.editArea', function () {
             var area_id = $(this).data('id');
+            $("#error_message").html("").hide()
             $.get("{{ url('area') }}" + '/' + area_id + '/edit', function (data) {
                 $('#modelHeading').html("Edit Area");
                 $('#saveBtn').html('Update');
@@ -137,6 +155,7 @@
                 $('#area_name').val(data.area_name);
                 $('#area_name1').val(data.area_name);
                 $('#area_code').val(data.area_code);
+                $('#area_code1').val(data.area_code);
             })
         });
 

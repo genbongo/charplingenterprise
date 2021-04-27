@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <label class="col-sm-12 control-label">Description</label>
                         <div class="col-sm-12">
-                            <input name="description" placeholder="Enter Description" class="form-control"required/>
+                            <input name="description" placeholder="Enter Description" class="form-control" required/>
                         </div>
                     </div>
                     {{-- <input type="hidden" name="status" value=1> --}}
@@ -126,7 +126,10 @@
                                     disabled
                                     selected 
                                 >Please Select Store</option>
-                                @foreach(\App\User::where('user_role', '=', 2)->first()->stores as $store)
+                                @php
+                                    $stores = \App\User::where('user_role', '=', 2)->first();
+                                @endphp
+                                @foreach(($stores ? $stores->stores : []) as $store)
                                     <option 
                                         value="{{ $store }}"
                                     >
@@ -208,12 +211,13 @@
                         htmlData +='<td>'+ row.id + '</td>'
                         htmlData += '<td>'+ row.store_name + '</td>'
                         htmlData += '<td>'+row.store_address+'</td>'
-                        htmlData += '<td>'
-                        htmlData += '<select id="fridge_status" width="60">'
-                        htmlData += '<option value="available" data-id='+ row.id +' ' + (row.status == 'available' ? 'selected' : row.status) + '>Available</option>'
-                        htmlData += '<option value="unavailable" data-id='+ row.id +' ' + (row.status == 'unavailable' ? 'selected' : row.status) + '>UnAvailable</option>'
-                        htmlData += '</select>'
-                        htmlData += '</td>'
+                        htmlData += '<td>'+row.status+'</td>'
+                        // htmlData += '<td>'
+                        // htmlData += '<select id="fridge_status" width="60">'
+                        // htmlData += '<option value="available" data-id='+ row.id +' ' + (row.status == 'available' ? 'selected' : row.status) + '>Available</option>'
+                        // htmlData += '<option value="unavailable" data-id='+ row.id +' ' + (row.status == 'unavailable' ? 'selected' : row.status) + '>UnAvailable</option>'
+                        // htmlData += '</select>'
+                        // htmlData += '</td>'
                         htmlData += '<td>' + moment(row.created_at).format('MMMM D YYYY') + '</td>'
                         htmlData += '</tr>'
                 });
@@ -290,18 +294,19 @@
         });
 
         // create or update fridge
-        $('#saveBtn').click(function (e) {
+        $(document).on('submit', '#fridgeForm', function(e){
+        // $('#saveBtn').click(function (e) {
             e.preventDefault();
-
+            $('#saveBtn').html('Save').prop("disabled", true);
             var cmb_user = $("#cmb_user option:selected").val();
 
             if(cmb_user == 0){
                 swal("Error", "Please select a User to proceed!");
             }else{
-                $(this).html('Saving..');
+                $('#saveBtn').html('Saving').prop("disabled", false);
 
                 $.ajax({
-                    data: $('#fridgeForm').serialize(),
+                    data: $(this).serialize(),
                     url: "{{ url('fridge') }}",
                     type: "POST",
                     dataType: 'json',
@@ -309,11 +314,11 @@
                         $('#fridgeForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
                         table.draw();
-                        $('#saveBtn').html('Save');
+                        $('#saveBtn').html('Save').prop("disabled", false);
                     },
                     error: function (data) {
                         console.log('Error:', data);
-                        $('#saveBtn').html('Save');
+                        $('#saveBtn').html('Save').prop("disabled", false);
                     }
                 });
             }

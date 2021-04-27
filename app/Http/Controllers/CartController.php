@@ -6,15 +6,18 @@ use App\{
     Cart,
     Product,
     Order,
-    Product_Report
+    Product_Report,
+    User
 };
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use App\Traits\GlobalFunction;
 class CartController extends Controller
 {
+    use GlobalFunction;
     /**
      * Create a new controller instance.
      *
@@ -43,13 +46,13 @@ class CartController extends Controller
         if ($request->ajax()) {
             return Datatables::of($cart)
                 ->addIndexColumn()
-                ->addColumn('select', function(){
-                    return false;
+                ->addColumn('select', function($row){
+                    return "<input type='checkbox' name='checkoutIds[]' class='checkout' value='".$row->id."' style='margin: 9px; transform: scale(1.5)'>";
                 })
                 ->addColumn('action', function ($row) {
-
-                    $btn = ' <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Remove Cart" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Remove" class="btn btn-danger btn-sm deleteCart">Remove</a>';
-
+                    $btn = "";
+                    $btn .= '<a href="javascript:void(0)"  data-id="'.$row->id.'" class="btn btn-danger btn-sm deleteCart">Remove</a>';
+                    $btn .= ' <a href="javascript:void(0)" data-id="'.$row->id.'" data-stock_id="'.$row->product_stock_id.'" data-quantity="'.$row->quantity.'" data-val="'.$row->product_id.'" class="btn btn-primary btn-sm div-prod">Edit</a>';
                     return $btn;
                 })
                 ->rawColumns(['select', 'action'])
@@ -104,7 +107,7 @@ class CartController extends Controller
                 $cart_object_array[] = [
                     "client_id"                 => $client_id,
                     'invoice_id'                => $id,
-                    "delivery_date"             => $request->damage_delivery_date,
+                    "delivery_date"             => @$request->damage_delivery_date,
                     "store_id"                  => $store_id,
                     'product_stock_id'          => $order['product_stock_id'],
                     "product_id"                => $order["product_id"],
@@ -130,6 +133,23 @@ class CartController extends Controller
         }
 
         if(Order::insert($cart_object_array)){
+            if($user = User::find($client_id)){
+                $this->notificationDispatch([
+                    'user_id'   => $client_id,
+                    'type'      => 'file_replacement_approved',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'client',
+                    'message'   => "Your replacement ".$invoiceNo." was approved. Delivery is scheduled on ".date("M d, Y", strtotime($request->damage_delivery_date)).".",
+                    'status'    => 'unread'
+                ]);   
+                //set text message
+                $text_message = "Your replacement ".$invoiceNo." was approved. Delivery is scheduled on ".date("M d, Y", strtotime($request->damage_delivery_date)).".           
+                \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                //send it to customer
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
+            }
+            
             Product_Report::where('id', $request->product_report_id)->update(['is_replaced' => '1']);
             $response = [
                 'success' => true,
@@ -155,29 +175,41 @@ class CartController extends Controller
     {
         $product = Product::find($request->product_id);
 
-        $cart = Cart::where('product_id', $request->product_id)
-                        ->where('product_stock_id', $request->product_stock_id)
-                        ->where('user_id', Auth::user()->id)
-                        ->where('is_checkout', '0')
-                        ->first();
+        if($request->has('cart_id')){
+            Cart::where([
+                'id'        => $request->cart_id
+            ])->update([
+                'size'                  => $request->size,
+                'quantity'              => $request->quantity,
+                'price'                 => $request->price,
+                'subtotal'              => ($request->quantity * $request->price)
+            ]);    
+        } else {
+            
+            $cart = Cart::where('product_id', $request->product_id)
+                            ->where('product_stock_id', $request->product_stock_id)
+                            ->where('user_id', Auth::user()->id)
+                            ->where('is_checkout', '0')
+                            ->first();
 
-        $quantity = $cart ? $cart->quantity + $request->quantity : $request->quantity;
-        Cart::updateOrCreate([
-            'user_id'           => Auth::user()->id,
-            'product_id'        => $request->product_id,
-            'product_stock_id'  => $request->product_stock_id,
-            'is_checkout'       => '0',
-        ],[
-            'product_stock_id'      => $request->product_stock_id,
-            'product_image'         => $product->product_image,
-            'product_name'          => $request->product_name,
-            'product_description'   => $request->product_description,
-            'size'                  => $request->size,
-            'flavor'                => $request->flavor,
-            'quantity'              => $quantity,
-            'price'                 => $request->price,
-            'subtotal'              => ($quantity * $request->price)
-        ]);
+            $quantity = $cart ? $cart->quantity + $request->quantity : $request->quantity;
+            Cart::updateOrCreate([
+                'user_id'           => Auth::user()->id,
+                'product_id'        => $request->product_id,
+                'product_stock_id'  => $request->product_stock_id,
+                'is_checkout'       => '0',
+            ],[
+                'product_stock_id'      => $request->product_stock_id,
+                'product_image'         => $product->product_image,
+                'product_name'          => $request->product_name,
+                'product_description'   => $request->product_description,
+                'size'                  => $request->size,
+                'flavor'                => $request->flavor,
+                'quantity'              => $quantity,
+                'price'                 => $request->price,
+                'subtotal'              => ($quantity * $request->price)
+            ]);
+        }
 
         // return response
         $response = [

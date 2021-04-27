@@ -35,6 +35,7 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Addres</th>
             <th>Contact</th>
             <th>Status</th>
             <th width="220px">Action</th>
@@ -90,6 +91,13 @@
                                     <input type="email" class="form-control" id="email" name="email"
                                            placeholder="Enter Email"
                                            value="" maxlength="50" required="" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lname" class="col-sm-12 control-label">Address</label>
+                                <div class="col-sm-12">
+                                    <textarea type="text" class="form-control" id="address" name="address" placeholder="Enter Address"
+                                           value="" maxlength="50" required="" autocomplete="off" onkeypress="return onlyLetters(event)"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -157,6 +165,7 @@
                 {data: 'fname', name: 'fname'},
                 {data: 'lname', name: 'lname'},
                 {data: 'email', name: 'email'},
+                {data: 'address', name: 'address'},
                 {data: 'contact_num', name: 'contact_num'},
                 {
                     data: 'is_active', name: 'is_active',
@@ -191,6 +200,7 @@
             $('#client_id').val('');
             $('#contact_num1').val("");
             $('#email1').val("");
+            $('#address').val("");
             $('#clientForm').trigger("reset");
             $('#modelHeading').html("Create New Client");
             $('#ajaxModel').modal('show');
@@ -245,6 +255,7 @@
                 $('#fname').val(data.fname);
                 $('#mname').val(data.mname);
                 $('#lname').val(data.lname);
+                $('#address').val(data.address);
                 $('#email').val(data.email);
                 $('#email1').val(data.email);
                 $('#contact_num').val(data.contact_num);

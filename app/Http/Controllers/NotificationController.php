@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Notification;
-use App\{Area, User, Product};
+use App\{Area, User, Product, Order};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use App\Helpers\Mail\SenderHelper as MailDispatch;
@@ -30,6 +31,68 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
+        $orders = User::select('users.id')
+                    ->join('order_invoice', ['order_invoice.user_id' => 'users.id'])
+                    ->groupBy('order_invoice.user_id')
+                            ->pluck('id')
+                                ->toArray();
+
+        $deactivate =  User::where('user_role',2)
+                    ->whereRaw("created_at <= DATE_SUB(NOW(), INTERVAL 60 DAY)")
+                    ->where('is_active',1)
+                    ->whereNotIn('id', $orders)
+                    ->get();
+
+        foreach ($deactivate as $key => $value) {
+            User::whereId($value->id)->update([
+                'is_active' => 0
+            ]);
+        }            
+    
+        $orders = Order::selectRaw('orders.*,order_invoice.invoice_no')
+            ->where('orders.is_approved', 1)
+            ->join('order_invoice', ['orders.invoice_id' => 'order_invoice.id'])
+                    ->where('orders.is_completed', 0)
+                    ->where('is_cancelled',0)
+                        ->whereRaw("delivery_date < CURDATE()")
+                            ->get();
+
+                        // return $orders;
+        foreach ($orders as $key => $value) {
+            Order::whereId($value->id)->update([
+                'is_cancelled' => 1
+            ]);
+            if($user = User::find($value->client_id)){
+                //staff
+                $this->notificationDispatch([
+                    'user_id'   => $user->id,
+                    'type'      => 'order_auto_cancel',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'staff',
+                    'message'   => "There are ".count($orders)." orders that were automatically cancelled and added to the undelivered list. It has
+                    passed the delivery date and no actions were done. Please contact your administration for
+                    clarification.",
+                    'status'    => 'unread'
+                ]);   
+                //client
+                $this->notificationDispatch([
+                    'user_id'   => $user->id,
+                    'type'      => 'order_auto_cancel',
+                    'area_id'   => $user->area_id,
+                    'email_to'  => 'client',
+                    'message'   => "Your order ".$value->invoice_no." is added to the undelivered list. It has passed the delivery date.
+                    Please contact the staff assigned in your store area",
+                    'status'    => 'unread'
+                ]);   
+
+                //set text message
+                $text_message = "Your order ".$value->invoice_no." is added to the undelivered list.\nIt has passed the delivery date.\nPlease contact the staff assigned in your store area 
+                \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                //send it to customer
+                $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
+            }
+        }
         $users = User::where('is_pending','0')
                         ->where('is_active','1')
                             ->where('user_role',2)
@@ -71,7 +134,7 @@ class NotificationController extends Controller
             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
             //send it to customer
-            $this->global_itexmo($value->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+            $this->global_itexmo($value->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
 
             new MailDispatch('reminder', trim($value->email), array(
                 'subject'   => 'Reminder of 2 months without ordering',
@@ -128,19 +191,56 @@ class NotificationController extends Controller
                     'message' => "There are ".$users." registrations for today. <a href='/client'>Click</a> to review details"]
                 ));
             }
-            return response()->json($notification);
+            
         } 
         else if(Auth::user()->user_role == 2){#client notifications
             $user = User::find(@Auth::user()->id);
             $notification = SystemNotification::where('user_id', $user->id)->where('email_to', 'client')->orderBy('id', 'desc')->get();
-            return response()->json($notification);
+            // return response()->json($notification);
         } 
         else { //staff notifications
             $user = User::find(@Auth::user()->id);
             $notification = SystemNotification::where('area_id', $user->area_id)->where('email_to', 'staff')->orderBy('id', 'desc')->get();
-            return response()->json($notification);
+            // return response()->json($notification);
         }
 
         $users = User::where('is_pending','0')->where('is_active','1')->get();
+
+        if(!DB::table('notification_counter')->where('user_id',Auth::user()->id)->first()){
+            DB::table('notification_counter')->updateOrInsert(
+                [
+                    'current_notif' => count($notification),
+                    'updated_notif' => count($notification)
+                ],
+                ['user_id' => Auth::user()->id]
+            );
+        } else {
+            DB::table('notification_counter')->updateOrInsert(
+                [
+                    'current_notif' => count($notification)
+                ],
+                ['user_id' => Auth::user()->id]
+            );
+        }
+
+        if($notif = DB::table('notification_counter')->where('user_id',Auth::user()->id)->first()){
+            if($notif->modified){
+                $counter = $notif->current_notif - $notif->updated_notif;
+            } else {
+                $counter = $notif->current_notif;
+            }
+        }
+        
+        return response()->json(['notifications' => $notification, 'counter' => ($counter > 0) ? $counter : 0 ]);
+    }
+
+    public function notificationUpdate(Request $request){
+        if($notif = DB::table('notification_counter')->where('user_id',Auth::user()->id)->first()){
+           $updated_notif = $notif->updated_notif + $request->updated_notif;
+            DB::table('notification_counter')
+                ->where('user_id',Auth::user()->id)
+                    ->update(['modified' => date('Y-m-d'),'updated_notif' => $updated_notif]);
+
+        }
     }
 }

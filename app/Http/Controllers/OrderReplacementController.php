@@ -60,6 +60,7 @@ class OrderReplacementController extends Controller
                 SUM(orders.ordered_total_price) as total_price, 
                 CONCAT(users.fname, ' ', users.lname) as fullname, 
                 users.email, 
+                orders.store_id,
                 orders.delivery_date,
                 orders.attempt,
                 users.id as client_id,
@@ -69,7 +70,25 @@ class OrderReplacementController extends Controller
                 ->where('is_cancelled', 1)
                 ->where('order_cancel', 0)
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    // $item->store_name = 'NA';
+                    // $item->assigned_staff = "NA";
+                    // if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                    //     $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    //     $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
+                    // }
+                    // return $item;
+                    $item->store_name = 'NA';
+                    $item->assigned_staff = "NA";
+                    if($store = DB::table('stores')->selectRaw('stores.area_id, stores.store_name, stores.store_address, areas.area_name')
+                                ->join('areas', ['areas.id' => 'stores.area_id'])
+                                    ->where('stores.id', $item->store_id)->first()){
+                        $item->store_name = "Name: ". $store->store_name .'<br/>Area: '.$store->area_name. '<br/>Address: '.$store->store_address;
+                        $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
+                    }
+                    return $item;
+                });
 
             if ($request->ajax()) {
                 return Datatables::of($file_replacement)
@@ -77,7 +96,7 @@ class OrderReplacementController extends Controller
                     ->addColumn('action', function ($row) {
     
                         $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm viewDetails">View Details </a> ';
-                        $btn .= '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="2" data-type="all" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-success btn-sm mt-1 editPendingOrder">Re-Schedule</a>';
+                        $btn .= '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-accept="schedule" data-set="2" data-type="all" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-success btn-sm mt-1 editPendingOrder">Re-Schedule</a>';
                         // $btn .= '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-success btn-sm editPendingOrder mt-1">Re-Schedule</a>';
                         $btn .= '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-danger btn-sm cancelOrder mt-1">Cancel</a>';
                         return $btn;
@@ -85,7 +104,7 @@ class OrderReplacementController extends Controller
                     ->addColumn('total_price', function($row){
                         return '<strong>'.number_format($row->total_price,2).'</strong>';
                     })
-                    ->rawColumns(['action', 'total_price'])
+                    ->rawColumns(['action', 'total_price', 'store_name'])
                     ->make(true);
             }
 

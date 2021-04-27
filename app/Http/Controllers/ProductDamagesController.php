@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductDamages;
+use App\{ProductDamages,User};
 use App\Product_Report;
 use App\ProductFileDamages;
 use Illuminate\Http\Request;
@@ -92,13 +92,31 @@ class ProductDamagesController extends Controller
                 ]);
                 break;
             case "disapprove_damage":
+
+                if($user = User::find($request->clientid)){
+                    //set text message
+                    $text_message = "Your replacement ".$request->report_no." was declined. Please contact the staff assigned in your store area.           
+                    \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                    //send it to customer
+                    $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
+                    // $order = DB::table('order_invoice')->where('id', $request->damageid)->first();
+                    $this->notificationDispatch([
+                        'user_id'   => $request->clientid,
+                        'type'      => 'file_replacement_disapproved',
+                        'area_id'   => $user->area_id,
+                        'email_to'  => 'client',
+                        'message'   => "Your replacement ".$request->report_no." was declined. Please contact the staff assigned in your store area.",
+                        'status'    => 'unread'
+                    ]);   
+                }
                 Product_Report::where('id', $request->input("damageid"))->update(["is_replaced" => 2]);
                 
                 //set message
-                $message = 'Your Damage request # '.$request->input("damageid").' has been disapproved. Please be advised accordingly';
+                // $message = 'Your Damage request # '.$request->input("damageid").' has been disapproved. Please be advised accordingly';
 
                 //call the global function for setting the notification
-                $this->set_notification("approved_customer_order", $message, $request->input("clientid"));
+                // $this->set_notification("approved_customer_order", $message, $request->input("clientid"));
                 
                 return response()->json([
                     'message' => "Order Damage Disapproved!",

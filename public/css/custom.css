@@ -7,6 +7,9 @@ html, body {
     margin: 0;
 }
 
+div#status_update_28 {
+  z-index: 999;
+}
 .row {
     margin-left: 0;
     margin-right: 0;

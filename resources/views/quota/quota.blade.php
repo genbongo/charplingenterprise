@@ -196,7 +196,7 @@
             var year_list = '<option value="999999999">Please select year</option>'
 
             //loop the year to 30 years starting from the current date
-            for(var i = 2020; i <= 2050; i++){
+            for(var i = 2021; i <= 2050; i++){
                 year_list += '<option value="'+i+'">'+i+'</option>';
             }
             //append the list
@@ -230,7 +230,7 @@
                         htmlData += `
                             <tr>
                                 <td scope="row">${key}</td>
-                                <td>${row}</td>
+                                <td>Php ${row}</td>
                             </tr>
                         `
                     })

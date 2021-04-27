@@ -1,0 +1,22 @@
+ADMIN YEARLY QUOTA
+-yearly quota table maguba after creating quota ---- DONE
+
+ADMIN MANAGE AREA
+-can still create area with same area code. --- DONE
+
+ADMIN CHECKOUT MODULE
+-Can still deliver choosing a pending store/can still choose a pending store on checkout
+
+ADMIN PRODUCT PAGE
+-product can still add existing product. --- DONE
+
+FRIDGE
+-History?? Fridge
+
+
+ADMIN CART MODULE
+-Cart - should edit quantity and size
+-Takeout sort button
+
+YEARLY QUOTA
+-PRICE SYMBOL PHP

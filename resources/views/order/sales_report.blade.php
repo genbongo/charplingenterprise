@@ -30,8 +30,8 @@
 		<canvas id="canvas"></canvas>
 	</div>
     <button class="btn btn-info ml-auto float-right" onclick="printData();" id="print_data">Print</button> &nbsp;
-    <button class="btn btn-danger ml-auto float-right mr-2" id="export_data">PDF</button>
-    <button class="btn btn-success ml-auto float-right mr-2" onclick="exportEx('xls');">XLS</button>
+    {{-- <button class="btn btn-danger ml-auto float-right mr-2" id="export_data">PDF</button>
+    <button class="btn btn-success ml-auto float-right mr-2" onclick="exportEx('xls');">XLS</button> --}}
     <br/>
     <br/>
     <table id="salesReportTableReport" class="table">
@@ -143,7 +143,7 @@
                 responsive: true,
                 title: {
                     display: true,
-                    text: '2021 Statistic Reports'
+                    text: $('#filter_status').val() + ' Statistic Reports'
                 },
                 tooltips: {
                     mode: 'index',

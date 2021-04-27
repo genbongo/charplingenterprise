@@ -13,7 +13,7 @@
                         @csrf
                         <div class="alert alert-danger" role="alert" id="error_message" style="display:none;"></div>    
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-center">{{ __('E-Mail Address') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-center">{{ __('E-Mail Addressadsfasdfs') }}</label>
 
                             <div class="col-md-6">
                                 <input id="email" autofocus type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -106,6 +106,13 @@
                    }
                    else {
                     $("#error_message").hide()
+                    if(data.user.user_role == 99){ //admin
+                        window.location.herf = "{{url('/home')}}"
+                    } else if(data.user.user_role == 2){ //staff 
+                        window.location.herf = "{{url('/home')}}"
+                    } else { //client
+                        window.location.herf = "{{url('/main')}}"
+                    }
                        window.location.reload(true)
                    }
                 },

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
-
+use App\{User, Order};
+use App\Traits\GlobalFunction;
 class TransactionHistoryController extends Controller
 {
+    use GlobalFunction;
     /**
      * Create a new controller instance.
      *
@@ -41,6 +43,8 @@ class TransactionHistoryController extends Controller
                 SUM(orders.ordered_total_price) as total_price, 
                 CONCAT(users.fname, ' ', users.lname) as fullname, 
                 users.email, 
+                orders.store_id,
+                orders.store_id,
                 orders.delivery_date,
                 orders.is_approved,
                 orders.is_completed,
@@ -63,7 +67,16 @@ class TransactionHistoryController extends Controller
                 })
                 ->where('users.id', Auth::user()->id)
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->store_name = 'NA';
+                    $item->assigned_staff = "NA";
+                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                        $item->assigned_staff = @User::where(['area_id' => $store->area_id, 'user_role' => 1])->first()->fname;
+                    }
+                    return $item;
+                });
 
         if ($request->ajax()) {
             return Datatables::of($order)
@@ -87,14 +100,36 @@ class TransactionHistoryController extends Controller
 
     public function deleteOrder(Request $request){
         if($request->id){
+            if($order = DB::table('order_invoice')
+                ->selectRaw('users.contact_num, users.area_id,order_invoice.user_id, order_invoice.invoice_no')
+                    ->join('users', ['users.id' => 'order_invoice.user_id'])
+                        ->where('order_invoice.id', $request->id)->first()){
+
+                            //set text message
+                            $text_message = "Your order ".@$order->invoice_no." was declined.\nPlease contact the staff assigned in your store area.             
+                            \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                            //send it to customer
+                            $this->global_itexmo($order->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
+
+                            $this->notificationDispatch([
+                                'user_id'   => $order->user_id,
+                                'type'      => 'order_approval',
+                                'area_id'   => $order->area_id,
+                                'email_to'  => 'client',
+                                'message'   => "Your order ".$order->invoice_no." was declined. Please contact the staff assigned in your store area.",
+                                'status'    => 'unread'
+                            ]);   
+                        }
+            
             // return response
             $order = DB::table('order_invoice')->where('id', $request->id)->delete();
             if($order){
                 DB::table('orders')->where('invoice_id', $request->id)->delete();
             }
             $response = [
-                'success' => true,
-                'message' => 'Store saved successfully.',
+                'success'   => true,
+                'message'   => 'Store delete successfully.'
             ];
             return response()->json($response, 200);
         }

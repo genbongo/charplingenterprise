@@ -59,6 +59,7 @@ Route::resource('sales',                                                'SalesRe
 Route::resource('loss',                                                 'LossReportController');
 Route::resource('emergency',                                            'EmergencyController');
 Route::resource('notification',                                         'NotificationController');
+Route::post('notification/update',                                      'NotificationController@notificationUpdate');
 Route::resource('order_replacement',                                    'OrderReplacementController');
 Route::resource('order_damage',                                         'ProductDamagesController');
 Route::resource('ads',                                                  'AdController');
@@ -117,7 +118,7 @@ Route::resource('cart',                                                 'CartCon
 Route::post('damage-cart',                                              'CartController@storeDamageCart');
 Route::resource('transaction',                                          'TransactionController');
 Route::resource('transaction_history',                                  'TransactionHistoryController');
-Route::get('transaction_history/delete/{id}',                      'TransactionHistoryController@deleteOrder');
+Route::get('transaction_history/delete/{id}',                           'TransactionHistoryController@deleteOrder');
 Route::get('order-success',                                             'TransactionController@thankyou')->name('thankyou');
 
 //client dashboard
@@ -139,7 +140,8 @@ Route::get('product/json/{product_id}',                                 'Product
 
 //reports here
 Route::get('report/orders',                                             'ReportsController@index');
-Route::get('order/reports/json/{filter_status}',                        'ReportsController@getOrders');
+Route::get('order/reports/get-details/{id}',                            'ReportsController@getDetails');
+Route::get('order/reports/json',                                        'ReportsController@getOrders');
 Route::get('statistic_reports/{year}',                                  'HomeController@getYearStatistics');
 
 

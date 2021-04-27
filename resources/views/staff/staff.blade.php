@@ -185,8 +185,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Address</th>
+                            <th>Client Name</th>
+                            <th>Store Name</th>
+                            <th>Store Address</th>
                             <th>Date Created</th>
                         </tr>
                     </thead>
@@ -217,6 +218,7 @@
                 $.each(data, function( index, row ) {
                     htmlData += `<tr>
                         <td>${row.id}</td>
+                        <td>${row.client_name}</td>
                         <td>${row.store_name}</td>
                         <td>${row.store_address}</td>
                         <td>${moment(row.created_at).format('MMMM D YYYY')}</td>
@@ -352,7 +354,7 @@
 
                 var htmlData = ''
                 $.each(data.areas, function( index, row ) {
-                    htmlData += `<tr>
+                    htmlData += `<tr style="color:${(row.status == 'active' ? 'green;' : 'red;')}">
                         <td>${row.id}</td>
                         <td>${row.area_name + '(' + row.area_code + ')'}</td>
                         <td>${moment(row.date_assigned).format('MMMM D YYYY')}</td>
@@ -367,6 +369,7 @@
         // assign staff
         $('body').on('submit', '#assignForm', function (e) {
             e.preventDefault();
+            $('#saveBtn').html('Save').prop("disabled",true);
             $.ajax({
                 data: $('#assignForm').serialize(),
                 url: "{{ url('staff') }}",
@@ -376,7 +379,7 @@
                     $('#assignForm').trigger("reset");
                     $('#assignModal').modal('hide');
                     table.draw();
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').prop("disabled",false);
                     // swal("Information", data.message);
                     swal("Information", data.message, "success").then(function(){
                         window.location.reload();
@@ -384,7 +387,7 @@
                 },
                 error: function (data) {
                     console.log('Error:', data);
-                    $('#saveBtn').html('Save');
+                    $('#saveBtn').html('Save').prop("disabled",false);
                 }
             });
         });

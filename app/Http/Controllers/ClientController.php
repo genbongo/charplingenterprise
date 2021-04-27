@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{User, Store,UserFridge};
+use App\{User, Store,UserFridge,AssignedArea};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -83,7 +83,7 @@ class ClientController extends Controller
                     }
                     if($row->is_pending == 1){
                         $btn .= '<div class="dropdown">
-                            <button class="dropbtn" id="status_update_'.$row->id.'">Status</button>
+                            <button type="button" class="dropbtn" id="status_update_'.$row->id.'">Status</button>
                             <div class="dropdown-content">
                                 <a href="javascript://;" data-id="'.$row->id.'" class="status_update" data-status="accept">Accept</a>
                                 <a href="javascript://;" data-id="'.$row->id.'" class="status_update" data-status="decline">Decline</a>
@@ -169,8 +169,8 @@ class ClientController extends Controller
                         'mname' => $request->mname,
                         'lname' => $request->lname,
                         'email' => $request->email,
+                        'address' => $request->address,
                         'contact_num' => $request->contact_num,
-                        'address' => "NA",
                         'email_verified_at' => "2020-06-08 07:57:47",
                         'img' => "NA",
                         'remember_token' => "NA"
@@ -190,8 +190,8 @@ class ClientController extends Controller
                     'mname' => $request->mname,
                     'lname' => $request->lname,
                     'email' => $request->email,
+                    'address' => $request->address,
                     'contact_num' => $request->contact_num,
-                    'address' => "NA",
                     'email_verified_at' => "2020-06-08 07:57:47",
                     'img' => "NA",
                     'remember_token' => "NA"
@@ -224,6 +224,7 @@ class ClientController extends Controller
                     'mname' => $request->mname,
                     'lname' => $request->lname,
                     'email' => $request->email,
+                    'address' => $request->address,
                     'contact_num' => $request->contact_num,
                     'user_role' => 2,   //2 for client
                     'is_pending' => 0,   //0 means not pending
@@ -256,6 +257,19 @@ class ClientController extends Controller
                     
                     //send it to customer
                     $this->global_itexmo($request->contact_num, $text_message." \n\n\n\n","ST-CREAM343228_LGZPB", '#5pcg2mpi]');
+                } else {
+                    new MailDispatch('client_password', trim($request->email), array(
+                        'subject'   => 'Welcome to Charpling Square Enterprise',
+                        'title'     => 'Welcome to Charpling Square Enterprise', 
+                        "name"      => trim($request->fname),
+                        "password"  => $request->password
+                    ));
+                    //set text message
+                    $text_message = "Welcome to Creamline ". $user->fname. " ". $user->lname ."!\nYour client ID is ".$user->id.".\nYou can now start ordering.             
+                    \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+                    //send it to customer
+                    $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
                 }
 
                 // return response
@@ -295,7 +309,7 @@ class ClientController extends Controller
             'store_address'     => $request->store_address,
             'area_id'           => $request->area_id,
             'user_id'           => $request->user_id,
-            'is_deleted'        => 0
+            'is_deleted'        => 1
         ]);
 
         // return response
@@ -318,6 +332,29 @@ class ClientController extends Controller
         $user = User::find($client->id);
         // $client->delete();
         if($client->is_active == 0){
+            //set text message
+            $text_message = "Welcome to Creamline ". $user->fname. " ". $user->lname ."!\nYour client ID is ".$user->id.".\nYou can now start ordering.             
+            \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+
+            //send it to customer
+            $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
+
+            $this->notificationDispatch([
+                'user_id'   => $user->id,
+                'type'      => 'client_activation',
+                'area_id'   => $user->area_id,
+                'email_to'  => 'staff',
+                'message'   => "(" . $user->id . ") " . $user->fname. " ". $user->lname . "  is now activated as one of your clients. ",
+                'status'    => 'unread'
+            ]);   
+            $this->notificationDispatch([
+                'user_id'   => $user->id,
+                'type'      => 'client_activation',
+                'area_id'   => $user->area_id,
+                'email_to'  => 'client',
+                'message'   => "Welcome to Creamline ". $user->fname. " ". $user->lname ."! Your client ID is ".$user->id.". You can now start ordering.",
+                'status'    => 'unread'
+            ]);   
             $user->update(["is_active" => 1]);
             $output = 'Successfully Activated!';
         }else{
@@ -327,7 +364,7 @@ class ClientController extends Controller
                 'type'      => 'client_deactivation',
                 'area_id'   => $user->area_id,
                 'email_to'  => 'staff',
-                'message'   => "(" . $user->id . ") " . $user->fname. " ". $user->lname . "  is deactivated from the client’s list. ",
+                'message'   => "(" . $user->id . ") " . $user->fname. " ". $user->lname . "  is now added to the deactivated list. He is removed as one of your clients. ",
                 'status'    => 'unread'
             ]);   
 
@@ -342,11 +379,11 @@ class ClientController extends Controller
             ]);  
 
             //set text message
-            $text_message = "Hi, ". $user->fname . "\n \nWe are sorry to inform you that you are now deactivated from our retailer’s list. You can no longer login to our website. If you wish to continue our business, please contact your sales agent or the administration to activate your account again.             
+            $text_message = "Hi, ". $user->fname . "\n \nWe are sorry to inform you that you are now deactivated from our retailer’s list. You can no longer login to our website. If you wish to continue our business, please contact your sales agent or the administration to activate your account again.\nYour fridge has been scheduled for pull out             
             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
 
             //send it to customer
-            $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+            $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
 
             new MailDispatch('client_deactivation', trim($user->email), array(
                 'subject'   => 'Account Deactivated',
@@ -431,7 +468,7 @@ class ClientController extends Controller
             $output = 'Successfully Declined!';            
         }
 
-        $this->global_itexmo($contact_number, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+        $this->global_itexmo($contact_number, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
         
         if($request->status != 'accept')
             User::where('id', $user->id)->delete();
@@ -501,7 +538,7 @@ class ClientController extends Controller
         }
 
         //send it to customer
-        $this->global_itexmo($user->contact_num, $text_message, "ST-CREAM343228_F3PNT", '8)tg(84@$$');
+        $this->global_itexmo($user->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
 
         
         if($request->status != 'accept'){
@@ -535,7 +572,12 @@ class ClientController extends Controller
                                 ->where($where)
                                     ->get()->map(function($item){
                                         $item->fullname = 'NA';
-                                        if($user = User::where(['area_id' => $item->area_id, 'user_role' => 1])->first()){
+                                        // if($user = User::where(['area_id' => $item->area_id, 'user_role' => 1])->first()){
+                                        //     $item->fullname = $user->fname . ' ' .  $user->lname;
+                                        // }
+                                        if($user = User::selectRaw('users.fname,users.lname')
+                                                ->join('assigned_areas', ['assigned_areas.user_id' => 'users.id'])
+                                        ->where(['assigned_areas.status' => 'active', 'user_role' => 1])->first()){
                                             $item->fullname = $user->fname . ' ' .  $user->lname;
                                         }
                                         return $item;
@@ -544,7 +586,7 @@ class ClientController extends Controller
             return Datatables::of($stores)
                 ->addIndexColumn()
                 ->addColumn('area', function($row) {
-                    return $row->area->area_name;
+                    return $row->area ? $row->area->area_name : 'NA';
                 })
                 ->addColumn('action', function ($row) {
                     $status = '';
@@ -573,8 +615,8 @@ class ClientController extends Controller
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Edit Store" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editStore">Edit</a> ';
                     if($row->is_deleted == 0){
                         $btn .= '<div class="dropdown">
-                            <button class="dropbtn" id="status_update_'.$row->id.'">Status</button>
-                            <div class="dropdown-content">
+                            <button class="dropbtn" type="button" >Status</button>
+                            <div class="dropdown-content" id="status_update_'.$row->id.'">
                                 <a href="javascript://;" data-store_id="'.$row->id.'" data-id="'.$row->user_id.'" class="status_update" data-status="accept">Accept</a>
                                 <a href="javascript://;" data-store_id="'.$row->id.'" data-id="'.$row->user_id.'" class="status_update" data-status="decline">Decline</a>
                             </div>
@@ -594,16 +636,18 @@ class ClientController extends Controller
     }
 
 
-    public function storeListJson($id)
+    public function storeListJson(Request $request, $id)
     {
-        // $client = User::find($id);
+        if(Auth::user()->user_role == 99) {
+            $stores = Store::where(['user_id' => $id, 'is_deleted' => 1])->get();
+            return response()->json($stores);
+        }
 
-        // return response()->json( $client->stores);
-
-        $stores = Store::selectRaw('stores.*')
-                    // ->leftJoin('user_fridges', ['user_fridges.store_id' => 'stores.id'])
-                    // ->leftJoin('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
-                    ->where(['user_id' => $id])->get()
+        if($request->has('action')){
+            $stores = Store::selectRaw('stores.*')
+                    ->join('orders', ['orders.store_id' => 'stores.id'])->groupBy('orders.store_id')
+                    ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => auth()->user()->area_id])
+                    ->get()
                     ->map(function($item){
                         $item->fridges = UserFridge::join('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
                                         ->selectRaw('fridges.id, fridges.model, fridges.description, fridges.status')
@@ -612,13 +656,31 @@ class ClientController extends Controller
                                         ->get();
                         return $item;
                     });
+        } else {
+            $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
+            ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+            ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+                ->first();
+            $stores = Store::selectRaw('stores.*')
+                        ->where(['stores.user_id' => $id, 'stores.is_deleted' => 1, 'stores.area_id' => @$area_asigned->id])
+                        ->get()
+                        ->map(function($item){
+                            $item->fridges = UserFridge::join('fridges', ['user_fridges.fridge_id' => 'fridges.id'])
+                                            ->selectRaw('fridges.id, fridges.model, fridges.description, fridges.status')
+                                            ->where(['store_id' => $item->id, 'user_fridges.status' => 'available'])
+                                            ->where('fridges.is_pullout',0)
+                                            ->get();
+                            return $item;
+                        });
+        }
+        
         return response()->json( $stores);
     }
 
     public function staffClientStore(Request $request)
     {
         $client = User::join('stores', ['users.id' => 'stores.user_id'])
-                        ->selectRaw('stores.*')
+                        ->selectRaw('stores.*, users.fname as client_name')
                         ->where([
                             // 'stores.user_id' => $request->user_id,
                             'stores.area_id' => $request->area_id

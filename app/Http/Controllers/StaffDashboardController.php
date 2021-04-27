@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Order,Stock, ProductStock, User};
+use App\{Order,Stock, ProductStock, User, AssignedArea};
 use App\Traits\GlobalFunction;
 use DataTables;
 use Illuminate\Http\Request;
@@ -29,61 +29,18 @@ class StaffDashboardController extends Controller
      */
     public function index(Request $request)
     {
-
-        $area = auth()->user()->area;
+        $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
+            ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+            ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+                ->first();
 
         $now = date('Y-m-d');
 
-        // $order =  $area->orders()->where('delivery_date', '=', $now)->get();
-
-        // if ($request->ajax()) {
-            // return Datatables::of($order)
-            //     ->addIndexColumn()
-            //     ->addColumn('name', function($row) {
-            //         return $row->client->fname. " " . $row->client->lname;
-            //     })
-            //     ->addColumn('store_name', function($row) {
-            //         return $row->store->store_name;
-            //     })
-            //     ->addColumn('store_address', function($row) {
-            //         return $row->store->store_address;
-            //     })
-            //     ->addColumn('action', function ($row) {
-
-            //         if (!$row->is_completed && !$row->is_cancelled) {
-            //             $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as completed" data-id="'.$row->id.'" class="btn btn-primary btn-sm editCompleteOrder">Completed</a>&nbsp;';
-
-            //             $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as cancelled" data-id="'.$row->id.'" class="btn btn-danger btn-sm editCancelOrder">Cancel</a>';
-
-            //              return $btn;
-            //          } else {
-            //             return 'NA';
-            //          }
-   
-            //     })
-            //     ->addColumn('status', function($row) {
-            //         if ($row->is_completed) {
-            //             return '<span class="text-success font-weight-bold">Completed</span>';
-            //         }
-
-            //         if ($row->is_cancelled) {
-            //             return '<span class="text-danger font-weight-bold">Cancelled</span>';
-            //         }
-
-            //         if (!$row->is_completed) {
-            //             return '<span class="text-info font-weight-bold">Pending</span>';
-            //         }
-            //     })
-            //     ->rawColumns(['action', 'store_name', 'store_address', 'name', 'status'])
-            //     ->make(true);
-            
-        // }
 
         $order = DB::table('order_invoice')
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')
                 ->join('stores', 'orders.store_id', '=', 'stores.id')
                 ->join('users', 'orders.client_id', '=', 'users.id')
-                // ->selectRaw("order_invoice.id, order_invoice.created_at as date_ordered, order_invoice.invoice_no, SUM(orders.ordered_total_price) as , CONCAT(users.fname, ' ', users.lname) as fullname, users.email")
                 ->selectRaw("order_invoice.id, 
                 order_invoice.created_at as date_ordered, 
                 order_invoice.invoice_no, 
@@ -92,18 +49,23 @@ class StaffDashboardController extends Controller
                 users.email, 
                 SUM(orders.attempt) as attempt, 
                 orders.delivery_date,
+                orders.store_id,
                 orders.is_completed,
                 orders.is_cancelled,
                 orders.is_replacement,
                 users.id as client_id,
                 users.contact_num as num")
-                // ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered',
-                //     'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
-                // ->where('is_approved', 0)
                 ->where('orders.delivery_date', '=', $now)
-                ->where('stores.area_id', @$area->id)
+                ->where('stores.area_id', @$area_asigned->id)
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->store_name = 'NA';
+                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    }
+                    return $item;
+                });
 
         if ($request->ajax()) {
             return Datatables::of($order)
@@ -121,10 +83,7 @@ class StaffDashboardController extends Controller
                         return '<span class="text-info font-weight-bold">For Delivery</span>';
                     }
                 })
-                ->addColumn('action', function ($row) use($area) {
-   
-                    // $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm editPendingOrder">Approve</a>';
-                    // return $btn;
+                ->addColumn('action', function ($row) use($area_asigned) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as completed" data-id="'.$row->id.'" data-type="1" class="btn btn-primary btn-sm mt-2 viewCompleteOrder">View Details</a> ';
                     if (!$row->is_completed && !$row->is_cancelled) {
                         $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as completed" data-id="'.$row->id.'" data-type="0" class="btn btn-primary mt-2 btn-sm editCompleteOrder">Confirm</a> ';
@@ -132,9 +91,6 @@ class StaffDashboardController extends Controller
                         $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as cancelled" data-id="'.$row->id.'" class="btn btn-danger btn-sm editCancelOrder mt-2">Cancel</a>';
 
                     } 
-                    // else {
-                    //     $btn .= 'NA';
-                    // }
                     return $btn;
                 })
                 ->addColumn('total_price', function($row){
@@ -153,10 +109,28 @@ class StaffDashboardController extends Controller
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')
                 ->join('products', 'orders.product_id', '=', 'products.id')
                 ->join('users', 'orders.client_id', '=', 'users.id')
-                ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered','orders.size',
-                    'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
+                ->select('products.id AS prodID', 
+                'products.name', 
+                'products.product_image', 
+                'orders.quantity_ordered','orders.size',
+                'orders.ordered_total_price', 
+                'orders.created_at', 'orders.is_approved', 
+                'orders.is_completed', 'orders.delivery_date', 
+                'orders.id', 
+                'orders.product_stock_id',
+                'users.fname', 
+                'users.lname', 
+                'users.contact_num',
+                'orders.client_id')
                 ->where('orders.invoice_id', $request->invoice_id)
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->remaining_stock = 0 ;
+                    if($stock = ProductStock::whereId($item->product_stock_id)->first()){
+                        $item->remaining_stock = $stock->quantity;
+                    }
+                    return $item;
+                });
 
             return response()->json($pending, 200);
         }
@@ -169,109 +143,15 @@ class StaffDashboardController extends Controller
      */
     public function staffTransactions(Request $request)
     {
-
-        // $area = auth()->user()->area;
-
-        // $now = date('Y-m-d');
-
-        // $order =  $area->orders()->get();
-
-        // if ($request->ajax()) {
-        //     return Datatables::of($order)
-        //         ->addIndexColumn()
-        //         ->addColumn('name', function($row) {
-        //             return $row->client ? $row->client->fname. " " . $row->client->lname : '-';
-        //         })
-        //         ->addColumn('store_name', function($row) {
-        //             return $row->store ? $row->store->store_name : '-';
-        //         })
-        //         ->addColumn('store_address', function($row) {
-        //             return $row->store ? $row->store->store_address : '-';
-        //         })
-        //         ->addColumn('action', function ($row) {
-
-        //             if (!$row->is_completed && !$row->is_cancelled) {
-        //                 $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as completed" data-id="'.$row->id.'" class="btn btn-primary btn-sm editCompleteOrder">Completed</a>&nbsp;';
-
-        //                 $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as cancelled" data-id="'.$row->id.'" class="btn btn-danger btn-sm editCancelOrder">Cancel</a>';
-
-        //                  return $btn;
-        //              } else {
-        //                 return 'NA';
-        //              }
-   
-        //         })
-        //         ->addColumn('status', function($row) {
-        //             if ($row->is_completed) {
-        //                 return '<span class="text-success font-weight-bold">Completed</span>';
-        //             }
-
-        //             if ($row->is_cancelled) {
-        //                 return '<span class="text-danger font-weight-bold">Cancelled</span>';
-        //             }
-
-        //             if (!$row->is_completed) {
-        //                 return '<span class="text-info font-weight-bold">Pending</span>';
-        //             }
-        //         })
-        //         ->rawColumns(['action', 'store_name', 'store_address', 'name', 'status'])
-        //         ->make(true);
-        // }
-
-        $area = auth()->user()->area;
-
+        $area_asigned = AssignedArea::selectRaw('areas.id,areas.area_name')
+            ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+            ->where(['assigned_areas.user_id' => auth()->user()->id, 'assigned_areas.status' => 'active'])
+                ->first();
         $now = date('Y-m-d');
-
-        // $order =  $area->orders()->where('delivery_date', '=', $now)->get();
-
-        // if ($request->ajax()) {
-            // return Datatables::of($order)
-            //     ->addIndexColumn()
-            //     ->addColumn('name', function($row) {
-            //         return $row->client->fname. " " . $row->client->lname;
-            //     })
-            //     ->addColumn('store_name', function($row) {
-            //         return $row->store->store_name;
-            //     })
-            //     ->addColumn('store_address', function($row) {
-            //         return $row->store->store_address;
-            //     })
-            //     ->addColumn('action', function ($row) {
-
-            //         if (!$row->is_completed && !$row->is_cancelled) {
-            //             $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as completed" data-id="'.$row->id.'" class="btn btn-primary btn-sm editCompleteOrder">Completed</a>&nbsp;';
-
-            //             $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as cancelled" data-id="'.$row->id.'" class="btn btn-danger btn-sm editCancelOrder">Cancel</a>';
-
-            //              return $btn;
-            //          } else {
-            //             return 'NA';
-            //          }
-   
-            //     })
-            //     ->addColumn('status', function($row) {
-            //         if ($row->is_completed) {
-            //             return '<span class="text-success font-weight-bold">Completed</span>';
-            //         }
-
-            //         if ($row->is_cancelled) {
-            //             return '<span class="text-danger font-weight-bold">Cancelled</span>';
-            //         }
-
-            //         if (!$row->is_completed) {
-            //             return '<span class="text-info font-weight-bold">Pending</span>';
-            //         }
-            //     })
-            //     ->rawColumns(['action', 'store_name', 'store_address', 'name', 'status'])
-            //     ->make(true);
-            
-        // }
-
         $order = DB::table('order_invoice')
                 ->join('orders', 'orders.invoice_id', '=', 'order_invoice.id')
                 ->join('stores', 'orders.store_id', '=', 'stores.id')
                 ->join('users', 'orders.client_id', '=', 'users.id')
-                // ->selectRaw("order_invoice.id, order_invoice.created_at as date_ordered, order_invoice.invoice_no, SUM(orders.ordered_total_price) as , CONCAT(users.fname, ' ', users.lname) as fullname, users.email")
                 ->selectRaw("order_invoice.id, 
                 order_invoice.created_at as date_ordered, 
                 order_invoice.invoice_no, 
@@ -280,15 +160,12 @@ class StaffDashboardController extends Controller
                 users.email, 
                 SUM(orders.attempt) as attempt, 
                 orders.delivery_date,
+                orders.store_id,
                 orders.is_completed,
                 orders.is_cancelled,
                 users.id as client_id,
                 users.contact_num as num")
-                // ->select('products.id AS prodID', 'products.name', 'products.product_image', 'orders.quantity_ordered',
-                //     'orders.ordered_total_price', 'orders.created_at', 'orders.is_approved', 'orders.is_completed', 'orders.delivery_date', 'orders.id', 'users.fname', 'users.lname', 'users.contact_num', 'orders.client_id')
-                // ->where('is_approved', 0)
-                // ->where('orders.delivery_date', '=', $now)
-                ->where('stores.area_id', $area->id)
+                ->where('stores.area_id', @$area_asigned->id)
                 ->when($request->filter_status, function($sql) use($request){
                     if($request->filter_status == 'completed'){
                         return $sql->where('orders.is_completed', 1);
@@ -299,7 +176,14 @@ class StaffDashboardController extends Controller
                     }
                 })
                 ->groupBy('orders.invoice_id')
-                ->get();
+                ->get()
+                ->map(function($item){
+                    $item->store_name = 'NA';
+                    if($store = DB::table('stores')->where('id', $item->store_id)->first()){
+                        $item->store_name = $store->store_name . ' ('.$store->store_address.')';
+                    }
+                    return $item;
+                });
 
         if ($request->ajax()) {
             return Datatables::of($order)
@@ -317,20 +201,9 @@ class StaffDashboardController extends Controller
                         return '<span class="text-info font-weight-bold">Pending</span>';
                     }
                 })
-                ->addColumn('action', function ($row) use($area) {
-   
-                    // $btn = '<a data-invoice="'.$row->invoice_no.'" data-num="'.$row->num.'" data-set="0" data-type="pending" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Update Order" data-contact data-client="'.$row->client_id.'" data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-primary btn-sm editPendingOrder">Approve</a>';
-                    // return $btn;
-
+                ->addColumn('action', function ($row) use($area_asigned) {
                     $btn = '<a href="javascript:void(0)" ata-type="1" data-toggle="tooltip" data-placement="top" title="Mark this order as completed" data-id="'.$row->id.'" class="btn btn-primary btn-sm viewCompleteOrder">View Details</a> ';
-                    // if (!$row->is_completed && !$row->is_cancelled) {
-
-                    //     $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Mark this order as cancelled" data-id="'.$row->id.'" class="btn btn-danger btn-sm editCancelOrder mt-2">Cancel</a>';
-
-                    //      return $btn;
-                    //  } else {
-                    //     return 'NA';
-                    //  }
+                    
                     return $btn;
                 })
                 ->addColumn('total_price', function($row){
@@ -393,6 +266,24 @@ class StaffDashboardController extends Controller
                 'message'   => $staff->fname. " " . $staff->lname. " cancelled order " .$order->invoice_no. " of ".$client->fname. " " . $client->lname. " due to ".$cancel_option." (".$request->reason.").",
                 'status'    => 'unread'
             ]);  
+
+            //client reminder
+            $this->notificationDispatch([
+                'user_id'   => $client->id,
+                'type'      => 'staff_cancel_order',
+                'area_id'   => $client->area_id,
+                'email_to'  => 'client',
+                'message'   => "Your order ".$order->invoice_no." was cancelled by staff ".$staff->fname. " " . $staff->lname.". Please contact the staff
+                assigned in your store area.",
+                'status'    => 'unread'
+            ]);  
+
+             //set text message
+             $text_message = "Your order ".$order->invoice_no." was cancelled by staff ".$staff->fname. " " . $staff->lname.".\nPlease contact the staff assigned in your store area.             
+             \nBest regards,\nCharpling Square Enterprise \nCreamline Authorized Distributor";
+ 
+             //send it to customer
+             $this->global_itexmo($client->contact_num, $text_message, "ST-CHARP371478_AF72H", '7x8j1z3vnv');
             
             // if 1 cancelled by client, if 2 cancelled by staff
             $cancelled_by = $request->input("cancel_option");

@@ -58,7 +58,7 @@ class StaffController extends Controller
    
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Edit Staff" data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editStaff">Edit</a>';
 
-                    $btn .=' <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Assign Staff" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Assign" class="btn btn-warning btn-sm assignStaff">Assign</a>';
+                    $btn .=' <button type="button" data-toggle="tooltip" '.($row->is_active == 0 ? 'disabled' : '').' data-placement="top" title="Assign Staff" data-toggle="tooltip" data-id="'.$row->id.'" data-original-title="Assign" class="btn btn-warning btn-sm assignStaff">Assign</button>';
                     
                     $btn .=' <button type="button" data-toggle="tooltip" data-placement="top" '.(!$store ? 'disabled' : '').' title="Assigned Staff" data-toggle="tooltip" data-area="'.$row->area_id.'" data-id="'.($store ? $store->user_id : 0).'" data-original-title="Assigned Store" class="btn btn-success btn-sm viewStore">Assigned Store</button>';
 
@@ -67,7 +67,13 @@ class StaffController extends Controller
                      return $btn;
                 })
                 ->addColumn('area', function ($row) {
-                    return $row->area ? $row->area->area_name : 'Not Assigned'; 
+                    $str = 'Not Assigned';
+                    if($area_asigned = AssignedArea::selectRaw('areas.area_name')
+                                ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+                                ->where(['assigned_areas.user_id' => $row->id, 'assigned_areas.status' => 'active'])->first()){
+                        $str = $area_asigned->area_name;
+                    }
+                    return $str; 
                 })
                 ->rawColumns(['action', 'area'])
                 ->make(true);
@@ -86,6 +92,7 @@ class StaffController extends Controller
     {
         if($request->action == 'assign_staff'){
             $assigned = new AssignedArea;
+            AssignedArea::where('user_id',$request->assign_id)->update(['status' => 'inactive']);
             $assigned->user_id = $request->assign_id;
             $assigned->area_id = $request->area_id;
             $assigned->save();
@@ -109,12 +116,13 @@ class StaffController extends Controller
                 'img'               => "NA",
                 'remember_token'    => "NA",
                 'user_role'         => 1,
-                'is_active'         => 0,
-                'is_pending'        => 0
             ];
 
             if(!$request->staff_id){
-                $data = array_merge($data, ['password' => Hash::make($request->password)]);
+                $data = array_merge($data, [
+                    'password' => Hash::make($request->password), 
+                    'is_active'         => 0,
+                    'is_pending'        => 0]);
             }
 
             if($request->staff_id){
@@ -128,7 +136,7 @@ class StaffController extends Controller
                         User::updateOrCreate([
                             'id' => $request->staff_id
                         ],$data);
-                        $message = 'Staff successfully updated.';
+                        $message = 'Staff successfully submitted.';
                     }
                 } else if($request->contact_num != $request->contact_num1) {
                     if(User::where('contact_num', $request->contact_num)->first()){
@@ -140,14 +148,14 @@ class StaffController extends Controller
                         User::updateOrCreate([
                             'id' => $request->staff_id
                         ],$data);
-                        $message = 'Staff successfully updated.';
+                        $message = 'Staff successfully submitted.';
                     }
                 }
                  else {
                     User::updateOrCreate([
                         'id' => $request->staff_id
                     ],$data);
-                    $message = 'Staff successfully updated.';
+                    $message = 'Staff successfully submitted.';
                 }
             } else {
                 if(User::where('email', $request->email)->first()){
@@ -164,7 +172,7 @@ class StaffController extends Controller
                     User::updateOrCreate([
                         'id' => $request->staff_id
                     ],$data);
-                    $message = 'Staff successfully updated.';
+                    $message = 'Staff successfully submitted.';
                 }
             }
         }
@@ -186,8 +194,12 @@ class StaffController extends Controller
     public function edit($id)
     {
         $staff = User::find($id);
-        $assigned = AssignedArea::selectRaw('assigned_areas.id, 
-        assigned_areas.created_at as date_assigned, areas.area_name, areas.area_code')->join('areas', ['areas.id' => 'assigned_areas.area_id'])->where('user_id', $id)->get();
+        $assigned = AssignedArea::selectRaw('assigned_areas.id, assigned_areas.status,
+        assigned_areas.created_at as date_assigned, areas.area_name, areas.area_code')
+        ->join('areas', ['areas.id' => 'assigned_areas.area_id'])
+        ->where('user_id', $id)
+        ->orderBy('assigned_areas.id','desc')
+        ->get();
         return response()->json(['staff' => $staff, 'areas' => $assigned]);
     }
 

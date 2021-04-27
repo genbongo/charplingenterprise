@@ -5,7 +5,7 @@
 <div class="container">
     <div class="container-fluid">
         <div class="row">
-            <h4 class="center">Manage Client ({{ auth()->user()->area->area_name }} Branch) </h4>
+            <h4 class="center">Manage Client ({{ @$stores->getArea() }} Branch) </h4>
         </div>
     </div>
     <br>
@@ -188,9 +188,10 @@
                                         <option value='4' ${row.status == 2 ? 'selected' : ''}>Deployed</option>
                                         <option value='1' ${row.status == 3 ? 'selected' : ''}>Pullout</option>`
                             htmlData += `</select>
-                                <button type='button' ${ (row.status == 2 || row.status == 3 ? '' : 'disabled') } data-id='${row.id}' id='confirm_fridge' class='btn btn-primary' style='padding: 2px;'>Confirm</button>
+                                
                         </div>
                     </div>`
+                    // <button type='button' ${ (row.status == 2 || row.status == 3 ? '' : 'disabled') } data-id='${row.id}' id='confirm_fridge' class='btn btn-primary' style='padding: 2px;'>Confirm</button>
                 }); 
             }
             

@@ -42,14 +42,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-4">
-                            <div class="card text-black-50 border-primary mb-3" style="max-width: 50rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Sales & Loss Report:</h5>
-                                    <canvas id="salesChart" width="459" height="415"></canvas>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="col-sm-12">
                             <div class="card text-black-50 border-primary mb-3" style="width:100%;">
                                 <div class="card-body">
@@ -71,30 +63,24 @@
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-body">
-                                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                            <div id="slider1" class="carousel slide" data-ride="carousel">
                                                 <ol class="carousel-indicators">
-                                                    <!-- <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                                                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> -->
-                                                    <!-- @foreach($ads->get() as $ad)
-                                                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                                                    @endforeach -->
                                                     @foreach(\App\Ad::all() as $key => $value)
-                                                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}" class="{{ $key ? 'active' : '' }}"></li>
+                                                    <li data-target="#carouselExampleCaptions" data-slide-to="{{$key}}" class="{{ $key == 0 ? 'active' : '' }}"></li>
                                                     @endforeach
                                                 </ol>
                                                 <div class="carousel-inner">
                                                     @foreach(\App\Ad::all() as $key => $value)
-                                                        <div class="carousel-item active">
-                                                            <img class="d-block h-100 w-100" src="{{ URL('/img/ads').'/'.$value->ads_image }}">
-                                                        </div>
+                                                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                                        <img src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/ads/'.$value->ads_image }}">
+                                                    </div>
                                                     @endforeach
                                                 </div>
-                                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                                <a class="carousel-control-prev" href="#slider1" role="button" data-slide="prev">
                                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                     <span class="sr-only">Previous</span>
                                                 </a>
-                                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                                <a class="carousel-control-next" href="#slider1" role="button" data-slide="next">
                                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                     <span class="sr-only">Next</span>
                                                 </a>
@@ -104,7 +90,6 @@
                                 </div>
                             </div>
                         @endif
-
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="card text-white bg-success mb-3" style="max-width: 28rem;">
@@ -136,7 +121,7 @@
 <script>
     // ------------------------------------- CLIENT SCRIPTS --------------------------------//
     @if(Auth::user()->user_role == 2)
-        // $("#exampleModalCenter").modal("show")
+        $("#exampleModalCenter").modal("show")
 
         //call the function for populating the order to receive
         populate_order_to_receive_count_client();

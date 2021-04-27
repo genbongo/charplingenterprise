@@ -14,6 +14,8 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-12 control-label">Size</label>
                             <div class="col-sm-12">
+                                <input type="hidden" class="form-control" id="option" name="option" maxlength="50">
+                                <input type="hidden" class="form-control" id="size1" name="size1" maxlength="50">
                                 <input type="text" class="form-control" id="size" name="size" maxlength="50" required placeholder="ex. 10">
                                 <br>
                                 <p>
@@ -29,7 +31,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="name" class="col-sm-12 control-label">Price</label>
+                            <label for="name" class="col-sm-12 control-label">Unit Price</label>
                             <div class="col-sm-12">
                                 <input type="number" class="form-control" id="price" name="price" maxlength="50" required placeholder="ex. 10">
                             </div>
@@ -53,7 +55,7 @@
                             <div class="col-sm-12">
                                 <select class="form-control" name="status" id="status">
                                     <option value="0">Available</option>
-                                    <option value="1">UnAvailable</option>
+                                    <option value="1">Phase out</option>
                                 </select>
                             </div>
                         </div>
@@ -84,7 +86,7 @@
                                 {{-- <th>ID</th> --}}
                                 <th>Size</th>
                                 <th>Quantity</th>
-                                <th>Price</th>
+                                <th>Unit Price</th>
                                 <th>Threshold</th>
                                 <th>Promo</th>
                                 <th>Status</th>
@@ -160,6 +162,7 @@
                 var size = data.size.split(" ")
                 $('#id').val(data.id)
                 $('#size').val(size[0])
+                $('#size1').val(size[0])
                 if(size[1] != undefined){
                     if(size[1] == 'ML'){
                         $("#ml_length").prop("checked", true)
@@ -167,6 +170,7 @@
                     if(size[1] == 'L'){
                         $("#l_length").prop("checked", true)
                     }
+                    $('#option').val(size[1])
                 }
                 $('#quantity').val(data.quantity)
                 $('#price').val(data.price)
@@ -180,24 +184,39 @@
         //save edit stocks
         $(document).on('submit', '#productForm', function(e){
             e.preventDefault();
-            if(confirm("Do you want to submit this data?")){
+
+            if(parseFloat($("#promo").val()) > parseFloat($("#quantity").val())){
+                alert("Invalid promo!")
+                return;
+            } else {
+                if(confirm("Do you want to submit this data?")){
                 $.ajax({
                     data: $(this).serialize(),
                     url: "{{ url('save-edit-stocks') }}",
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
-                        table.ajax.reload();
-                        $('#id').val('')
-                        $('#productForm').trigger("reset");
-                        swal("Information", data.message);
-                        $("#btnUpdateProduct").text('Submit')
+                        if(data.status == "exist"){
+                            alert(data.message)
+                            return 
+                        } else {
+                            table.ajax.reload();
+                            $('#id').val('')
+                            $('#size1').val('')
+                            $('#option').val('')
+                            $('#productForm').trigger("reset");
+                            swal("Information", data.message);
+                            $("#btnUpdateProduct").text('Submit')
+                        }
+                       
                     },
                     error: function (data) {
                         console.log('Error:', data);
                     }
                 });
             }
+            }
+            
         });
     })
 

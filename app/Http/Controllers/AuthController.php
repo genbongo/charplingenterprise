@@ -21,7 +21,7 @@ class AuthController extends Controller
                     $this->rejectAuth($request);
                     $response = ['status'=>'failed', 'message' => 'Your account is currently deactivated.'];
                 } else {
-                    $response = ['status'=>'success', 'message' => 'Login Successful'];
+                    $response = ['status'=>'success', 'message' => 'Login Successful', 'user' => Auth::user()];
                 }
             }
          } 
