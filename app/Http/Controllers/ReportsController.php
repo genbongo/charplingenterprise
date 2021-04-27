@@ -67,8 +67,7 @@ class ReportsController extends Controller
                                     ->where('orders.is_damages', 0);
                         break;
                         case 'REPLACEMENT':
-                            return $sql->where('orders.is_completed', 1)
-                                        ->where('orders.is_replacement', 1)
+                            return $sql->where('orders.is_replacement', 1)
                                         ->where('orders.is_damages', 0);
                         break;
                         case 'DAMAGES':
