@@ -198,11 +198,18 @@
                 {   
                     data: 'product_image', name: 'product_image',
                     "render": function (data, type, full, meta) {
-                        // 'https://storage.googleapis.com/'.$storageBucketName.'/'.$googleCloudStoragePath
-                        return `<a data-fancybox='' href='${data}'><img src='${data}' height='40' width='40'></a>`;
+                        return "<a data-fancybox='' href='{{ URL('img/product') }}/"+ data +"'><img src='{{ URL('img/product') }}/"+ data +"' height='40' width='40'></a>";
                     },
                     "orderable": false
                 },
+                // {   
+                //     data: 'product_image', name: 'product_image',
+                //     "render": function (data, type, full, meta) {
+                //         // 'https://storage.googleapis.com/'.$storageBucketName.'/'.$googleCloudStoragePath
+                //         return `<a data-fancybox='' href='${data}'><img src='${data}' height='40' width='40'></a>`;
+                //     },
+                //     "orderable": false
+                // },
                 {data: 'name', name: 'name'},
                 {data: 'description', name: 'description'},
                 // {data: 'quantity', name: 'quantity'},

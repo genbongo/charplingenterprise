@@ -136,13 +136,20 @@
             columns: [
                 {data: 'select', name: 'select', orderable: false},
                 {data: 'id', name: 'id'},
+                // {
+                //     data: 'product_image', name: 'product_image',
+                //     render: function (data, type, full, meta) {
+                //         var url  = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data
+                //         return "<a data-fancybox='' href='"+ url +"' align='center'><img src='"+ url +"' height='40' width='40'></a>";
+                //     },
+                //     orderable: false
+                // },
                 {
                     data: 'product_image', name: 'product_image',
-                    render: function (data, type, full, meta) {
-                        var url  = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"+ data
+                    "render": function (data, type, full, meta) {
+                        var url  = "{{ asset('img/product') }}" +"/"+ data
                         return "<a data-fancybox='' href='"+ url +"' align='center'><img src='"+ url +"' height='40' width='40'></a>";
                     },
-                    orderable: false
                 },
                 {data: 'product_name', name: 'product_name',},
                 {data: 'size', name: 'size'},
@@ -316,7 +323,8 @@
                 prod_stocks_qty = data.stocks[0].quantity;
                 $('#product_images').html("")
                 var name = data.product.product_image.split('.')
-                var url  = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}" + data.product.product_image
+                var url  = "{{ asset('img/product') }}" +"/"+ data.product.product_image
+                // var url  = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}" + data.product.product_image
                 var jsx = `<div class="carousel-item active">
                     <img class="d-block w-100" src="${url}" alt="${name[0]}">
                   </div>`

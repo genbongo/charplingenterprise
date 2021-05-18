@@ -104,10 +104,11 @@
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>
+                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='40'></a></td>
                         <td>${row.quantity_ordered}</td>
                         <td>${row.ordered_total_price}</td>
                     </tr>`
+                    // <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='40'></a></td>
                     i++
                 });
                 $("#completed_orders").find('tbody').html("").append(htmlData) 
@@ -115,6 +116,7 @@
                 $('#HistoryModal').modal('show');
             });
         }
+        // <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>
 
         $(document).on('click', '.removeOrder', function(e){
             e.preventDefault();

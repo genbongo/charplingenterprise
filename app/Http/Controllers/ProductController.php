@@ -92,9 +92,9 @@ class ProductController extends Controller
 
                     return $status;
                 })
-                ->editColumn('product_image', function ($row) {
-                    return 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' . $row->product_image;
-                })
+                // ->editColumn('product_image', function ($row) {
+                //     return 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' . $row->product_image;
+                // })
                 ->rawColumns(['action', 'is_deleted'])
                 ->make(true);
         }
@@ -116,6 +116,21 @@ class ProductController extends Controller
                 $concat = "sss";
             }
 
+            if(empty($request->product_id)){
+                $image = $request->file('product_image');
+                $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('img/product'), $new_name);
+            } else {
+                if($request->hasFile("product_image")){
+                    $image = $request->file('product_image');
+                    $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('img/product'), $new_name);
+                } else {
+                    $pdct = Product::find($request->product_id);
+                    $new_name = $pdct->product_image;
+                }
+            }
+
             if($request->product_id){
                 if($request->name != $request->name1){
                     if(Product::where('name', $request->name)->first()){
@@ -124,41 +139,40 @@ class ProductController extends Controller
                             'message'   => 'Product Already Exist.'
                         ]);
                     } else {
-                        if(empty($request->product_id)){
-                            $image = $request->file('product_image');
-                        } else {
-                            if($request->hasFile("product_image")){
-                                $image = $request->file('product_image');
-                            } else {
-                                $pdct = Product::find($request->product_id);
-                                $new_name = $pdct->product_image;
-                            }
-                        }
+                        // if(empty($request->product_id)){
+                        //     $image = $request->file('product_image');
+                        // } else {
+                        //     if($request->hasFile("product_image")){
+                        //         $image = $request->file('product_image');
+                        //     } else {
+                        //         $pdct = Product::find($request->product_id);
+                        //         $new_name = $pdct->product_image;
+                        //     }
+                        // }
     
-                        if($request->hasFile("product_image")){
-                            // $image = $request->file('img');
-                            $path = \Storage::disk('public')->put('img/product', $image);
+                        // if($request->hasFile("product_image")){
+                        //     $path = \Storage::disk('public')->put('img/product', $image);
                         
-                            #start here ============================================================
-                            $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                        //     #start here ============================================================
+                        //     $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
                             
-                            $storage = new StorageClient([
-                                'keyFile' => json_decode($googleConfigFile, true)
-                            ]);
+                        //     $storage = new StorageClient([
+                        //         'keyFile' => json_decode($googleConfigFile, true)
+                        //     ]);
     
-                            $storageBucketName  = config('googlecloud.storage_bucket');
-                            $bucket             = $storage->bucket($storageBucketName);
-                            $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                        //     $storageBucketName  = config('googlecloud.storage_bucket');
+                        //     $bucket             = $storage->bucket($storageBucketName);
+                        //     $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
                             
-                            $googleCloudStoragePath = $path;
+                        //     $googleCloudStoragePath = $path;
     
-                            $bucket->upload($fileSource, [
-                                'predefinedAcl'  => 'publicRead',
-                                'name'           => $googleCloudStoragePath
-                            ]);
-                            #end here ===============================================================
-                            $new_name = str_replace("img/product/", "", $path);
-                        }
+                        //     $bucket->upload($fileSource, [
+                        //         'predefinedAcl'  => 'publicRead',
+                        //         'name'           => $googleCloudStoragePath
+                        //     ]);
+                        //     #end here ===============================================================
+                        //     $new_name = str_replace("img/product/", "", $path);
+                        // }
     
                         Product::updateOrCreate([
                             'id' => $request->product_id
@@ -170,41 +184,40 @@ class ProductController extends Controller
                         ]);
                     }
                 } else {
-                    if(empty($request->product_id)){
-                        $image = $request->file('product_image');
-                    } else {
-                        if($request->hasFile("product_image")){
-                            $image = $request->file('product_image');
-                        } else {
-                            $pdct = Product::find($request->product_id);
-                            $new_name = $pdct->product_image;
-                        }
-                    }
+                    // if(empty($request->product_id)){
+                    //     $image = $request->file('product_image');
+                    // } else {
+                    //     if($request->hasFile("product_image")){
+                    //         $image = $request->file('product_image');
+                    //     } else {
+                    //         $pdct = Product::find($request->product_id);
+                    //         $new_name = $pdct->product_image;
+                    //     }
+                    // }
 
-                    if($request->hasFile("product_image")){
-                        // $image = $request->file('img');
-                        $path = \Storage::disk('public')->put('img/product', $image);
+                    // if($request->hasFile("product_image")){
+                    //     $path = \Storage::disk('public')->put('img/product', $image);
                     
-                        #start here ============================================================
-                        $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                    //     #start here ============================================================
+                    //     $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
                         
-                        $storage = new StorageClient([
-                            'keyFile' => json_decode($googleConfigFile, true)
-                        ]);
+                    //     $storage = new StorageClient([
+                    //         'keyFile' => json_decode($googleConfigFile, true)
+                    //     ]);
 
-                        $storageBucketName  = config('googlecloud.storage_bucket');
-                        $bucket             = $storage->bucket($storageBucketName);
-                        $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                    //     $storageBucketName  = config('googlecloud.storage_bucket');
+                    //     $bucket             = $storage->bucket($storageBucketName);
+                    //     $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
                         
-                        $googleCloudStoragePath = $path;
+                    //     $googleCloudStoragePath = $path;
 
-                        $bucket->upload($fileSource, [
-                            'predefinedAcl'  => 'publicRead',
-                            'name'           => $googleCloudStoragePath
-                        ]);
-                        #end here ===============================================================
-                        $new_name = str_replace("img/product/", "", $path);
-                    }
+                    //     $bucket->upload($fileSource, [
+                    //         'predefinedAcl'  => 'publicRead',
+                    //         'name'           => $googleCloudStoragePath
+                    //     ]);
+                    //     #end here ===============================================================
+                    //     $new_name = str_replace("img/product/", "", $path);
+                    // }
 
                     Product::updateOrCreate([
                         'id' => $request->product_id
@@ -222,41 +235,40 @@ class ProductController extends Controller
                         'message'   => 'Product Already Exist.'
                     ]);
                 } else {
-                    if(empty($request->product_id)){
-                        $image = $request->file('product_image');
-                    } else {
-                        if($request->hasFile("product_image")){
-                            $image = $request->file('product_image');
-                        } else {
-                            $pdct = Product::find($request->product_id);
-                            $new_name = $pdct->product_image;
-                        }
-                    }
+                    // if(empty($request->product_id)){
+                    //     $image = $request->file('product_image');
+                    // } else {
+                    //     if($request->hasFile("product_image")){
+                    //         $image = $request->file('product_image');
+                    //     } else {
+                    //         $pdct = Product::find($request->product_id);
+                    //         $new_name = $pdct->product_image;
+                    //     }
+                    // }
 
-                    if($request->hasFile("product_image")){
-                        // $image = $request->file('img');
-                        $path = \Storage::disk('public')->put('img/product', $image);
+                    // if($request->hasFile("product_image")){
+                    //     $path = \Storage::disk('public')->put('img/product', $image);
                     
-                        #start here ============================================================
-                        $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                    //     #start here ============================================================
+                    //     $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
                         
-                        $storage = new StorageClient([
-                            'keyFile' => json_decode($googleConfigFile, true)
-                        ]);
+                    //     $storage = new StorageClient([
+                    //         'keyFile' => json_decode($googleConfigFile, true)
+                    //     ]);
 
-                        $storageBucketName  = config('googlecloud.storage_bucket');
-                        $bucket             = $storage->bucket($storageBucketName);
-                        $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                    //     $storageBucketName  = config('googlecloud.storage_bucket');
+                    //     $bucket             = $storage->bucket($storageBucketName);
+                    //     $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
                         
-                        $googleCloudStoragePath = $path;
+                    //     $googleCloudStoragePath = $path;
 
-                        $bucket->upload($fileSource, [
-                            'predefinedAcl'  => 'publicRead',
-                            'name'           => $googleCloudStoragePath
-                        ]);
-                        #end here ===============================================================
-                        $new_name = str_replace("img/product/", "", $path);
-                    }
+                    //     $bucket->upload($fileSource, [
+                    //         'predefinedAcl'  => 'publicRead',
+                    //         'name'           => $googleCloudStoragePath
+                    //     ]);
+                    //     #end here ===============================================================
+                    //     $new_name = str_replace("img/product/", "", $path);
+                    // }
 
                     Product::updateOrCreate([
                         'id' => $request->product_id

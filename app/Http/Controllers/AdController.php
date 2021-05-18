@@ -34,9 +34,9 @@ class AdController extends Controller
         if ($request->ajax()) {
             return Datatables::of($ads)
                 ->addIndexColumn()
-                ->editColumn('ads_image', function ($row) {
-                    return 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/ads/' . $row->ads_image;
-                })
+                // ->editColumn('ads_image', function ($row) {
+                //     return 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/ads/' . $row->ads_image;
+                // })
                 ->addColumn('action', function ($row) {
 
                     $status = '';
@@ -80,32 +80,35 @@ class AdController extends Controller
 
         if($validation->passes())
         {
-            if($request->hasFile("ads_image")){
-                $image = $request->file('ads_image');
-                // $new_name = rand() . '.' . $image->getClientOriginalExtension();
-                // $image->move(public_path('img/ads'), $new_name);
-                $path = \Storage::disk('public')->put('img/ads', $image);
-                #start here ============================================================
-                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+            // if($request->hasFile("ads_image")){
+            //     $image = $request->file('ads_image');
+            //     $path = \Storage::disk('public')->put('img/ads', $image);
+            //     #start here ============================================================
+            //     $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
                             
-                $storage = new StorageClient([
-                    'keyFile' => json_decode($googleConfigFile, true)
-                ]);
+            //     $storage = new StorageClient([
+            //         'keyFile' => json_decode($googleConfigFile, true)
+            //     ]);
 
-                $storageBucketName  = config('googlecloud.storage_bucket');
-                $bucket             = $storage->bucket($storageBucketName);
-                $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+            //     $storageBucketName  = config('googlecloud.storage_bucket');
+            //     $bucket             = $storage->bucket($storageBucketName);
+            //     $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
                 
-                $googleCloudStoragePath = $path;
+            //     $googleCloudStoragePath = $path;
 
-                $bucket->upload($fileSource, [
-                    'predefinedAcl'  => 'publicRead',
-                    'name'           => $googleCloudStoragePath
-                ]);
-                #end here ===============================================================
+            //     $bucket->upload($fileSource, [
+            //         'predefinedAcl'  => 'publicRead',
+            //         'name'           => $googleCloudStoragePath
+            //     ]);
+            //     #end here ===============================================================
 
-                $new_name = str_replace("img/ads/", "", $path);    
-            } 
+            //     $new_name = str_replace("img/ads/", "", $path);    
+            // } 
+
+            $image = $request->file('ads_image');
+            $new_name = rand() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('img/ads'), $new_name);
+            
             if(!$request->ads_id){
                 //set text message
                 $user = User::where(['user_role' => 2, 'is_active' => 1])->get();

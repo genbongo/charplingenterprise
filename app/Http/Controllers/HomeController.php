@@ -62,28 +62,32 @@ class HomeController extends Controller
 
             if($validation->passes())
             {
-                $image = $request->file('img');
-                $path = \Storage::disk('public')->put('img/profile', $image);
+                // $image = $request->file('img');
+                // $path = \Storage::disk('public')->put('img/profile', $image);
             
-                #start here ============================================================
-                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                // #start here ============================================================
+                // $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
                 
-                $storage = new StorageClient([
-                    'keyFile' => json_decode($googleConfigFile, true)
-                ]);
+                // $storage = new StorageClient([
+                //     'keyFile' => json_decode($googleConfigFile, true)
+                // ]);
 
-                $storageBucketName  = config('googlecloud.storage_bucket');
-                $bucket             = $storage->bucket($storageBucketName);
-                $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                // $storageBucketName  = config('googlecloud.storage_bucket');
+                // $bucket             = $storage->bucket($storageBucketName);
+                // $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
                 
-                $googleCloudStoragePath = $path;
+                // $googleCloudStoragePath = $path;
 
-                $bucket->upload($fileSource, [
-                    'predefinedAcl'  => 'publicRead',
-                    'name'           => $googleCloudStoragePath
-                ]);
-                #end here ===============================================================
-                $new_name = str_replace("img/profile/", "", $path);
+                // $bucket->upload($fileSource, [
+                //     'predefinedAcl'  => 'publicRead',
+                //     'name'           => $googleCloudStoragePath
+                // ]);
+                // #end here ===============================================================
+                // $new_name = str_replace("img/profile/", "", $path);
+                $image = $request->file('img');
+                $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('img/profile'), $new_name);
+
                 User::updateOrCreate([
                     'id' => $request->user_id
                 ],[
@@ -93,7 +97,7 @@ class HomeController extends Controller
                 
                 return response()->json([
                     'message'   => 'Image Upload Successfully',
-                    'uploaded_image' => 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/profile/' . $new_name
+                    'uploaded_image' => url('img/profile').'/'.$new_name, //'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/profile/' . $new_name
                 ]);
             }
             else

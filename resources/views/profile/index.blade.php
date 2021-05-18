@@ -18,10 +18,15 @@
 		<div class="profile">
 			<picture>
 			@if(Auth::user()->img !== "NA" && Auth::user()->img != "")
+				<img src="{{ url('img/profile').'/'.Auth::user()->img }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
+			@else
+				<img src="{{ asset('img/profile/default.png') }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
+			@endif
+			{{-- @if(Auth::user()->img !== "NA" && Auth::user()->img != "")
 				<img src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/profile/'.Auth::user()->img }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
 			@else
 				<img src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/profile/default.png' }}" class="mg-fluid img-thumbnail" alt="avatar" id="profile_img" />
-			@endif
+			@endif --}}
 			</picture>
 			<br/><br>
 			<label class="new-avatar hidden">

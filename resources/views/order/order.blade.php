@@ -553,14 +553,15 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                // var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                // <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>`
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size} ${ (row.remaining_stock < row.quantity_ordered ? ('<br/><span style="color:red;" class="out_of_stock">Out of stock</span><br/><span style="color:green;">Stock:' + row.remaining_stock + "</span>")  : '')}</td>
-                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>`
+                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='40'></a></td>`
                         if(['pending'].indexOf(type) !== -1){
                             htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
                         } else {
@@ -606,14 +607,15 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                // var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                        // <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='40'></a></td>
+                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='40'></a></td>
                         <td>${row.quantity_ordered}</td>
                         <td>${row.ordered_total_price}</td>
                     </tr>`
@@ -782,20 +784,20 @@
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
-
+        // <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='20'></a></td>`
         function getPendingOrdersUndelivered(invoice_id){
             $.getJSON( "{{ url('order/items/completed/') }}" + '/'+ invoice_id, function( data ) {
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                // var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size}</td>
-                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='20'></a></td>`
+                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='40'></a></td>`
                     htmlData += `<td>${row.quantity_ordered}</td>`
                     htmlData +=`<td>${row.ordered_total_price}
                             <input type='hidden' name='order[${i}][product_id]' value='${row.prodID}'>
@@ -978,12 +980,13 @@
             $('#divContentImages').empty()
             const images =JSON.parse($(this).attr("data-val"));
             $('#displayFileModal').modal('show');
-            var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
+            // var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
+            // <img src="${url + image.file_report_image}" style="height:101px;"/>
             images.map(image => {
                 var jsx =`
                     <div class="row">
                         <div class="col-4 m-2">
-                            <img src="${url + image.file_report_image}" style="height:101px;"/>
+                            <img src="{{ URL('img/filereport') }}/${image.file_report_image}" style="height:101px;"/>
                         </div>
                     </div>`;
                 $('#divContentImages').append(jsx)
@@ -1302,11 +1305,14 @@
                 var output = '';
 
                 const file_images = data.product_file_report;
-                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
+                // var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/filereport/' }}"
                 for(var i = 0; i < file_images.length; i++){
                     console.log(file_images[i])
+                    // output += '<div class="col-lg-4 col-md-4 col-4">' +
+                    //             "<a data-fancybox='' href='"+url +  file_images[i].file_report_image +"'><img src='"+ url + file_images[i].file_report_image +"' class='img-fluid img-thumbnail card-img-top' style='height:100px;width:100px'></a>" +
+                    //         '</div>'
                     output += '<div class="col-lg-4 col-md-4 col-4">' +
-                                "<a data-fancybox='' href='"+url +  file_images[i].file_report_image +"'><img src='"+ url + file_images[i].file_report_image +"' class='img-fluid img-thumbnail card-img-top' style='height:100px;width:100px'></a>" +
+                                "<a data-fancybox='' href='{{ URL('img/filereport') }}/"+ file_images[i].file_report_image +"'><img src='{{ URL('img/filereport') }}/"+ file_images[i].file_report_image +"' class='img-fluid img-thumbnail card-img-top' style='height:100px;width:100px'></a>" +
                             '</div>'
                 }
 

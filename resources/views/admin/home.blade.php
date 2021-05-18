@@ -72,7 +72,8 @@
                                                 <div class="carousel-inner">
                                                     @foreach(\App\Ad::all() as $key => $value)
                                                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                                        <img src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/ads/'.$value->ads_image }}">
+                                                        {{-- <img src="{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/ads/'.$value->ads_image }}"> --}}
+                                                        <img src="{{ URL('/img/ads').'/'.$value->ads_image }}">
                                                     </div>
                                                     @endforeach
                                                 </div>
@@ -181,18 +182,21 @@
                    
                     var htmlData = '';
                     $.each(response, function(key, row){
-                        var url = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
-                        var imgHTML = url + row.product_image 
+                        // var url = "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                        // var imgHTML = url + row.product_image 
+                        var imgHTML = "{{ asset('img/product/') }}" + "/" + row.product_image 
                         htmlData += `<div class="col-sm-4">
                                     <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-                                        <a data-fancybox='' href="${url + row.product_image}" id="a-product-of-the-month-1">
-                                            <img style="max-height: 14rem;" class="card-img-top" src="${url + row.product_image}"  id="img-product-of-the-month-1"></a>
+                                        <a data-fancybox='' href="{{ asset('img/product/') }}/${row.product_image}" id="a-product-of-the-month-1">
+                                            <img style="max-height: 14rem;" class="card-img-top" src="{{ asset('img/product/') }}/${row.product_image}"  id="img-product-of-the-month-1"></a>
                                         <div class="card-body">
                                             <h4 class="card-title">Top Products</h4>
                                             <h5 id="lbl-product-of-the-month-1">${row.product_name}</h5>
                                         </div>
                                     </div>
                                 </div>`
+                                // <a data-fancybox='' href="${url + row.product_image}" id="a-product-of-the-month-1">
+                                //             <img style="max-height: 14rem;" class="card-img-top" src="${url + row.product_image}"  id="img-product-of-the-month-1"></a>
                     })
                     $(".top_product_div").append(htmlData)
                 },

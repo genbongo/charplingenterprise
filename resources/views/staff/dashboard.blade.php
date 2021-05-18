@@ -294,14 +294,15 @@
                 var htmlData = ''
                 var total = 0;
                 var i = 0
-                var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                // var  url =  "{{ 'https://storage.googleapis.com/'.config('googlecloud.storage_bucket').'/img/product/' }}"
+                //         <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='20'></a></td>`
                 $.each(data, function( index, row ) {
                     total += row.ordered_total_price
                     htmlData += `<tr>
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td>${row.size} ${ (row.remaining_stock < row.quantity_ordered ? ('<br/><span style="color:red;" class="out_of_stock">Out of stock</span><br/><span style="color:green;">Stock:' + row.remaining_stock + "</span>")  : '')}</td>
-                        <td><a data-fancybox='' href='${url + row.product_image}'><img src='${url + row.product_image}' height='20'></a></td>`
+                        <td><a data-fancybox='' href='/img/product/${row.product_image}'><img src='/img/product/${row.product_image}' height='40'></a></td>`
                     if(type == 0){
                         htmlData += `<td><input type='number' name='order[${i}][quantity]' value='${row.quantity_ordered}' data-iid='${invoice_id}' data-id='${row.id}' class="modal_qty" style='width:60px;' placeholder='0'></td>`
                     } else {

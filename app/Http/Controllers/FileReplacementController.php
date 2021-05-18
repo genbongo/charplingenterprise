@@ -241,30 +241,34 @@ class FileReplacementController extends Controller
             }
 
             foreach($files as $file){
-                
                 $extension = $file->getClientOriginalExtension();
                 $check=in_array($extension,$allowedfileExtension);
-                $path = \Storage::disk('public')->put('img/filereport', $file);
+                $new_name = rand() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('img/filereport'), $new_name);
+                
+                // $extension = $file->getClientOriginalExtension();
+                // $check=in_array($extension,$allowedfileExtension);
+                // $path = \Storage::disk('public')->put('img/filereport', $file);
             
-                #start here ============================================================
-                $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+                // #start here ============================================================
+                // $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
                 
-                $storage = new StorageClient([
-                    'keyFile' => json_decode($googleConfigFile, true)
-                ]);
+                // $storage = new StorageClient([
+                //     'keyFile' => json_decode($googleConfigFile, true)
+                // ]);
 
-                $storageBucketName  = config('googlecloud.storage_bucket');
-                $bucket             = $storage->bucket($storageBucketName);
-                $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
+                // $storageBucketName  = config('googlecloud.storage_bucket');
+                // $bucket             = $storage->bucket($storageBucketName);
+                // $fileSource         = fopen(storage_path('app/public/'.$path), 'r');
                 
-                $googleCloudStoragePath = $path;
+                // $googleCloudStoragePath = $path;
 
-                $bucket->upload($fileSource, [
-                    'predefinedAcl'  => 'publicRead',
-                    'name'           => $googleCloudStoragePath
-                ]);
-                #end here ===============================================================
-                $new_name = str_replace("img/filereport/", "", $path);
+                // $bucket->upload($fileSource, [
+                //     'predefinedAcl'  => 'publicRead',
+                //     'name'           => $googleCloudStoragePath
+                // ]);
+                // #end here ===============================================================
+                // $new_name = str_replace("img/filereport/", "", $path);
 
                 if($check)
                 {
